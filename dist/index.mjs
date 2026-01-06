@@ -1945,7 +1945,7 @@ function AstroMandalaWithModal({
         backgroundColor: isDark ? "#121212" : "#ffffff",
         display: "flex",
         flexDirection: "column",
-        overflow: "hidden"
+        overflow: isMobile ? "auto" : "hidden"
       },
       onClick: (e) => e.stopPropagation(),
       children: [
@@ -1964,7 +1964,7 @@ function AstroMandalaWithModal({
               maxHeight: isMobile ? "40px" : "48px",
               width: "100%",
               boxSizing: "border-box",
-              overflow: "hidden"
+              overflow: isMobile ? "auto" : "hidden"
             },
             children: [
               /* @__PURE__ */ jsxs("div", { style: { display: "flex", alignItems: "center", gap: isMobile ? "0.25rem" : "1rem", flexShrink: 1, overflow: "hidden" }, children: [
@@ -1974,7 +1974,7 @@ function AstroMandalaWithModal({
                   fontWeight: 600,
                   color: isDark ? "#fff" : "#333",
                   whiteSpace: "nowrap",
-                  overflow: "hidden",
+                  overflow: isMobile ? "auto" : "hidden",
                   textOverflow: "ellipsis",
                   maxWidth: isMobile ? "120px" : "300px"
                 }, children: title }),
@@ -2074,7 +2074,7 @@ function AstroMandalaWithModal({
             style: {
               flex: 1,
               display: "flex",
-              overflow: "hidden"
+              overflow: isMobile ? "auto" : "hidden"
             },
             children: [
               showModalSettings && /* @__PURE__ */ jsxs(
@@ -2222,7 +2222,7 @@ function AstroMandalaWithModal({
                     alignItems: "center",
                     padding: isMobile ? "0.5rem" : "1rem",
                     backgroundColor: isDark ? "#0d0d1a" : "#f0f0f0",
-                    overflow: "hidden",
+                    overflow: isMobile ? "auto" : "hidden",
                     boxSizing: "border-box",
                     minHeight: 0,
                     gap: "0.5rem",
