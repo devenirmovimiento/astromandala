@@ -4,7 +4,7 @@ A React/Next.js component library for displaying beautiful astrological charts (
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-blue?style=for-the-badge)](https://devenirmovimiento.github.io/astromandala/)
 
-![Astromandala Example](https://raw.githubusercontent.com/devenirmovimiento/astromandala/main/example.png)
+![Astromandala Example](https://devenirmovimiento.github.io/astromandala/)
 
 ## Features
 
