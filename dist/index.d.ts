@@ -336,6 +336,8 @@ interface AstroMandalaWithModalProps extends AstroMandalaProps {
     showExpandButton?: boolean;
     /** Whether to show chart info panel (default: false) */
     showChartInfo?: boolean;
+    /** Position of the chart info panel: 'right' (default) or 'bottom' */
+    chartInfoPosition?: 'right' | 'bottom';
     /** Title to display in the modal header when expanded */
     title?: string;
     /** Birth data for the primary chart */
@@ -363,7 +365,7 @@ interface ModalSettings {
 /**
  * AstroMandala with an expand button and fullscreen modal with settings
  */
-declare function AstroMandalaWithModal({ chart, secondChart, synastryAspects, size, showAspects: initialShowAspects, showDegrees: initialShowDegrees, showHouses: initialShowHouses, showSecondChartHouses: initialShowSecondChartHouses, showPlanetProjections: initialShowPlanetProjections, showChartInfo: initialShowChartInfo, showBirthData: initialShowBirthData, aspectTypesFilter: initialAspectTypesFilter, includeAnglesInSynastry: initialIncludeAnglesInSynastry, innerChartColor, outerChartColor, aspectColors, theme: initialTheme, language: initialLanguage, className, showExpandButton, title, birthData, secondBirthData, onSettingsChange, }: AstroMandalaWithModalProps): react_jsx_runtime.JSX.Element;
+declare function AstroMandalaWithModal({ chart, secondChart, synastryAspects, size, showAspects: initialShowAspects, showDegrees: initialShowDegrees, showHouses: initialShowHouses, showSecondChartHouses: initialShowSecondChartHouses, showPlanetProjections: initialShowPlanetProjections, showChartInfo: initialShowChartInfo, chartInfoPosition, showBirthData: initialShowBirthData, aspectTypesFilter: initialAspectTypesFilter, includeAnglesInSynastry: initialIncludeAnglesInSynastry, innerChartColor, outerChartColor, aspectColors, theme: initialTheme, language: initialLanguage, className, showExpandButton, title, birthData, secondBirthData, onSettingsChange, }: AstroMandalaWithModalProps): react_jsx_runtime.JSX.Element;
 
 interface ZodiacWheelProps {
     centerX: number;

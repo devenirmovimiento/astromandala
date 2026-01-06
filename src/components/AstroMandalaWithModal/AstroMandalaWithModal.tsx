@@ -61,6 +61,8 @@ export interface AstroMandalaWithModalProps extends AstroMandalaProps {
     showExpandButton?: boolean;
     /** Whether to show chart info panel (default: false) */
     showChartInfo?: boolean;
+    /** Position of the chart info panel: 'right' (default) or 'bottom' */
+    chartInfoPosition?: 'right' | 'bottom';
     /** Title to display in the modal header when expanded */
     title?: string;
     /** Birth data for the primary chart */
@@ -108,6 +110,7 @@ export function AstroMandalaWithModal({
     showSecondChartHouses: initialShowSecondChartHouses = true,
     showPlanetProjections: initialShowPlanetProjections = true,
     showChartInfo: initialShowChartInfo = false,
+    chartInfoPosition = 'right',
     showBirthData: initialShowBirthData = false,
     aspectTypesFilter: initialAspectTypesFilter,
     includeAnglesInSynastry: initialIncludeAnglesInSynastry = false,
@@ -866,7 +869,7 @@ export function AstroMandalaWithModal({
                     </div>
 
                     {/* Chart Info Panel - shows next to mandala on desktop (vertically centered) */}
-                    {showChartInfo && !isMobile && (
+                    {showChartInfo && !isMobile && chartInfoPosition === 'right' && (
                         <div style={{
                             alignSelf: 'center',
                             maxHeight: modalMandalaSize * 0.85,
@@ -882,7 +885,7 @@ export function AstroMandalaWithModal({
                     )}
 
                     {/* Chart Info Panel for Mobile - shows below mandala (horizontally centered) */}
-                    {showChartInfo && isMobile && (
+                    {showChartInfo && (isMobile || chartInfoPosition === 'bottom') && (
                         <div style={{
                             width: '100%',
                             maxWidth: '100%',

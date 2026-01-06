@@ -1694,6 +1694,7 @@ function AstroMandalaWithModal({
   showSecondChartHouses: initialShowSecondChartHouses = true,
   showPlanetProjections: initialShowPlanetProjections = true,
   showChartInfo: initialShowChartInfo = false,
+  chartInfoPosition = "right",
   showBirthData: initialShowBirthData = false,
   aspectTypesFilter: initialAspectTypesFilter,
   includeAnglesInSynastry: initialIncludeAnglesInSynastry = false,
@@ -2351,7 +2352,7 @@ function AstroMandalaWithModal({
                         ]
                       }
                     ),
-                    showChartInfo && !isMobile && /* @__PURE__ */ jsx("div", { style: {
+                    showChartInfo && !isMobile && chartInfoPosition === "right" && /* @__PURE__ */ jsx("div", { style: {
                       alignSelf: "center",
                       maxHeight: modalMandalaSize * 0.85,
                       overflowY: "auto"
@@ -2364,7 +2365,7 @@ function AstroMandalaWithModal({
                         language
                       }
                     ) }),
-                    showChartInfo && isMobile && /* @__PURE__ */ jsx("div", { style: {
+                    showChartInfo && (isMobile || chartInfoPosition === "bottom") && /* @__PURE__ */ jsx("div", { style: {
                       width: "100%",
                       maxWidth: "100%",
                       display: "flex",
