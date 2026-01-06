@@ -282,18 +282,29 @@ interface AstrologicalChart {
 }
 ```
 
-## Calculating Charts
+## Integration with circular-natal-horoscope-js
 
-This library only handles visualization. To calculate astrological charts from birth data, you can use:
+This library provides seamless integration with [circular-natal-horoscope-js](https://www.npmjs.com/package/circular-natal-horoscope-js) through the `convertHoroscopeToChart` utility function. **No manual data conversion needed!**
 
-- [`circular-natal-horoscope-js`](https://www.npmjs.com/package/circular-natal-horoscope-js) - JavaScript library for chart calculations
-- [Swiss Ephemeris](https://www.astro.com/swisseph/) - Professional-grade ephemeris
+### Installation
 
-Example with `circular-natal-horoscope-js`:
+```bash
+npm install circular-natal-horoscope-js
+```
+
+### Direct Usage (Recommended)
 
 ```tsx
-import { Horoscope, Origin } from "circular-natal-horoscope-js";
+"use client";
 
+import { Origin, Horoscope } from "circular-natal-horoscope-js";
+import {
+	AstroMandalaWithModal,
+	convertHoroscopeToChart,
+	calculateSynastryAspects,
+} from "astromandala";
+
+// Create birth data
 const origin = new Origin({
 	year: 1984,
 	month: 7, // 0-indexed (August)
@@ -304,13 +315,116 @@ const origin = new Origin({
 	longitude: -58.3816,
 });
 
+// Calculate horoscope
 const horoscope = new Horoscope({
 	origin,
 	houseSystem: "placidus",
 	zodiac: "tropical",
+	aspectPoints: ["bodies", "points", "angles"],
+	aspectWithPoints: ["bodies", "points", "angles"],
+	aspectTypes: ["major", "minor"],
 });
 
-// Extract data from horoscope object to create AstrologicalChart
+// Convert directly to AstrologicalChart - no manual mapping needed!
+const chart = convertHoroscopeToChart(horoscope, "John Doe");
+
+export default function ChartPage() {
+	return (
+		<AstroMandalaWithModal
+			chart={chart}
+			size={500}
+			showChartInfo={true}
+			theme="dark"
+			language="es"
+		/>
+	);
+}
+```
+
+### Synastry with Two Charts
+
+```tsx
+"use client";
+
+import { Origin, Horoscope } from "circular-natal-horoscope-js";
+import {
+	AstroMandalaWithModal,
+	convertHoroscopeToChart,
+	calculateSynastryAspects,
+} from "astromandala";
+
+// Person A
+const origin1 = new Origin({
+	year: 1984,
+	month: 7,
+	date: 16,
+	hour: 18,
+	minute: 15,
+	latitude: -34.6037,
+	longitude: -58.3816,
+});
+
+const horoscope1 = new Horoscope({
+	origin: origin1,
+	houseSystem: "placidus",
+	zodiac: "tropical",
+});
+
+// Person B
+const origin2 = new Origin({
+	year: 1990,
+	month: 2,
+	date: 21,
+	hour: 10,
+	minute: 30,
+	latitude: -34.6037,
+	longitude: -58.3816,
+});
+
+const horoscope2 = new Horoscope({
+	origin: origin2,
+	houseSystem: "placidus",
+	zodiac: "tropical",
+});
+
+// Convert both charts
+const chart1 = convertHoroscopeToChart(horoscope1, "Person A");
+const chart2 = convertHoroscopeToChart(horoscope2, "Person B");
+
+// Calculate synastry aspects automatically
+const synastryAspects = calculateSynastryAspects(horoscope1, horoscope2);
+
+export default function SynastryPage() {
+	return (
+		<AstroMandalaWithModal
+			chart={chart1}
+			secondChart={chart2}
+			synastryAspects={synastryAspects}
+			size={600}
+			showChartInfo={true}
+			theme="dark"
+			language="es"
+		/>
+	);
+}
+```
+
+### Utility Functions
+
+| Function                     | Description                                                   |
+| ---------------------------- | ------------------------------------------------------------- |
+| `convertHoroscopeToChart()`  | Converts a Horoscope result to AstrologicalChart format       |
+| `calculateSynastryAspects()` | Calculates aspects between two Horoscope results for synastry |
+
+```typescript
+// Convert horoscope to chart
+const chart = convertHoroscopeToChart(horoscope, "Optional Label");
+
+// Calculate synastry aspects with custom orbs
+const aspects = calculateSynastryAspects(horoscope1, horoscope2, {
+	conjunction: 10, // wider orb for conjunctions
+	trine: 6, // narrower orb for trines
+});
 ```
 
 ---
@@ -323,33 +437,37 @@ Use this prompt to ask an AI coding agent (like GitHub Copilot, Cursor, or simil
 Implement the astromandala library in my Next.js project for displaying astrological birth charts.
 
 Requirements:
-1. Install astromandala from GitHub: npm install git+https://github.com/devenirmovimiento/astromandala.git
-2. Also install circular-natal-horoscope-js for chart calculations: npm install circular-natal-horoscope-js
-3. Create a page/component that:
-   - Takes birth data input (date, time, location)
+1. Install dependencies:
+   - npm install git+https://github.com/devenirmovimiento/astromandala.git
+   - npm install circular-natal-horoscope-js
+
+2. Create a page/component that:
+   - Takes birth data input (date, time, location with latitude/longitude)
    - Calculates the astrological chart using circular-natal-horoscope-js
+   - Uses the convertHoroscopeToChart() utility to convert the horoscope result
    - Displays the chart using AstroMandalaWithModal component
    - Supports both single charts and synastry (two charts comparison)
    - Uses dark theme and Spanish language
    - Shows the chart info panel with planet positions
 
 Key imports:
-- import { AstroMandalaWithModal, ChartInfoPanel } from 'astromandala';
-- import type { AstrologicalChart, SynastryAspect, PlanetPosition, HousePosition } from 'astromandala';
-- import { Horoscope, Origin } from 'circular-natal-horoscope-js';
+import { Origin, Horoscope } from 'circular-natal-horoscope-js';
+import {
+  AstroMandalaWithModal,
+  convertHoroscopeToChart,
+  calculateSynastryAspects,
+} from 'astromandala';
 
 The component must use 'use client' directive since it uses React hooks.
 
-Map the data from circular-natal-horoscope-js to the astromandala types:
-- Extract planets from horoscope.CelestialBodies.all
-- Extract houses from horoscope.Houses
-- Map sign keys (lowercase) to ZodiacSign type (capitalized)
-- Map planet keys to PlanetName type
-- Include Ascendant from horoscope.Ascendant
-- Include Midheaven from horoscope.Midheaven
-- Include NorthNode from horoscope.CelestialPoints
+Usage pattern:
+1. Create Origin with birth data (year, month 0-indexed, date, hour, minute, latitude, longitude)
+2. Create Horoscope with origin and options (houseSystem: 'placidus', zodiac: 'tropical', aspectTypes: ['major', 'minor'])
+3. Convert with: const chart = convertHoroscopeToChart(horoscope, 'Person Name')
+4. For synastry, use: const aspects = calculateSynastryAspects(horoscope1, horoscope2)
+5. Render: <AstroMandalaWithModal chart={chart} secondChart={chart2} synastryAspects={aspects} />
 
-For synastry, calculate aspects between charts by comparing planet positions and checking if they form aspects (conjunction, opposition, trine, square, sextile, etc.) within their respective orbs.
+No manual data mapping is required - the convertHoroscopeToChart function handles all conversions automatically.
 ```
 
 ---

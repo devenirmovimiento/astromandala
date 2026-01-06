@@ -22,6 +22,15 @@ export type {
     AstroMandalaProps,
     MandalaTheme,
     MandalaLanguage,
+    // Types for circular-natal-horoscope-js compatibility
+    HoroscopeResult,
+    HoroscopeCelestialBody,
+    HoroscopeCelestialPoint,
+    HoroscopeAngle,
+    HoroscopeHouse,
+    HoroscopeAspect,
+    HoroscopeChartPosition,
+    HoroscopeSign,
 } from './types';
 
 // Constants for reference
@@ -48,4 +57,7 @@ export {
     formatDegree,
     normalizeAngle,
     getPlanetAbsoluteDegree,
+    // Horoscope conversion utilities
+    convertHoroscopeToChart,
+    calculateSynastryAspects,
 } from './utils';

@@ -309,20 +309,24 @@ export function AstroMandalaWithModal({
                             borderBottom: isDark ? '1px solid #333' : '1px solid #ddd',
                             backgroundColor: isDark ? '#1a1a1a' : '#f5f5f5',
                             flexShrink: 0,
-                            minHeight: '48px',
-                            maxHeight: '48px',
+                            minHeight: isMobile ? '40px' : '48px',
+                            maxHeight: isMobile ? '40px' : '48px',
+                            width: '100%',
+                            boxSizing: 'border-box',
                         }}
                     >
-                        <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '0.5rem' : '1rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '0.25rem' : '1rem', flexShrink: 0 }}>
                             <button
                                 onClick={() => setShowModalSettings(!showModalSettings)}
                                 style={{
                                     ...buttonStyle,
-                                    padding: isMobile ? '0.35rem 0.5rem' : buttonStyle.padding,
-                                    fontSize: isMobile ? '12px' : buttonStyle.fontSize,
+                                    padding: isMobile ? '0.25rem 0.4rem' : buttonStyle.padding,
+                                    fontSize: isMobile ? '14px' : buttonStyle.fontSize,
+                                    minWidth: isMobile ? 'auto' : undefined,
                                 }}
+                                title={t.settings}
                             >
-                                ⚙ {isMobile ? '' : (showModalSettings ? '▼' : '▶')} {isMobile ? '' : t.settings}
+                                ⚙{isMobile ? '' : ` ${showModalSettings ? '▼' : '▶'} ${t.settings}`}
                             </button>
 
                             {/* Language selector */}
@@ -330,13 +334,14 @@ export function AstroMandalaWithModal({
                                 value={language}
                                 onChange={(e) => setLanguage(e.target.value as MandalaLanguage)}
                                 style={{
-                                    padding: isMobile ? '0.35rem 0.25rem' : '0.5rem',
+                                    padding: isMobile ? '0.25rem' : '0.5rem',
                                     borderRadius: '4px',
                                     border: isDark ? '1px solid #444' : '1px solid #ccc',
                                     backgroundColor: isDark ? '#333' : '#fff',
                                     color: isDark ? '#fff' : '#333',
                                     cursor: 'pointer',
-                                    fontSize: isMobile ? '12px' : '14px',
+                                    fontSize: isMobile ? '14px' : '14px',
+                                    minWidth: isMobile ? 'auto' : undefined,
                                 }}
                             >
                                 <option value="en">{isMobile ? '🇬🇧' : '🇬🇧 English'}</option>
@@ -348,8 +353,9 @@ export function AstroMandalaWithModal({
                                 onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
                                 style={{
                                     ...buttonStyle,
-                                    padding: isMobile ? '0.35rem 0.5rem' : buttonStyle.padding,
-                                    fontSize: isMobile ? '12px' : buttonStyle.fontSize,
+                                    padding: isMobile ? '0.25rem 0.4rem' : buttonStyle.padding,
+                                    fontSize: isMobile ? '14px' : buttonStyle.fontSize,
+                                    minWidth: isMobile ? 'auto' : undefined,
                                 }}
                             >
                                 {isDark ? '☀️' : '🌙'}
@@ -362,11 +368,13 @@ export function AstroMandalaWithModal({
                                 ...buttonStyle,
                                 backgroundColor: isDark ? '#c53030' : '#e53e3e',
                                 color: '#fff',
-                                padding: isMobile ? '0.35rem 0.5rem' : buttonStyle.padding,
-                                fontSize: isMobile ? '12px' : buttonStyle.fontSize,
+                                padding: isMobile ? '0.25rem 0.4rem' : buttonStyle.padding,
+                                fontSize: isMobile ? '14px' : buttonStyle.fontSize,
+                                minWidth: isMobile ? 'auto' : undefined,
+                                flexShrink: 0,
                             }}
                         >
-                            ✕ {isMobile ? '' : t.close}
+                            ✕{isMobile ? '' : ` ${t.close}`}
                         </button>
                     </div>
 
