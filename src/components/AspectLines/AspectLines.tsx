@@ -25,6 +25,20 @@ interface AspectLinesProps {
 const ANGLE_POINTS = ['Ascendant', 'Midheaven'];
 
 /**
+ * Check if an aspect should be skipped from rendering.
+ * Skips North Node - South Node opposition since it's always exact by definition.
+ */
+function shouldSkipAspect(planet1: string, planet2: string, aspectType: string): boolean {
+    if (aspectType === 'opposition') {
+        const isNodePair =
+            (planet1 === 'NorthNode' && planet2 === 'SouthNode') ||
+            (planet1 === 'SouthNode' && planet2 === 'NorthNode');
+        if (isNodePair) return true;
+    }
+    return false;
+}
+
+/**
  * Helper to find planet position
  */
 function findPlanet(planets: PlanetPosition[], name: string): PlanetPosition | undefined {
@@ -49,19 +63,15 @@ export function AspectLines({
     const colors = { ...DEFAULT_ASPECT_COLORS, ...aspectColors };
     const aspectRadius = radius * 0.7; // Draw aspects in inner area
 
-    // Filter natal aspects to exclude angles if configured
-    const filteredNatalAspects = includeAnglesInSynastry
-        ? aspects
-        : aspects.filter(
-            (a) => !ANGLE_POINTS.includes(a.planet1) && !ANGLE_POINTS.includes(a.planet2)
-        );
+    // Filter natal aspects to exclude angles if configured and skip NorthNode-SouthNode opposition
+    const filteredNatalAspects = aspects
+        .filter((a) => !shouldSkipAspect(a.planet1, a.planet2, a.aspect))
+        .filter((a) => includeAnglesInSynastry || (!ANGLE_POINTS.includes(a.planet1) && !ANGLE_POINTS.includes(a.planet2)));
 
-    // Filter synastry aspects to exclude angles if configured
-    const filteredSynastryAspects = includeAnglesInSynastry
-        ? synastryAspects
-        : synastryAspects.filter(
-            (a) => !ANGLE_POINTS.includes(a.planet1) && !ANGLE_POINTS.includes(a.planet2)
-        );
+    // Filter synastry aspects to exclude angles if configured and skip NorthNode-SouthNode opposition
+    const filteredSynastryAspects = synastryAspects
+        .filter((a) => !shouldSkipAspect(a.planet1, a.planet2, a.aspect))
+        .filter((a) => includeAnglesInSynastry || (!ANGLE_POINTS.includes(a.planet1) && !ANGLE_POINTS.includes(a.planet2)));
 
     // Helper to get planet coordinates
     const getPlanetCoords = (planetName: string, isSecondChart: boolean = false) => {

@@ -305,6 +305,26 @@ const ASPECT_ANGLES: Record<AspectType, number> = {
 };
 
 /**
+ * Check if an aspect should be skipped.
+ * Currently skips opposition between North Node and South Node
+ * since they are always in exact opposition by definition.
+ */
+function shouldSkipAspect(
+    planet1: PlanetName,
+    planet2: PlanetName,
+    aspectType: AspectType
+): boolean {
+    // Skip North Node - South Node opposition (always exact by definition)
+    if (aspectType === 'opposition') {
+        const isNodePair =
+            (planet1 === 'NorthNode' && planet2 === 'SouthNode') ||
+            (planet1 === 'SouthNode' && planet2 === 'NorthNode');
+        if (isNodePair) return true;
+    }
+    return false;
+}
+
+/**
  * Get the orb for an aspect between two planets based on their categories.
  * Uses the average of both planets' orbs for the aspect calculation.
  * 
@@ -408,6 +428,10 @@ export function calculateSynastryAspects(
                 const aspectDiff = Math.abs(normalizedDiff - angle);
 
                 if (aspectDiff <= maxOrb) {
+                    // Skip certain aspects (e.g., North Node - South Node opposition)
+                    if (shouldSkipAspect(planet1, planet2, aspectType as AspectType)) {
+                        break;
+                    }
                     synastryAspects.push({
                         planet1,
                         chart1Owner: 'chart1',
@@ -480,6 +504,10 @@ export function calculateNatalAspects(
                 const aspectDiff = Math.abs(normalizedDiff - angle);
 
                 if (aspectDiff <= maxOrb) {
+                    // Skip certain aspects (e.g., North Node - South Node opposition)
+                    if (shouldSkipAspect(planet1, planet2, aspectType)) {
+                        break;
+                    }
                     aspects.push({
                         planet1,
                         planet2,
