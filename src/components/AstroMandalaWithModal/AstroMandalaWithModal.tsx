@@ -111,14 +111,15 @@ export function AstroMandalaWithModal({
 
         if (isMobile) {
             // On mobile, maximize space usage
-            // Subtract header height (~55px) from height
-            // If showing chart info, reserve space for it (40% of height)
-            const headerHeight = 55;
-            const chartInfoHeight = showChartInfo ? height * 0.35 : 0;
-            const availableWidth = width - 10; // Small margin
-            const availableHeight = height - headerHeight - chartInfoHeight - 10;
-            // Use the smaller dimension to ensure it fits
-            return Math.min(availableWidth, availableHeight);
+            // Subtract header height and padding from dimensions
+            const headerHeight = 45;
+            const padding = 24; // Total horizontal padding (12px each side)
+            const chartInfoHeight = showChartInfo ? Math.min(height * 0.30, 200) : 0;
+            const availableWidth = width - padding;
+            const availableHeight = height - headerHeight - chartInfoHeight - padding;
+            // Use the smaller dimension to ensure it fits, with a minimum size
+            const size = Math.min(availableWidth, availableHeight);
+            return Math.max(size, 250);
         } else {
             // On desktop, account for settings panel if visible
             const availableWidth = showModalSettings ? width - 320 : width - 40;
@@ -292,11 +293,14 @@ export function AstroMandalaWithModal({
                         left: 0,
                         right: 0,
                         bottom: 0,
+                        width: '100vw',
+                        maxWidth: '100vw',
                         backgroundColor: isDark ? '#121212' : '#ffffff',
                         zIndex: 9999,
                         display: 'flex',
                         flexDirection: 'column',
                         overflow: 'hidden',
+                        boxSizing: 'border-box',
                     }}
                 >
                     {/* Modal Header */}
@@ -313,9 +317,10 @@ export function AstroMandalaWithModal({
                             maxHeight: isMobile ? '40px' : '48px',
                             width: '100%',
                             boxSizing: 'border-box',
+                            overflow: 'hidden',
                         }}
                     >
-                        <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '0.25rem' : '1rem', flexShrink: 0 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '0.25rem' : '1rem', flexShrink: 1, overflow: 'hidden' }}>
                             <button
                                 onClick={() => setShowModalSettings(!showModalSettings)}
                                 style={{
@@ -368,13 +373,14 @@ export function AstroMandalaWithModal({
                                 ...buttonStyle,
                                 backgroundColor: isDark ? '#c53030' : '#e53e3e',
                                 color: '#fff',
-                                padding: isMobile ? '0.25rem 0.4rem' : buttonStyle.padding,
+                                padding: isMobile ? '0.25rem 0.5rem' : buttonStyle.padding,
                                 fontSize: isMobile ? '14px' : buttonStyle.fontSize,
                                 minWidth: isMobile ? 'auto' : undefined,
                                 flexShrink: 0,
+                                marginLeft: isMobile ? '0.25rem' : undefined,
                             }}
                         >
-                            ✕{isMobile ? '' : ` ${t.close}`}
+                            ✕
                         </button>
                     </div>
 
@@ -517,32 +523,34 @@ export function AstroMandalaWithModal({
                         {/* Mandala Container */}
                         <div
                             style={{
-                                flex: isMobile ? '0 0 auto' : 1,
+                                flex: 1,
                                 display: 'flex',
                                 flexDirection: isMobile ? 'column' : 'row',
-                                justifyContent: 'center',
-                                alignItems: isMobile ? 'center' : 'center',
+                                justifyContent: isMobile ? 'flex-start' : 'center',
+                                alignItems: 'center',
                                 padding: isMobile ? '0.5rem' : '1rem',
                                 backgroundColor: isDark ? '#0d0d1a' : '#f0f0f0',
-                                overflow: isMobile ? 'auto' : 'hidden',
+                                overflow: 'hidden',
                                 boxSizing: 'border-box',
                                 minHeight: 0,
-                                gap: '1rem',
+                                gap: '0.5rem',
+                                width: '100%',
+                                maxWidth: '100%',
                             }}
                         >
                             <div style={{
-                                width: showChartInfo && !isMobile ? modalMandalaSize * 0.85 : modalMandalaSize,
-                                height: showChartInfo && !isMobile ? modalMandalaSize * 0.85 : modalMandalaSize,
-                                maxWidth: isMobile ? '100%' : undefined,
-                                maxHeight: isMobile ? modalMandalaSize : undefined,
+                                width: modalMandalaSize,
+                                height: modalMandalaSize,
+                                maxWidth: '100%',
+                                maxHeight: '100%',
                                 display: 'flex',
                                 justifyContent: 'center',
                                 alignItems: 'center',
-                                flexShrink: isMobile ? 1 : 0,
+                                flexShrink: 1,
                             }}>
                                 <AstroMandala
                                     {...modalMandalaProps}
-                                    size={showChartInfo && !isMobile ? modalMandalaSize * 0.85 : modalMandalaSize}
+                                    size={modalMandalaSize}
                                     key={`modal-mandala-${modalMandalaSize}-${showChartInfo}`}
                                 />
                             </div>
