@@ -144,6 +144,16 @@ export interface AspectColors {
 }
 
 /**
+ * Theme for the mandala
+ */
+export type MandalaTheme = 'light' | 'dark';
+
+/**
+ * Supported languages
+ */
+export type MandalaLanguage = 'en' | 'es';
+
+/**
  * Props for the AstroMandala component
  */
 export interface AstroMandalaProps {
@@ -161,12 +171,24 @@ export interface AstroMandalaProps {
   showDegrees?: boolean;
   /** Whether to show house divisions */
   showHouses?: boolean;
+  /** Whether to show second chart houses (synastry) */
+  showSecondChartHouses?: boolean;
+  /** Whether to show planet projection markers on the zodiac ring */
+  showPlanetProjections?: boolean;
+  /** Aspect types to display (if not provided, all aspects are shown) */
+  aspectTypesFilter?: AspectType[];
+  /** Whether to include AC, MC, DSC, IC in synastry aspects (default: false) */
+  includeAnglesInSynastry?: boolean;
   /** Color for inner chart planets */
   innerChartColor?: string;
   /** Color for outer chart planets (synastry) */
   outerChartColor?: string;
   /** Custom colors for aspect lines */
   aspectColors?: AspectColors;
+  /** Theme for the mandala (light or dark) */
+  theme?: MandalaTheme;
+  /** Language for labels (default: 'en') */
+  language?: MandalaLanguage;
   /** Additional CSS class name */
   className?: string;
 }

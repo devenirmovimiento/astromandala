@@ -17,7 +17,12 @@ interface AspectLinesProps {
   secondChartPlanets?: PlanetPosition[];
   ascendantDegree?: number;
   aspectColors?: AspectColors;
+  /** Whether to include AC, MC, DSC, IC in synastry aspects */
+  includeAnglesInSynastry?: boolean;
 }
+
+/** Angle points to filter from synastry aspects */
+const ANGLE_POINTS = ['Ascendant', 'Midheaven'];
 
 /**
  * Helper to find planet position
@@ -39,9 +44,24 @@ export function AspectLines({
   secondChartPlanets = [],
   ascendantDegree = 0,
   aspectColors = {},
+  includeAnglesInSynastry = false,
 }: AspectLinesProps) {
   const colors = { ...DEFAULT_ASPECT_COLORS, ...aspectColors };
   const aspectRadius = radius * 0.7; // Draw aspects in inner area
+
+  // Filter natal aspects to exclude angles if configured
+  const filteredNatalAspects = includeAnglesInSynastry
+    ? aspects
+    : aspects.filter(
+        (a) => !ANGLE_POINTS.includes(a.planet1) && !ANGLE_POINTS.includes(a.planet2)
+      );
+
+  // Filter synastry aspects to exclude angles if configured
+  const filteredSynastryAspects = includeAnglesInSynastry
+    ? synastryAspects
+    : synastryAspects.filter(
+        (a) => !ANGLE_POINTS.includes(a.planet1) && !ANGLE_POINTS.includes(a.planet2)
+      );
 
   // Helper to get planet coordinates
   const getPlanetCoords = (planetName: string, isSecondChart: boolean = false) => {
@@ -58,7 +78,7 @@ export function AspectLines({
   return (
     <g className="aspect-lines">
       {/* Natal aspects (within single chart) */}
-      {aspects.map((aspect, index) => {
+      {filteredNatalAspects.map((aspect, index) => {
         const pos1 = getPlanetCoords(aspect.planet1);
         const pos2 = getPlanetCoords(aspect.planet2);
         
@@ -88,7 +108,7 @@ export function AspectLines({
       })}
 
       {/* Synastry aspects (between two charts) */}
-      {synastryAspects.map((aspect, index) => {
+      {filteredSynastryAspects.map((aspect, index) => {
         const isP1SecondChart = aspect.chart1Owner === 'chart2';
         const isP2SecondChart = aspect.chart2Owner === 'chart2';
         

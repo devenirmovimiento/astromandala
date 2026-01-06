@@ -1,4 +1,5 @@
 import React from 'react';
+import { MandalaTheme } from '../../types';
 import { ZODIAC_ORDER, ZODIAC_SYMBOLS, ELEMENT_COLORS, SIGN_ELEMENTS } from '../../constants';
 import { getPointOnCircle, getMandalaAngle } from '../../utils';
 
@@ -8,6 +9,7 @@ interface ZodiacWheelProps {
   outerRadius: number;
   innerRadius: number;
   ascendantDegree?: number;
+  theme?: MandalaTheme;
 }
 
 /**
@@ -19,9 +21,15 @@ export function ZodiacWheel({
   outerRadius,
   innerRadius,
   ascendantDegree = 0,
+  theme = 'light',
 }: ZodiacWheelProps) {
   const signArcAngle = 30; // Each sign spans 30 degrees
   const middleRadius = (outerRadius + innerRadius) / 2;
+  
+  const isDark = theme === 'dark';
+  const strokeColor = isDark ? '#555' : '#333';
+  const segmentStroke = isDark ? '#777' : '#666';
+  const markerColor = isDark ? '#666' : '#999';
 
   return (
     <g className="zodiac-wheel">
@@ -31,7 +39,7 @@ export function ZodiacWheel({
         cy={centerY}
         r={outerRadius}
         fill="none"
-        stroke="#333"
+        stroke={strokeColor}
         strokeWidth={1}
       />
       
@@ -41,7 +49,7 @@ export function ZodiacWheel({
         cy={centerY}
         r={innerRadius}
         fill="none"
-        stroke="#333"
+        stroke={strokeColor}
         strokeWidth={1}
       />
 
@@ -62,7 +70,8 @@ export function ZodiacWheel({
         const symbolPos = getPointOnCircle(centerX, centerY, middleRadius, symbolAngle);
         
         const element = SIGN_ELEMENTS[sign];
-        const fillColor = ELEMENT_COLORS[element] + '30'; // 30 is hex for ~19% opacity
+        const baseColor = ELEMENT_COLORS[element];
+        const fillColor = isDark ? baseColor + '40' : baseColor + '30'; // More opacity in dark mode
         
         // Create the arc segment path
         const pathD = `
@@ -79,7 +88,7 @@ export function ZodiacWheel({
             <path
               d={pathD}
               fill={fillColor}
-              stroke="#666"
+              stroke={segmentStroke}
               strokeWidth={0.5}
             />
             
@@ -92,8 +101,11 @@ export function ZodiacWheel({
               fontSize={outerRadius * 0.08}
               fill={ELEMENT_COLORS[element]}
               fontWeight="bold"
+              style={{ 
+                fontFamily: 'Segoe UI Symbol, Symbola, sans-serif',
+              }}
             >
-              {ZODIAC_SYMBOLS[sign]}
+              {ZODIAC_SYMBOLS[sign]}&#xFE0E;
             </text>
           </g>
         );
@@ -116,7 +128,7 @@ export function ZodiacWheel({
             y1={outer.y}
             x2={inner.x}
             y2={inner.y}
-            stroke="#999"
+            stroke={markerColor}
             strokeWidth={isMainDivision ? 1 : 0.5}
           />
         );

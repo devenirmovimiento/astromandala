@@ -1,51 +1,107 @@
 # Astromandala
 
-A React/Next.js component library for displaying astrological mandalas (birth charts). Supports single chart visualization and synastry (two charts overlapping).
+A React/Next.js component library for displaying beautiful astrological charts (birth charts/mandalas). Supports single chart visualization, synastry (two charts comparison), themes (light/dark), multiple languages (English/Spanish), and an expandable modal with settings panel.
+
+![Astromandala Example](https://raw.githubusercontent.com/devenirmovimiento/astromandala/main/example.png)
+
+## Features
+
+- 🌟 **Single Chart & Synastry** - Display individual birth charts or compare two charts
+- 🎨 **Light/Dark Themes** - Built-in theme support
+- 🌍 **Multi-language** - English and Spanish translations
+- 📱 **Responsive** - Works on desktop and mobile
+- ⚙️ **Configurable** - Show/hide aspects, degrees, houses, projections
+- 📊 **Chart Info Panel** - Display planet positions, houses, and elements
+- 🔍 **Expandable Modal** - Full-screen view with settings panel
+- 🎯 **Aspect Filtering** - Filter by major/minor aspects
 
 ## Installation
 
 ```bash
-# From GitHub
 npm install git+https://github.com/devenirmovimiento/astromandala.git
+```
 
-# Or using yarn
+Or with yarn:
+
+```bash
 yarn add git+https://github.com/devenirmovimiento/astromandala.git
 ```
 
-## Usage
+## Quick Start
 
-### Single Chart
+### Basic Usage
 
 ```tsx
+'use client';
+
 import { AstroMandala } from 'astromandala';
 import type { AstrologicalChart } from 'astromandala';
 
 const chart: AstrologicalChart = {
+  label: 'John Doe',
   planets: [
-    { planet: 'Sun', sign: 'Aries', degree: 15.5 },
-    { planet: 'Moon', sign: 'Cancer', degree: 22.3 },
-    { planet: 'Mercury', sign: 'Pisces', degree: 8.7 },
-    // ... more planets
+    { planet: 'Sun', sign: 'Leo', degree: 24.15 },
+    { planet: 'Moon', sign: 'Aries', degree: 21.58 },
+    { planet: 'Mercury', sign: 'Virgo', degree: 13.2, retrograde: true },
+    { planet: 'Venus', sign: 'Virgo', degree: 11.15 },
+    { planet: 'Mars', sign: 'Scorpio', degree: 29.5 },
+    { planet: 'Jupiter', sign: 'Capricorn', degree: 3.4, retrograde: true },
+    { planet: 'Saturn', sign: 'Scorpio', degree: 10.67 },
+    { planet: 'Uranus', sign: 'Sagittarius', degree: 9.53, retrograde: true },
+    { planet: 'Neptune', sign: 'Sagittarius', degree: 28.8, retrograde: true },
+    { planet: 'Pluto', sign: 'Libra', degree: 29.73 },
+    { planet: 'NorthNode', sign: 'Gemini', degree: 2.42 },
+    { planet: 'Chiron', sign: 'Gemini', degree: 8.72 },
+    { planet: 'Lilith', sign: 'Aries', degree: 1.77 },
+    { planet: 'Ascendant', sign: 'Aquarius', degree: 23.22 },
+    { planet: 'Midheaven', sign: 'Scorpio', degree: 18.27 },
   ],
   houses: [
-    { house: 1, sign: 'Leo', degree: 0 },
-    { house: 2, sign: 'Virgo', degree: 0 },
-    // ... all 12 houses
+    { house: 1, sign: 'Aquarius', degree: 23.22 },
+    { house: 2, sign: 'Pisces', degree: 17.13 },
+    { house: 3, sign: 'Aries', degree: 15.63 },
+    { house: 4, sign: 'Taurus', degree: 18.27 },
+    { house: 5, sign: 'Gemini', degree: 22.17 },
+    { house: 6, sign: 'Cancer', degree: 24.23 },
+    { house: 7, sign: 'Leo', degree: 23.22 },
+    { house: 8, sign: 'Virgo', degree: 17.13 },
+    { house: 9, sign: 'Libra', degree: 15.63 },
+    { house: 10, sign: 'Scorpio', degree: 18.27 },
+    { house: 11, sign: 'Sagittarius', degree: 22.17 },
+    { house: 12, sign: 'Capricorn', degree: 24.23 },
   ],
-  aspects: [
-    { planet1: 'Sun', planet2: 'Moon', aspect: 'square', orb: 2.5 },
-    { planet1: 'Venus', planet2: 'Mars', aspect: 'conjunction', orb: 1.2 },
-    // ... more aspects
-  ],
+  aspects: [],
 };
 
-function MyComponent() {
+export default function ChartPage() {
   return (
     <AstroMandala
       chart={chart}
       size={600}
       showAspects={true}
       showDegrees={true}
+      theme="dark"
+    />
+  );
+}
+```
+
+### With Modal and Settings
+
+```tsx
+'use client';
+
+import { AstroMandalaWithModal } from 'astromandala';
+
+export default function ChartPage() {
+  return (
+    <AstroMandalaWithModal
+      chart={chart}
+      size={500}
+      showExpandButton={true}
+      showChartInfo={false}
+      theme="dark"
+      language="es"
     />
   );
 }
@@ -54,23 +110,26 @@ function MyComponent() {
 ### Synastry (Two Charts)
 
 ```tsx
-import { AstroMandala } from 'astromandala';
+'use client';
+
+import { AstroMandalaWithModal } from 'astromandala';
 import type { AstrologicalChart, SynastryAspect } from 'astromandala';
 
 const chart1: AstrologicalChart = {
-  // First person's chart
+  label: 'Person A',
   planets: [...],
   houses: [...],
-  aspects: [...],
+  aspects: [],
 };
 
 const chart2: AstrologicalChart = {
-  // Second person's chart
+  label: 'Person B',
   planets: [...],
   houses: [...],
-  aspects: [...],
+  aspects: [],
 };
 
+// Calculate synastry aspects between charts
 const synastryAspects: SynastryAspect[] = [
   { 
     planet1: 'Sun', 
@@ -80,49 +139,190 @@ const synastryAspects: SynastryAspect[] = [
     aspect: 'trine', 
     orb: 1.5 
   },
-  // ... more synastry aspects
+  // ... more aspects
 ];
 
-function SynastryComponent() {
+export default function SynastryPage() {
   return (
-    <AstroMandala
+    <AstroMandalaWithModal
       chart={chart1}
       secondChart={chart2}
       synastryAspects={synastryAspects}
-      size={700}
-      showAspects={true}
+      size={600}
+      showChartInfo={true}
+      theme="dark"
+      language="es"
     />
   );
 }
 ```
 
+## Components
+
+### `AstroMandala`
+
+The base chart component without modal functionality.
+
+### `AstroMandalaWithModal`
+
+Extended component with expand button, fullscreen modal, and settings panel.
+
+### `ChartInfoPanel`
+
+Standalone component to display planet positions, houses, and elements.
+
+```tsx
+import { ChartInfoPanel } from 'astromandala';
+
+<ChartInfoPanel
+  chart={chart}
+  secondChart={chart2} // Optional - for synastry view
+  theme="dark"
+  language="es"
+/>
+```
+
 ## Props
+
+### AstroMandala Props
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `chart` | `AstrologicalChart` | required | Primary astrological chart data |
+| `chart` | `AstrologicalChart` | required | Primary chart data |
 | `secondChart` | `AstrologicalChart` | undefined | Secondary chart for synastry |
 | `synastryAspects` | `SynastryAspect[]` | undefined | Aspects between two charts |
-| `size` | `number` | 500 | Size of the mandala in pixels |
-| `showAspects` | `boolean` | true | Whether to display aspect lines |
-| `showDegrees` | `boolean` | false | Whether to display degree numbers |
-| `showHouses` | `boolean` | true | Whether to display house divisions |
-| `innerChartColor` | `string` | '#4a90d9' | Color for inner chart planets |
-| `outerChartColor` | `string` | '#d94a4a' | Color for outer chart planets (synastry) |
-| `aspectColors` | `AspectColors` | default colors | Custom colors for aspect lines |
-| `className` | `string` | undefined | Additional CSS class name |
+| `size` | `number` | 500 | Size in pixels |
+| `showAspects` | `boolean` | true | Show aspect lines |
+| `showDegrees` | `boolean` | false | Show degree numbers |
+| `showHouses` | `boolean` | true | Show house divisions |
+| `showSecondChartHouses` | `boolean` | true | Show second chart houses in synastry |
+| `showPlanetProjections` | `boolean` | true | Show planet projection lines |
+| `aspectTypesFilter` | `AspectType[]` | major aspects | Filter which aspects to show |
+| `includeAnglesInSynastry` | `boolean` | false | Include AC/MC in synastry aspects |
+| `innerChartColor` | `string` | '#4a90d9' | Color for inner chart |
+| `outerChartColor` | `string` | '#d94a4a' | Color for outer chart |
+| `theme` | `'light' \| 'dark'` | 'light' | Theme |
+| `className` | `string` | undefined | CSS class |
+
+### AstroMandalaWithModal Additional Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `language` | `'en' \| 'es'` | 'en' | UI language |
+| `showExpandButton` | `boolean` | true | Show expand button |
+| `showChartInfo` | `boolean` | false | Show chart info panel |
+| `onSettingsChange` | `(settings) => void` | undefined | Settings change callback |
 
 ## Types
 
-### Planet Names
-`'Sun' | 'Moon' | 'Mercury' | 'Venus' | 'Mars' | 'Jupiter' | 'Saturn' | 'Uranus' | 'Neptune' | 'Pluto' | 'NorthNode' | 'SouthNode' | 'Chiron' | 'Lilith' | 'Ascendant' | 'Midheaven'`
+```typescript
+type ZodiacSign = 'Aries' | 'Taurus' | 'Gemini' | 'Cancer' | 'Leo' | 'Virgo' 
+  | 'Libra' | 'Scorpio' | 'Sagittarius' | 'Capricorn' | 'Aquarius' | 'Pisces';
 
-### Zodiac Signs
-`'Aries' | 'Taurus' | 'Gemini' | 'Cancer' | 'Leo' | 'Virgo' | 'Libra' | 'Scorpio' | 'Sagittarius' | 'Capricorn' | 'Aquarius' | 'Pisces'`
+type PlanetName = 'Sun' | 'Moon' | 'Mercury' | 'Venus' | 'Mars' | 'Jupiter' 
+  | 'Saturn' | 'Uranus' | 'Neptune' | 'Pluto' | 'NorthNode' | 'SouthNode' 
+  | 'Chiron' | 'Lilith' | 'Ascendant' | 'Midheaven';
 
-### Aspect Types
-`'conjunction' | 'opposition' | 'trine' | 'square' | 'sextile' | 'quincunx' | 'semisextile' | 'semisquare' | 'sesquiquadrate' | 'quintile' | 'biquintile'`
+type AspectType = 'conjunction' | 'opposition' | 'trine' | 'square' | 'sextile' 
+  | 'quincunx' | 'semisextile' | 'semisquare' | 'sesquiquadrate' | 'quintile' | 'biquintile';
+
+interface PlanetPosition {
+  planet: PlanetName;
+  sign: ZodiacSign;
+  degree: number;
+  retrograde?: boolean;
+}
+
+interface HousePosition {
+  house: number; // 1-12
+  sign: ZodiacSign;
+  degree: number;
+}
+
+interface AstrologicalChart {
+  label?: string;
+  planets: PlanetPosition[];
+  houses: HousePosition[];
+  aspects: Aspect[];
+}
+```
+
+## Calculating Charts
+
+This library only handles visualization. To calculate astrological charts from birth data, you can use:
+
+- [`circular-natal-horoscope-js`](https://www.npmjs.com/package/circular-natal-horoscope-js) - JavaScript library for chart calculations
+- [Swiss Ephemeris](https://www.astro.com/swisseph/) - Professional-grade ephemeris
+
+Example with `circular-natal-horoscope-js`:
+
+```tsx
+import { Horoscope, Origin } from 'circular-natal-horoscope-js';
+
+const origin = new Origin({
+  year: 1984,
+  month: 7, // 0-indexed (August)
+  date: 16,
+  hour: 18,
+  minute: 15,
+  latitude: -34.6037,
+  longitude: -58.3816,
+});
+
+const horoscope = new Horoscope({
+  origin,
+  houseSystem: 'placidus',
+  zodiac: 'tropical',
+});
+
+// Extract data from horoscope object to create AstrologicalChart
+```
+
+---
+
+## 🤖 AI Agent Implementation Prompt
+
+Use this prompt to ask an AI coding agent (like GitHub Copilot, Cursor, or similar) to implement astromandala in your Next.js project:
+
+```
+Implement the astromandala library in my Next.js project for displaying astrological birth charts.
+
+Requirements:
+1. Install astromandala from GitHub: npm install git+https://github.com/devenirmovimiento/astromandala.git
+2. Also install circular-natal-horoscope-js for chart calculations: npm install circular-natal-horoscope-js
+3. Create a page/component that:
+   - Takes birth data input (date, time, location)
+   - Calculates the astrological chart using circular-natal-horoscope-js
+   - Displays the chart using AstroMandalaWithModal component
+   - Supports both single charts and synastry (two charts comparison)
+   - Uses dark theme and Spanish language
+   - Shows the chart info panel with planet positions
+
+Key imports:
+- import { AstroMandalaWithModal, ChartInfoPanel } from 'astromandala';
+- import type { AstrologicalChart, SynastryAspect, PlanetPosition, HousePosition } from 'astromandala';
+- import { Horoscope, Origin } from 'circular-natal-horoscope-js';
+
+The component must use 'use client' directive since it uses React hooks.
+
+Map the data from circular-natal-horoscope-js to the astromandala types:
+- Extract planets from horoscope.CelestialBodies.all
+- Extract houses from horoscope.Houses
+- Map sign keys (lowercase) to ZodiacSign type (capitalized)
+- Map planet keys to PlanetName type
+- Include Ascendant from horoscope.Ascendant
+- Include Midheaven from horoscope.Midheaven
+- Include NorthNode from horoscope.CelestialPoints
+
+For synastry, calculate aspects between charts by comparing planet positions and checking if they form aspects (conjunction, opposition, trine, square, sextile, etc.) within their respective orbs.
+```
+
+---
 
 ## License
 
 MIT
+
+## Author
+
+[devenirmovimiento](https://github.com/devenirmovimiento)

@@ -1,6 +1,10 @@
 // Main component
 export { AstroMandala } from './components';
 
+// Main component with modal
+export { AstroMandalaWithModal } from './components';
+export type { AstroMandalaWithModalProps, ModalSettings } from './components';
+
 // Sub-components for advanced usage
 export { ZodiacWheel, HouseWheel, PlanetDisplay, AspectLines } from './components';
 
@@ -16,6 +20,8 @@ export type {
   AstrologicalChart,
   AspectColors,
   AstroMandalaProps,
+  MandalaTheme,
+  MandalaLanguage,
 } from './types';
 
 // Constants for reference
@@ -28,7 +34,11 @@ export {
   SIGN_ELEMENTS,
   DEFAULT_ASPECT_COLORS,
   ASPECT_ANGLES,
+  TRANSLATIONS,
+  getTranslations,
 } from './constants';
+
+export type { Translations } from './constants';
 
 // Utility functions
 export {

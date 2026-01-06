@@ -6,6 +6,7 @@ import { ZodiacWheel } from '../ZodiacWheel';
 import { HouseWheel } from '../HouseWheel';
 import { PlanetDisplay } from '../PlanetDisplay';
 import { AspectLines } from '../AspectLines';
+import { PlanetProjections } from '../PlanetProjections';
 import { getAbsoluteDegree } from '../../utils';
 
 /**
@@ -23,19 +24,48 @@ export function AstroMandala({
   showAspects = true,
   showDegrees = false,
   showHouses = true,
+  showSecondChartHouses = false,
+  showPlanetProjections = true,
+  aspectTypesFilter,
+  includeAnglesInSynastry = false,
   innerChartColor = '#4a90d9',
   outerChartColor = '#d94a4a',
   aspectColors,
+  theme = 'light',
   className,
 }: AstroMandalaProps) {
   const centerX = size / 2;
   const centerY = size / 2;
   
+  // Theme colors
+  const isDark = theme === 'dark';
+  const colors = {
+    background: isDark ? '#1a1a2e' : '#fafafa',
+    backgroundStroke: isDark ? '#333' : '#ddd',
+    centerFill: isDark ? '#16162a' : '#fff',
+    centerStroke: isDark ? '#444' : '#ccc',
+    text: isDark ? '#e0e0e0' : '#333',
+    textSecondary: isDark ? '#aaa' : '#555',
+    line: isDark ? '#555' : '#999',
+  };
+  
   // Calculate radii for different rings
+  // In synastry mode with both houses shown, we need extra rings
+  const isSynastry = Boolean(secondChart);
+  const showBothHouses = showSecondChartHouses && isSynastry && secondChart;
+  
   const outerRadius = size * 0.45;
   const zodiacInnerRadius = size * 0.38;
-  const planetRadius = size * 0.32;
-  const houseInnerRadius = size * 0.15;
+  
+  // When showing both house systems, we need two house rings
+  const outerHouseRingOuter = zodiacInnerRadius;
+  const outerHouseRingInner = showBothHouses ? size * 0.30 : size * 0.15;
+  const innerHouseRingOuter = showBothHouses ? size * 0.30 : size * 0.15;
+  const innerHouseRingInner = showBothHouses ? size * 0.22 : size * 0.15;
+  
+  const planetRadius = showBothHouses ? size * 0.26 : size * 0.32;
+  const houseInnerRadius = showBothHouses ? size * 0.22 : size * 0.15;
+  const centerCircleRadius = showBothHouses ? size * 0.12 : size * 0.15;
 
   // Get Ascendant degree for chart orientation
   const ascendantDegree = useMemo(() => {
@@ -51,7 +81,21 @@ export function AstroMandala({
     return 0;
   }, [chart.planets, chart.houses]);
 
-  const isSynastry = Boolean(secondChart);
+  // Filter aspects by type if filter is provided
+  const filteredChartAspects = useMemo(() => {
+    if (!aspectTypesFilter || aspectTypesFilter.length === 0) {
+      return chart.aspects;
+    }
+    return chart.aspects.filter((a) => aspectTypesFilter.includes(a.aspect));
+  }, [chart.aspects, aspectTypesFilter]);
+
+  const filteredSynastryAspects = useMemo(() => {
+    if (!synastryAspects) return undefined;
+    if (!aspectTypesFilter || aspectTypesFilter.length === 0) {
+      return synastryAspects;
+    }
+    return synastryAspects.filter((a) => aspectTypesFilter.includes(a.aspect));
+  }, [synastryAspects, aspectTypesFilter]);
 
   return (
     <svg
@@ -59,15 +103,15 @@ export function AstroMandala({
       height={size}
       viewBox={`0 0 ${size} ${size}`}
       className={className}
-      style={{ fontFamily: 'Arial, sans-serif' }}
+      style={{ fontFamily: 'Arial, sans-serif', maxWidth: '100%', height: 'auto' }}
     >
       {/* Background */}
       <circle
         cx={centerX}
         cy={centerY}
         r={outerRadius + 5}
-        fill="#fafafa"
-        stroke="#ddd"
+        fill={colors.background}
+        stroke={colors.backgroundStroke}
         strokeWidth={1}
       />
 
@@ -75,9 +119,9 @@ export function AstroMandala({
       <circle
         cx={centerX}
         cy={centerY}
-        r={houseInnerRadius}
-        fill="#fff"
-        stroke="#ccc"
+        r={centerCircleRadius}
+        fill={colors.centerFill}
+        stroke={colors.centerStroke}
         strokeWidth={0.5}
       />
 
@@ -88,17 +132,49 @@ export function AstroMandala({
         outerRadius={outerRadius}
         innerRadius={zodiacInnerRadius}
         ascendantDegree={ascendantDegree}
+        theme={theme}
       />
 
-      {/* House divisions */}
+      {/* Planet projection markers on zodiac ring */}
+      {showPlanetProjections && (
+        <PlanetProjections
+          centerX={centerX}
+          centerY={centerY}
+          outerRadius={outerRadius}
+          innerRadius={zodiacInnerRadius}
+          planets={chart.planets}
+          secondChartPlanets={secondChart?.planets}
+          ascendantDegree={ascendantDegree}
+          innerChartColor={innerChartColor}
+          outerChartColor={outerChartColor}
+        />
+      )}
+
+      {/* House divisions - primary chart (outer ring) */}
       {showHouses && chart.houses.length > 0 && (
         <HouseWheel
           centerX={centerX}
           centerY={centerY}
-          outerRadius={zodiacInnerRadius}
-          innerRadius={houseInnerRadius}
+          outerRadius={outerHouseRingOuter}
+          innerRadius={outerHouseRingInner}
           houses={chart.houses}
           ascendantDegree={ascendantDegree}
+          theme={theme}
+        />
+      )}
+
+      {/* House divisions - second chart (inner ring for synastry) */}
+      {showSecondChartHouses && showBothHouses && secondChart.houses.length > 0 && (
+        <HouseWheel
+          centerX={centerX}
+          centerY={centerY}
+          outerRadius={innerHouseRingOuter}
+          innerRadius={innerHouseRingInner}
+          houses={secondChart.houses}
+          ascendantDegree={ascendantDegree}
+          isSecondChart={true}
+          color={outerChartColor}
+          theme={theme}
         />
       )}
 
@@ -108,12 +184,13 @@ export function AstroMandala({
           centerX={centerX}
           centerY={centerY}
           radius={planetRadius}
-          aspects={chart.aspects}
-          synastryAspects={synastryAspects}
+          aspects={filteredChartAspects}
+          synastryAspects={filteredSynastryAspects}
           planets={chart.planets}
           secondChartPlanets={secondChart?.planets}
           ascendantDegree={ascendantDegree}
           aspectColors={aspectColors}
+          includeAnglesInSynastry={includeAnglesInSynastry}
         />
       )}
 
@@ -127,6 +204,7 @@ export function AstroMandala({
         color={innerChartColor}
         showDegrees={showDegrees}
         isOuter={false}
+        theme={theme}
       />
 
       {/* Secondary chart planets (synastry) */}
@@ -140,36 +218,8 @@ export function AstroMandala({
           color={outerChartColor}
           showDegrees={showDegrees}
           isOuter={true}
+          theme={theme}
         />
-      )}
-
-      {/* Chart labels */}
-      {chart.label && (
-        <text
-          x={centerX}
-          y={centerY - 10}
-          textAnchor="middle"
-          dominantBaseline="central"
-          fontSize={size * 0.025}
-          fill={innerChartColor}
-          fontWeight="bold"
-        >
-          {chart.label}
-        </text>
-      )}
-      
-      {isSynastry && secondChart?.label && (
-        <text
-          x={centerX}
-          y={centerY + 10}
-          textAnchor="middle"
-          dominantBaseline="central"
-          fontSize={size * 0.025}
-          fill={outerChartColor}
-          fontWeight="bold"
-        >
-          {secondChart.label}
-        </text>
       )}
     </svg>
   );

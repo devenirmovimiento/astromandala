@@ -1,5 +1,5 @@
 import React from 'react';
-import { PlanetPosition } from '../../types';
+import { PlanetPosition, MandalaTheme } from '../../types';
 import { PLANET_SYMBOLS } from '../../constants';
 import {
   getPointOnCircle,
@@ -18,6 +18,7 @@ interface PlanetDisplayProps {
   color?: string;
   showDegrees?: boolean;
   isOuter?: boolean;
+  theme?: MandalaTheme;
 }
 
 /**
@@ -32,7 +33,10 @@ export function PlanetDisplay({
   color = '#4a90d9',
   showDegrees = false,
   isOuter = false,
+  theme = 'light',
 }: PlanetDisplayProps) {
+  const isDark = theme === 'dark';
+  const offsetLineColor = isDark ? '#555' : '#ccc';
   // Calculate absolute degrees for all planets
   const planetsWithDegrees = planets.map((planet) => ({
     planet,
@@ -43,9 +47,10 @@ export function PlanetDisplay({
   const adjustedPlanets = adjustPlanetPositions(planetsWithDegrees);
 
   // Different radii for inner and outer chart planets
-  const planetRadius = isOuter ? radius * 1.08 : radius * 0.92;
-  const lineRadius = isOuter ? radius * 1.0 : radius * 1.0;
-  const degreeRadius = isOuter ? radius * 1.18 : radius * 0.82;
+  // Inner planets are placed between zodiac ring and house numbers
+  const planetRadius = isOuter ? radius * 1.08 : radius * 0.88;
+  const lineRadius = isOuter ? radius * 1.0 : radius * 0.95;
+  const degreeRadius = isOuter ? radius * 1.18 : radius * 0.78;
 
   return (
     <g className={`planets ${isOuter ? 'outer-planets' : 'inner-planets'}`}>
@@ -60,7 +65,8 @@ export function PlanetDisplay({
         const degreePos = getPointOnCircle(centerX, centerY, degreeRadius, displayAngle);
 
         const symbol = PLANET_SYMBOLS[planet.planet];
-        const fontSize = radius * 0.08;
+        const isAngle = planet.planet === 'Ascendant' || planet.planet === 'Midheaven';
+        const fontSize = isAngle ? radius * 0.09 : radius * 0.14;
 
         return (
           <g
@@ -71,17 +77,28 @@ export function PlanetDisplay({
             data-actual-y={actualPos.y}
           >
             {/* Line connecting actual position to symbol if offset */}
-            {Math.abs(offset) > 1 && (
-              <line
-                x1={actualPos.x}
-                y1={actualPos.y}
-                x2={symbolPos.x}
-                y2={symbolPos.y}
-                stroke={color}
-                strokeWidth={0.5}
-                strokeDasharray="2,2"
-                opacity={0.5}
-              />
+            {Math.abs(offset) > 2 && (
+              <>
+                {/* Small marker at actual position */}
+                <circle
+                  cx={actualPos.x}
+                  cy={actualPos.y}
+                  r={2}
+                  fill={color}
+                  opacity={0.6}
+                />
+                {/* Connection line */}
+                <line
+                  x1={actualPos.x}
+                  y1={actualPos.y}
+                  x2={symbolPos.x}
+                  y2={symbolPos.y}
+                  stroke={color}
+                  strokeWidth={0.75}
+                  strokeDasharray="3,2"
+                  opacity={0.5}
+                />
+              </>
             )}
 
             {/* Planet symbol */}
@@ -92,9 +109,12 @@ export function PlanetDisplay({
               dominantBaseline="central"
               fontSize={fontSize}
               fill={color}
-              fontWeight="bold"
+              fontWeight={isAngle ? 'bold' : 'normal'}
+              style={{ 
+                fontFamily: 'Segoe UI Symbol, Symbola, sans-serif',
+              }}
             >
-              {symbol}
+              {symbol}&#xFE0E;
               {planet.retrograde && (
                 <tspan fontSize={fontSize * 0.5} dy={-fontSize * 0.3}>
                   ℞
@@ -109,7 +129,7 @@ export function PlanetDisplay({
                 y={degreePos.y}
                 textAnchor="middle"
                 dominantBaseline="central"
-                fontSize={fontSize * 0.5}
+                fontSize={fontSize * 0.35}
                 fill={color}
                 opacity={0.8}
               >

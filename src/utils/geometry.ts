@@ -35,15 +35,14 @@ export function normalizeAngle(angle: number): number {
 
 /**
  * Get the angle for positioning on the mandala wheel
- * The mandala typically has 0° Aries at the left (9 o'clock position)
- * and goes counter-clockwise
+ * The mandala has the Ascendant at the left (9 o'clock position)
+ * and houses go counter-clockwise (1 → 2 → 3 goes down toward IC)
  */
 export function getMandalaAngle(absoluteDegree: number, ascendantDegree?: number): number {
-  // If ascendant is provided, rotate chart so Ascendant is at the left
+  // If ascendant is provided, rotate chart so Ascendant is at the left (180°)
   const offset = ascendantDegree ?? 0;
-  // Convert to SVG angle (0 at right, clockwise)
-  // Astrological charts go counter-clockwise, so we negate
-  return normalizeAngle(180 - absoluteDegree + offset);
+  // Houses go counter-clockwise from ASC, which means increasing angle in SVG
+  return normalizeAngle(absoluteDegree - offset + 180);
 }
 
 /**
@@ -92,33 +91,86 @@ export function checkPlanetCollision(
 }
 
 /**
+ * Calculate the angular distance between two degrees (shortest path)
+ */
+function angularDistance(deg1: number, deg2: number): number {
+  const diff = Math.abs(normalizeAngle(deg1) - normalizeAngle(deg2));
+  return Math.min(diff, 360 - diff);
+}
+
+/**
  * Adjust planet positions to avoid overlapping
+ * Uses an iterative force-based approach to spread out clustered planets
  * Returns adjusted positions with offset angles
  */
 export function adjustPlanetPositions(
   planets: Array<{ planet: PlanetPosition; absoluteDegree: number }>,
   threshold: number = 8
 ): Array<{ planet: PlanetPosition; absoluteDegree: number; offset: number }> {
-  const sorted = [...planets].sort((a, b) => a.absoluteDegree - b.absoluteDegree);
-  const result: Array<{ planet: PlanetPosition; absoluteDegree: number; offset: number }> = [];
-
-  for (let i = 0; i < sorted.length; i++) {
-    let offset = 0;
-    const current = sorted[i];
-
-    // Check for collisions with already placed planets
-    for (const placed of result) {
-      const adjustedCurrent = normalizeAngle(current.absoluteDegree + offset);
-      const adjustedPlaced = normalizeAngle(placed.absoluteDegree + placed.offset);
+  if (planets.length === 0) return [];
+  if (planets.length === 1) return [{ ...planets[0], offset: 0 }];
+  
+  // Initialize with small random offsets to break ties
+  const result = planets.map((p, i) => ({ 
+    ...p, 
+    offset: 0,
+    displayDegree: p.absoluteDegree 
+  }));
+  
+  // Sort by absolute degree initially
+  result.sort((a, b) => a.absoluteDegree - b.absoluteDegree);
+  
+  // Iterative relaxation algorithm
+  const minSpacing = threshold;
+  const maxIterations = 50;
+  
+  for (let iteration = 0; iteration < maxIterations; iteration++) {
+    let hasCollision = false;
+    
+    // Update display degrees
+    result.forEach(p => {
+      p.displayDegree = normalizeAngle(p.absoluteDegree + p.offset);
+    });
+    
+    // Sort by display degree for collision detection
+    const sortedByDisplay = [...result].sort((a, b) => a.displayDegree - b.displayDegree);
+    
+    // Check each adjacent pair (including wrap-around)
+    for (let i = 0; i < sortedByDisplay.length; i++) {
+      const current = sortedByDisplay[i];
+      const next = sortedByDisplay[(i + 1) % sortedByDisplay.length];
       
-      if (checkPlanetCollision(adjustedCurrent, adjustedPlaced, threshold)) {
-        offset += threshold / 2;
+      let distance = next.displayDegree - current.displayDegree;
+      if (distance < 0) distance += 360; // Handle wrap-around
+      
+      if (distance < minSpacing && distance > 0) {
+        hasCollision = true;
+        
+        // Calculate how much to push apart
+        const overlap = minSpacing - distance;
+        const pushAmount = overlap / 2 + 0.5;
+        
+        // Push current backward and next forward
+        current.offset -= pushAmount;
+        next.offset += pushAmount;
       }
     }
-
-    result.push({ ...current, offset });
+    
+    // If no collisions, we're done
+    if (!hasCollision) break;
+    
+    // Dampen offsets slightly to prevent oscillation
+    result.forEach(p => {
+      p.offset *= 0.95;
+    });
   }
-
+  
+  // Final pass: limit maximum offset to prevent planets from drifting too far
+  const maxOffset = 25;
+  result.forEach(p => {
+    p.offset = Math.max(-maxOffset, Math.min(maxOffset, p.offset));
+  });
+  
   return result;
 }
 

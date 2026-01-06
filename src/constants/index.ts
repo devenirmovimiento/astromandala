@@ -31,7 +31,7 @@ export const PLANET_SYMBOLS: Record<PlanetName, string> = {
   Saturn: '♄',
   Uranus: '♅',
   Neptune: '♆',
-  Pluto: '♇',
+  Pluto: '⯓',
   NorthNode: '☊',
   SouthNode: '☋',
   Chiron: '⚷',
@@ -83,7 +83,7 @@ export const ELEMENT_COLORS: Record<string, string> = {
   fire: '#e63946',    // Aries, Leo, Sagittarius
   earth: '#588157',   // Taurus, Virgo, Capricorn
   air: '#457b9d',     // Gemini, Libra, Aquarius
-  water: '#1d3557',   // Cancer, Scorpio, Pisces
+  water: '#5a9fd4',   // Cancer, Scorpio, Pisces - lighter blue for visibility
 };
 
 /**
@@ -154,3 +154,7 @@ export const ASPECT_LINE_STYLES: Record<AspectType, { dashArray?: string; stroke
   quintile: { dashArray: '2,2', strokeWidth: 0.75 },
   biquintile: { dashArray: '2,2', strokeWidth: 0.75 },
 };
+
+// Export translations
+export { TRANSLATIONS, getTranslations } from './translations';
+export type { Translations } from './translations';
