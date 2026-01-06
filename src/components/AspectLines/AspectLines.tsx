@@ -1,5 +1,5 @@
 import React from 'react';
-import { Aspect, SynastryAspect, PlanetPosition, AspectColors } from '../../types';
+import { Aspect, SynastryAspect, PlanetPosition, AspectColors, PlanetName } from '../../types';
 import { DEFAULT_ASPECT_COLORS, ASPECT_LINE_STYLES } from '../../constants';
 import {
     getPointOnCircle,
@@ -19,6 +19,8 @@ interface AspectLinesProps {
     aspectColors?: AspectColors;
     /** Whether to include AC, MC, DSC, IC in synastry aspects */
     includeAnglesInSynastry?: boolean;
+    /** Currently hovered planet - when set, only show aspects involving this planet */
+    hoveredPlanet?: PlanetName | null;
 }
 
 /** Angle points to filter from synastry aspects */
@@ -59,19 +61,30 @@ export function AspectLines({
     ascendantDegree = 0,
     aspectColors = {},
     includeAnglesInSynastry = false,
+    hoveredPlanet = null,
 }: AspectLinesProps) {
     const colors = { ...DEFAULT_ASPECT_COLORS, ...aspectColors };
     const aspectRadius = radius * 0.7; // Draw aspects in inner area
 
     // Filter natal aspects to exclude angles if configured and skip NorthNode-SouthNode opposition
-    const filteredNatalAspects = aspects
+    let filteredNatalAspects = aspects
         .filter((a) => !shouldSkipAspect(a.planet1, a.planet2, a.aspect))
         .filter((a) => includeAnglesInSynastry || (!ANGLE_POINTS.includes(a.planet1) && !ANGLE_POINTS.includes(a.planet2)));
 
     // Filter synastry aspects to exclude angles if configured and skip NorthNode-SouthNode opposition
-    const filteredSynastryAspects = synastryAspects
+    let filteredSynastryAspects = synastryAspects
         .filter((a) => !shouldSkipAspect(a.planet1, a.planet2, a.aspect))
         .filter((a) => includeAnglesInSynastry || (!ANGLE_POINTS.includes(a.planet1) && !ANGLE_POINTS.includes(a.planet2)));
+
+    // When a planet is hovered, only show aspects involving that planet
+    if (hoveredPlanet) {
+        filteredNatalAspects = filteredNatalAspects.filter(
+            (a) => a.planet1 === hoveredPlanet || a.planet2 === hoveredPlanet
+        );
+        filteredSynastryAspects = filteredSynastryAspects.filter(
+            (a) => a.planet1 === hoveredPlanet || a.planet2 === hoveredPlanet
+        );
+    }
 
     // Helper to get planet coordinates
     const getPlanetCoords = (planetName: string, isSecondChart: boolean = false) => {

@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState, useEffect, useCallback, createElement } from 'react';
+import { useState, useCallback, useMemo, useRef, useEffect, createElement } from 'react';
 import { jsxs, jsx, Fragment } from 'react/jsx-runtime';
 import { createPortal } from 'react-dom';
 
@@ -690,7 +690,9 @@ function ZodiacWheel({
   outerRadius,
   innerRadius,
   ascendantDegree = 0,
-  theme = "light"
+  theme = "light",
+  onSignHover,
+  hoveredSign
 }) {
   const signArcAngle = 30;
   const middleRadius = (outerRadius + innerRadius) / 2;
@@ -733,7 +735,9 @@ function ZodiacWheel({
       const symbolPos = getPointOnCircle(centerX, centerY, middleRadius, symbolAngle);
       const element = SIGN_ELEMENTS[sign];
       const baseColor = ELEMENT_COLORS[element];
-      const fillColor = isDark ? baseColor + "40" : baseColor + "30";
+      const isHovered = hoveredSign === sign;
+      const fillOpacity = isHovered ? isDark ? "70" : "55" : isDark ? "40" : "30";
+      const fillColor = baseColor + fillOpacity;
       const pathD = `
           M ${outerStart.x} ${outerStart.y}
           A ${outerRadius} ${outerRadius} 0 0 0 ${outerEnd.x} ${outerEnd.y}
@@ -741,36 +745,48 @@ function ZodiacWheel({
           A ${innerRadius} ${innerRadius} 0 0 1 ${innerStart.x} ${innerStart.y}
           Z
         `;
-      return /* @__PURE__ */ jsxs("g", { className: `sign-segment sign-${sign.toLowerCase()}`, children: [
-        /* @__PURE__ */ jsx(
-          "path",
-          {
-            d: pathD,
-            fill: fillColor,
-            stroke: segmentStroke,
-            strokeWidth: 0.5
-          }
-        ),
-        /* @__PURE__ */ jsxs(
-          "text",
-          {
-            x: symbolPos.x,
-            y: symbolPos.y,
-            textAnchor: "middle",
-            dominantBaseline: "central",
-            fontSize: outerRadius * 0.08,
-            fill: ELEMENT_COLORS[element],
-            fontWeight: "bold",
-            style: {
-              fontFamily: "Segoe UI Symbol, Symbola, sans-serif"
-            },
-            children: [
-              ZODIAC_SYMBOLS[sign],
-              "\uFE0E"
-            ]
-          }
-        )
-      ] }, sign);
+      return /* @__PURE__ */ jsxs(
+        "g",
+        {
+          className: `sign-segment sign-${sign.toLowerCase()}${isHovered ? " hovered" : ""}`,
+          style: { cursor: "pointer" },
+          onMouseEnter: () => onSignHover?.(sign),
+          onMouseLeave: () => onSignHover?.(null),
+          children: [
+            /* @__PURE__ */ jsx(
+              "path",
+              {
+                d: pathD,
+                fill: fillColor,
+                stroke: isHovered ? baseColor : segmentStroke,
+                strokeWidth: isHovered ? 1.5 : 0.5,
+                style: { transition: "fill 0.15s ease-out, stroke 0.15s ease-out" }
+              }
+            ),
+            /* @__PURE__ */ jsxs(
+              "text",
+              {
+                x: symbolPos.x,
+                y: symbolPos.y,
+                textAnchor: "middle",
+                dominantBaseline: "central",
+                fontSize: isHovered ? outerRadius * 0.095 : outerRadius * 0.08,
+                fill: ELEMENT_COLORS[element],
+                fontWeight: "bold",
+                style: {
+                  fontFamily: "Segoe UI Symbol, Symbola, sans-serif",
+                  transition: "font-size 0.15s ease-out"
+                },
+                children: [
+                  ZODIAC_SYMBOLS[sign],
+                  "\uFE0E"
+                ]
+              }
+            )
+          ]
+        },
+        sign
+      );
     }),
     Array.from({ length: 72 }, (_, i) => {
       const degree = i * 5;
@@ -900,7 +916,10 @@ function PlanetDisplay({
   color = "#4a90d9",
   showDegrees = false,
   isOuter = false,
-  theme = "light"
+  theme = "light",
+  onPlanetHover,
+  hoveredPlanet,
+  highlightedSign
 }) {
   const filteredPlanets = planets.filter(
     (planet) => planet.planet !== "Ascendant" && planet.planet !== "Midheaven"
@@ -922,14 +941,33 @@ function PlanetDisplay({
     const symbol = PLANET_SYMBOLS[planet.planet];
     const isAngle = planet.planet === "Ascendant" || planet.planet === "Midheaven";
     const fontSize = isAngle ? radius * 0.09 : radius * 0.14;
+    const isHighlighted = highlightedSign && planet.sign === highlightedSign;
+    const isHovered = hoveredPlanet === planet.planet;
+    const baseOpacity = 1;
+    const highlightOpacity = isHighlighted ? 1 : highlightedSign ? 0.4 : baseOpacity;
     return /* @__PURE__ */ jsxs(
       "g",
       {
-        className: `planet planet-${planet.planet.toLowerCase()}`,
+        className: `planet planet-${planet.planet.toLowerCase()}${isHighlighted ? " highlighted" : ""}${isHovered ? " hovered" : ""}`,
         "data-degree": absoluteDegree,
         "data-actual-x": actualPos.x,
         "data-actual-y": actualPos.y,
+        style: { cursor: "pointer" },
+        onMouseEnter: () => onPlanetHover?.(planet.planet),
+        onMouseLeave: () => onPlanetHover?.(null),
+        opacity: highlightOpacity,
         children: [
+          isHighlighted && /* @__PURE__ */ jsx(
+            "circle",
+            {
+              cx: symbolPos.x,
+              cy: symbolPos.y,
+              r: fontSize * 0.8,
+              fill: color,
+              opacity: 0.25,
+              style: { filter: "blur(4px)" }
+            }
+          ),
           Math.abs(offset) > 2 && /* @__PURE__ */ jsxs(Fragment, { children: [
             /* @__PURE__ */ jsx(
               "circle",
@@ -938,7 +976,7 @@ function PlanetDisplay({
                 cy: actualPos.y,
                 r: 2,
                 fill: color,
-                opacity: 0.6
+                opacity: 0.6 * highlightOpacity
               }
             ),
             /* @__PURE__ */ jsx(
@@ -951,7 +989,7 @@ function PlanetDisplay({
                 stroke: color,
                 strokeWidth: 0.75,
                 strokeDasharray: "3,2",
-                opacity: 0.5
+                opacity: 0.5 * highlightOpacity
               }
             )
           ] }),
@@ -962,11 +1000,12 @@ function PlanetDisplay({
               y: symbolPos.y,
               textAnchor: "middle",
               dominantBaseline: "central",
-              fontSize,
+              fontSize: isHighlighted ? fontSize * 1.15 : fontSize,
               fill: color,
-              fontWeight: isAngle ? "bold" : "normal",
+              fontWeight: isAngle || isHighlighted ? "bold" : "normal",
               style: {
-                fontFamily: "Segoe UI Symbol, Symbola, sans-serif"
+                fontFamily: "Segoe UI Symbol, Symbola, sans-serif",
+                transition: "font-size 0.15s ease-out"
               },
               children: [
                 symbol,
@@ -1030,12 +1069,21 @@ function AspectLines({
   secondChartPlanets = [],
   ascendantDegree = 0,
   aspectColors = {},
-  includeAnglesInSynastry = false
+  includeAnglesInSynastry = false,
+  hoveredPlanet = null
 }) {
   const colors = { ...DEFAULT_ASPECT_COLORS, ...aspectColors };
   const aspectRadius = radius * 0.7;
-  const filteredNatalAspects = aspects.filter((a) => !shouldSkipAspect2(a.planet1, a.planet2, a.aspect)).filter((a) => includeAnglesInSynastry || !ANGLE_POINTS.includes(a.planet1) && !ANGLE_POINTS.includes(a.planet2));
-  const filteredSynastryAspects = synastryAspects.filter((a) => !shouldSkipAspect2(a.planet1, a.planet2, a.aspect)).filter((a) => includeAnglesInSynastry || !ANGLE_POINTS.includes(a.planet1) && !ANGLE_POINTS.includes(a.planet2));
+  let filteredNatalAspects = aspects.filter((a) => !shouldSkipAspect2(a.planet1, a.planet2, a.aspect)).filter((a) => includeAnglesInSynastry || !ANGLE_POINTS.includes(a.planet1) && !ANGLE_POINTS.includes(a.planet2));
+  let filteredSynastryAspects = synastryAspects.filter((a) => !shouldSkipAspect2(a.planet1, a.planet2, a.aspect)).filter((a) => includeAnglesInSynastry || !ANGLE_POINTS.includes(a.planet1) && !ANGLE_POINTS.includes(a.planet2));
+  if (hoveredPlanet) {
+    filteredNatalAspects = filteredNatalAspects.filter(
+      (a) => a.planet1 === hoveredPlanet || a.planet2 === hoveredPlanet
+    );
+    filteredSynastryAspects = filteredSynastryAspects.filter(
+      (a) => a.planet1 === hoveredPlanet || a.planet2 === hoveredPlanet
+    );
+  }
   const getPlanetCoords = (planetName, isSecondChart = false) => {
     const planetList = isSecondChart ? secondChartPlanets : planets;
     const planet = findPlanet(planetList, planetName);
@@ -1165,6 +1213,14 @@ function AstroMandala({
 }) {
   const centerX = size / 2;
   const centerY = size / 2;
+  const [hoveredPlanet, setHoveredPlanet] = useState(null);
+  const [hoveredSign, setHoveredSign] = useState(null);
+  const handlePlanetHover = useCallback((planet) => {
+    setHoveredPlanet(planet);
+  }, []);
+  const handleSignHover = useCallback((sign) => {
+    setHoveredSign(sign);
+  }, []);
   const isDark = theme === "dark";
   const colors = {
     background: isDark ? "#1a1a2e" : "#fafafa",
@@ -1253,7 +1309,9 @@ function AstroMandala({
             outerRadius,
             innerRadius: zodiacInnerRadius,
             ascendantDegree,
-            theme
+            theme,
+            onSignHover: handleSignHover,
+            hoveredSign
           }
         ),
         showPlanetProjections && /* @__PURE__ */ jsx(
@@ -1308,7 +1366,8 @@ function AstroMandala({
             secondChartPlanets: secondChart?.planets,
             ascendantDegree,
             aspectColors,
-            includeAnglesInSynastry
+            includeAnglesInSynastry,
+            hoveredPlanet
           }
         ),
         /* @__PURE__ */ jsx(
@@ -1322,7 +1381,10 @@ function AstroMandala({
             color: innerChartColor,
             showDegrees,
             isOuter: false,
-            theme
+            theme,
+            onPlanetHover: handlePlanetHover,
+            hoveredPlanet,
+            highlightedSign: hoveredSign
           }
         ),
         isSynastry && secondChart && /* @__PURE__ */ jsx(
@@ -1336,7 +1398,10 @@ function AstroMandala({
             color: outerChartColor,
             showDegrees,
             isOuter: true,
-            theme
+            theme,
+            onPlanetHover: handlePlanetHover,
+            hoveredPlanet,
+            highlightedSign: hoveredSign
           }
         )
       ]

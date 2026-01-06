@@ -1,5 +1,5 @@
 import React from 'react';
-import { PlanetPosition, MandalaTheme } from '../../types';
+import { PlanetPosition, MandalaTheme, PlanetName, ZodiacSign } from '../../types';
 import { PLANET_SYMBOLS } from '../../constants';
 import {
     getPointOnCircle,
@@ -19,6 +19,12 @@ interface PlanetDisplayProps {
     showDegrees?: boolean;
     isOuter?: boolean;
     theme?: MandalaTheme;
+    /** Callback when mouse hovers over a planet */
+    onPlanetHover?: (planet: PlanetName | null) => void;
+    /** Currently hovered planet */
+    hoveredPlanet?: PlanetName | null;
+    /** Sign being hovered - planets in this sign will be highlighted */
+    highlightedSign?: ZodiacSign | null;
 }
 
 /**
@@ -34,6 +40,9 @@ export function PlanetDisplay({
     showDegrees = false,
     isOuter = false,
     theme = 'light',
+    onPlanetHover,
+    hoveredPlanet,
+    highlightedSign,
 }: PlanetDisplayProps) {
     const isDark = theme === 'dark';
     const offsetLineColor = isDark ? '#555' : '#ccc';
@@ -74,14 +83,38 @@ export function PlanetDisplay({
                 const isAngle = planet.planet === 'Ascendant' || planet.planet === 'Midheaven';
                 const fontSize = isAngle ? radius * 0.09 : radius * 0.14;
 
+                // Determine if this planet should be highlighted (when its sign is hovered)
+                const isHighlighted = highlightedSign && planet.sign === highlightedSign;
+                // Determine if this planet is being hovered
+                const isHovered = hoveredPlanet === planet.planet;
+                // Calculate opacity based on hover state
+                const baseOpacity = 1;
+                const highlightOpacity = isHighlighted ? 1 : (highlightedSign ? 0.4 : baseOpacity);
+
                 return (
                     <g
                         key={planet.planet}
-                        className={`planet planet-${planet.planet.toLowerCase()}`}
+                        className={`planet planet-${planet.planet.toLowerCase()}${isHighlighted ? ' highlighted' : ''}${isHovered ? ' hovered' : ''}`}
                         data-degree={absoluteDegree}
                         data-actual-x={actualPos.x}
                         data-actual-y={actualPos.y}
+                        style={{ cursor: 'pointer' }}
+                        onMouseEnter={() => onPlanetHover?.(planet.planet)}
+                        onMouseLeave={() => onPlanetHover?.(null)}
+                        opacity={highlightOpacity}
                     >
+                        {/* Glow effect for highlighted planets */}
+                        {isHighlighted && (
+                            <circle
+                                cx={symbolPos.x}
+                                cy={symbolPos.y}
+                                r={fontSize * 0.8}
+                                fill={color}
+                                opacity={0.25}
+                                style={{ filter: 'blur(4px)' }}
+                            />
+                        )}
+
                         {/* Line connecting actual position to symbol if offset */}
                         {Math.abs(offset) > 2 && (
                             <>
@@ -91,7 +124,7 @@ export function PlanetDisplay({
                                     cy={actualPos.y}
                                     r={2}
                                     fill={color}
-                                    opacity={0.6}
+                                    opacity={0.6 * highlightOpacity}
                                 />
                                 {/* Connection line */}
                                 <line
@@ -102,7 +135,7 @@ export function PlanetDisplay({
                                     stroke={color}
                                     strokeWidth={0.75}
                                     strokeDasharray="3,2"
-                                    opacity={0.5}
+                                    opacity={0.5 * highlightOpacity}
                                 />
                             </>
                         )}
@@ -113,11 +146,12 @@ export function PlanetDisplay({
                             y={symbolPos.y}
                             textAnchor="middle"
                             dominantBaseline="central"
-                            fontSize={fontSize}
+                            fontSize={isHighlighted ? fontSize * 1.15 : fontSize}
                             fill={color}
-                            fontWeight={isAngle ? 'bold' : 'normal'}
+                            fontWeight={isAngle || isHighlighted ? 'bold' : 'normal'}
                             style={{
                                 fontFamily: 'Segoe UI Symbol, Symbola, sans-serif',
+                                transition: 'font-size 0.15s ease-out',
                             }}
                         >
                             {symbol}&#xFE0E;

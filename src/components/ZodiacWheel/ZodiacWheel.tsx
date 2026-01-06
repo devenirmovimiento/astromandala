@@ -1,5 +1,5 @@
 import React from 'react';
-import { MandalaTheme } from '../../types';
+import { MandalaTheme, ZodiacSign } from '../../types';
 import { ZODIAC_ORDER, ZODIAC_SYMBOLS, ELEMENT_COLORS, SIGN_ELEMENTS } from '../../constants';
 import { getPointOnCircle, getMandalaAngle } from '../../utils';
 
@@ -10,6 +10,10 @@ interface ZodiacWheelProps {
     innerRadius: number;
     ascendantDegree?: number;
     theme?: MandalaTheme;
+    /** Callback when mouse hovers over a zodiac sign */
+    onSignHover?: (sign: ZodiacSign | null) => void;
+    /** Currently hovered sign */
+    hoveredSign?: ZodiacSign | null;
 }
 
 /**
@@ -22,6 +26,8 @@ export function ZodiacWheel({
     innerRadius,
     ascendantDegree = 0,
     theme = 'light',
+    onSignHover,
+    hoveredSign,
 }: ZodiacWheelProps) {
     const signArcAngle = 30; // Each sign spans 30 degrees
     const middleRadius = (outerRadius + innerRadius) / 2;
@@ -71,7 +77,12 @@ export function ZodiacWheel({
 
                 const element = SIGN_ELEMENTS[sign];
                 const baseColor = ELEMENT_COLORS[element];
-                const fillColor = isDark ? baseColor + '40' : baseColor + '30'; // More opacity in dark mode
+
+                // Determine if this sign is being hovered
+                const isHovered = hoveredSign === sign;
+                // Increase opacity when hovered for a luminous effect
+                const fillOpacity = isHovered ? (isDark ? '70' : '55') : (isDark ? '40' : '30');
+                const fillColor = baseColor + fillOpacity;
 
                 // Create the arc segment path
                 const pathD = `
@@ -83,13 +94,20 @@ export function ZodiacWheel({
         `;
 
                 return (
-                    <g key={sign} className={`sign-segment sign-${sign.toLowerCase()}`}>
+                    <g
+                        key={sign}
+                        className={`sign-segment sign-${sign.toLowerCase()}${isHovered ? ' hovered' : ''}`}
+                        style={{ cursor: 'pointer' }}
+                        onMouseEnter={() => onSignHover?.(sign)}
+                        onMouseLeave={() => onSignHover?.(null)}
+                    >
                         {/* Segment background */}
                         <path
                             d={pathD}
                             fill={fillColor}
-                            stroke={segmentStroke}
-                            strokeWidth={0.5}
+                            stroke={isHovered ? baseColor : segmentStroke}
+                            strokeWidth={isHovered ? 1.5 : 0.5}
+                            style={{ transition: 'fill 0.15s ease-out, stroke 0.15s ease-out' }}
                         />
 
                         {/* Sign symbol */}
@@ -98,11 +116,12 @@ export function ZodiacWheel({
                             y={symbolPos.y}
                             textAnchor="middle"
                             dominantBaseline="central"
-                            fontSize={outerRadius * 0.08}
+                            fontSize={isHovered ? outerRadius * 0.095 : outerRadius * 0.08}
                             fill={ELEMENT_COLORS[element]}
                             fontWeight="bold"
                             style={{
                                 fontFamily: 'Segoe UI Symbol, Symbola, sans-serif',
+                                transition: 'font-size 0.15s ease-out',
                             }}
                         >
                             {ZODIAC_SYMBOLS[sign]}&#xFE0E;

@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useMemo } from 'react';
-import { AstroMandalaProps } from '../../types';
+import React, { useMemo, useState, useCallback } from 'react';
+import { AstroMandalaProps, ZodiacSign, PlanetName } from '../../types';
 import { ZodiacWheel } from '../ZodiacWheel';
 import { HouseWheel } from '../HouseWheel';
 import { PlanetDisplay } from '../PlanetDisplay';
@@ -36,6 +36,19 @@ export function AstroMandala({
 }: AstroMandalaProps) {
     const centerX = size / 2;
     const centerY = size / 2;
+
+    // Interactive hover states
+    const [hoveredPlanet, setHoveredPlanet] = useState<PlanetName | null>(null);
+    const [hoveredSign, setHoveredSign] = useState<ZodiacSign | null>(null);
+
+    // Callbacks for hover events
+    const handlePlanetHover = useCallback((planet: PlanetName | null) => {
+        setHoveredPlanet(planet);
+    }, []);
+
+    const handleSignHover = useCallback((sign: ZodiacSign | null) => {
+        setHoveredSign(sign);
+    }, []);
 
     // Theme colors
     const isDark = theme === 'dark';
@@ -143,6 +156,8 @@ export function AstroMandala({
                 innerRadius={zodiacInnerRadius}
                 ascendantDegree={ascendantDegree}
                 theme={theme}
+                onSignHover={handleSignHover}
+                hoveredSign={hoveredSign}
             />
 
             {/* Planet projection markers on zodiac ring */}
@@ -201,6 +216,7 @@ export function AstroMandala({
                     ascendantDegree={ascendantDegree}
                     aspectColors={aspectColors}
                     includeAnglesInSynastry={includeAnglesInSynastry}
+                    hoveredPlanet={hoveredPlanet}
                 />
             )}
 
@@ -215,6 +231,9 @@ export function AstroMandala({
                 showDegrees={showDegrees}
                 isOuter={false}
                 theme={theme}
+                onPlanetHover={handlePlanetHover}
+                hoveredPlanet={hoveredPlanet}
+                highlightedSign={hoveredSign}
             />
 
             {/* Secondary chart planets (synastry) */}
@@ -229,6 +248,9 @@ export function AstroMandala({
                     showDegrees={showDegrees}
                     isOuter={true}
                     theme={theme}
+                    onPlanetHover={handlePlanetHover}
+                    hoveredPlanet={hoveredPlanet}
+                    highlightedSign={hoveredSign}
                 />
             )}
         </svg>

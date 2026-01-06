@@ -372,11 +372,15 @@ interface ZodiacWheelProps {
     innerRadius: number;
     ascendantDegree?: number;
     theme?: MandalaTheme;
+    /** Callback when mouse hovers over a zodiac sign */
+    onSignHover?: (sign: ZodiacSign | null) => void;
+    /** Currently hovered sign */
+    hoveredSign?: ZodiacSign | null;
 }
 /**
  * Renders the zodiac sign wheel (outer ring of the mandala)
  */
-declare function ZodiacWheel({ centerX, centerY, outerRadius, innerRadius, ascendantDegree, theme, }: ZodiacWheelProps): react_jsx_runtime.JSX.Element;
+declare function ZodiacWheel({ centerX, centerY, outerRadius, innerRadius, ascendantDegree, theme, onSignHover, hoveredSign, }: ZodiacWheelProps): react_jsx_runtime.JSX.Element;
 
 interface HouseWheelProps {
     centerX: number;
@@ -404,11 +408,17 @@ interface PlanetDisplayProps {
     showDegrees?: boolean;
     isOuter?: boolean;
     theme?: MandalaTheme;
+    /** Callback when mouse hovers over a planet */
+    onPlanetHover?: (planet: PlanetName | null) => void;
+    /** Currently hovered planet */
+    hoveredPlanet?: PlanetName | null;
+    /** Sign being hovered - planets in this sign will be highlighted */
+    highlightedSign?: ZodiacSign | null;
 }
 /**
  * Renders planets on the chart
  */
-declare function PlanetDisplay({ centerX, centerY, radius, planets, ascendantDegree, color, showDegrees, isOuter, theme, }: PlanetDisplayProps): react_jsx_runtime.JSX.Element;
+declare function PlanetDisplay({ centerX, centerY, radius, planets, ascendantDegree, color, showDegrees, isOuter, theme, onPlanetHover, hoveredPlanet, highlightedSign, }: PlanetDisplayProps): react_jsx_runtime.JSX.Element;
 
 interface AspectLinesProps {
     centerX: number;
@@ -422,11 +432,13 @@ interface AspectLinesProps {
     aspectColors?: AspectColors;
     /** Whether to include AC, MC, DSC, IC in synastry aspects */
     includeAnglesInSynastry?: boolean;
+    /** Currently hovered planet - when set, only show aspects involving this planet */
+    hoveredPlanet?: PlanetName | null;
 }
 /**
  * Renders aspect lines between planets
  */
-declare function AspectLines({ centerX, centerY, radius, aspects, synastryAspects, planets, secondChartPlanets, ascendantDegree, aspectColors, includeAnglesInSynastry, }: AspectLinesProps): react_jsx_runtime.JSX.Element;
+declare function AspectLines({ centerX, centerY, radius, aspects, synastryAspects, planets, secondChartPlanets, ascendantDegree, aspectColors, includeAnglesInSynastry, hoveredPlanet, }: AspectLinesProps): react_jsx_runtime.JSX.Element;
 
 /**
  * Translations for UI labels
