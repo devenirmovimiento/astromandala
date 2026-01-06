@@ -32,78 +32,78 @@ yarn add git+https://github.com/devenirmovimiento/astromandala.git
 ### Basic Usage
 
 ```tsx
-'use client';
+"use client";
 
-import { AstroMandala } from 'astromandala';
-import type { AstrologicalChart } from 'astromandala';
+import { AstroMandala } from "astromandala";
+import type { AstrologicalChart } from "astromandala";
 
 const chart: AstrologicalChart = {
-  label: 'John Doe',
-  planets: [
-    { planet: 'Sun', sign: 'Leo', degree: 24.15 },
-    { planet: 'Moon', sign: 'Aries', degree: 21.58 },
-    { planet: 'Mercury', sign: 'Virgo', degree: 13.2, retrograde: true },
-    { planet: 'Venus', sign: 'Virgo', degree: 11.15 },
-    { planet: 'Mars', sign: 'Scorpio', degree: 29.5 },
-    { planet: 'Jupiter', sign: 'Capricorn', degree: 3.4, retrograde: true },
-    { planet: 'Saturn', sign: 'Scorpio', degree: 10.67 },
-    { planet: 'Uranus', sign: 'Sagittarius', degree: 9.53, retrograde: true },
-    { planet: 'Neptune', sign: 'Sagittarius', degree: 28.8, retrograde: true },
-    { planet: 'Pluto', sign: 'Libra', degree: 29.73 },
-    { planet: 'NorthNode', sign: 'Gemini', degree: 2.42 },
-    { planet: 'Chiron', sign: 'Gemini', degree: 8.72 },
-    { planet: 'Lilith', sign: 'Aries', degree: 1.77 },
-    { planet: 'Ascendant', sign: 'Aquarius', degree: 23.22 },
-    { planet: 'Midheaven', sign: 'Scorpio', degree: 18.27 },
-  ],
-  houses: [
-    { house: 1, sign: 'Aquarius', degree: 23.22 },
-    { house: 2, sign: 'Pisces', degree: 17.13 },
-    { house: 3, sign: 'Aries', degree: 15.63 },
-    { house: 4, sign: 'Taurus', degree: 18.27 },
-    { house: 5, sign: 'Gemini', degree: 22.17 },
-    { house: 6, sign: 'Cancer', degree: 24.23 },
-    { house: 7, sign: 'Leo', degree: 23.22 },
-    { house: 8, sign: 'Virgo', degree: 17.13 },
-    { house: 9, sign: 'Libra', degree: 15.63 },
-    { house: 10, sign: 'Scorpio', degree: 18.27 },
-    { house: 11, sign: 'Sagittarius', degree: 22.17 },
-    { house: 12, sign: 'Capricorn', degree: 24.23 },
-  ],
-  aspects: [],
+	label: "John Doe",
+	planets: [
+		{ planet: "Sun", sign: "Leo", degree: 24.15 },
+		{ planet: "Moon", sign: "Aries", degree: 21.58 },
+		{ planet: "Mercury", sign: "Virgo", degree: 13.2, retrograde: true },
+		{ planet: "Venus", sign: "Virgo", degree: 11.15 },
+		{ planet: "Mars", sign: "Scorpio", degree: 29.5 },
+		{ planet: "Jupiter", sign: "Capricorn", degree: 3.4, retrograde: true },
+		{ planet: "Saturn", sign: "Scorpio", degree: 10.67 },
+		{ planet: "Uranus", sign: "Sagittarius", degree: 9.53, retrograde: true },
+		{ planet: "Neptune", sign: "Sagittarius", degree: 28.8, retrograde: true },
+		{ planet: "Pluto", sign: "Libra", degree: 29.73 },
+		{ planet: "NorthNode", sign: "Gemini", degree: 2.42 },
+		{ planet: "Chiron", sign: "Gemini", degree: 8.72 },
+		{ planet: "Lilith", sign: "Aries", degree: 1.77 },
+		{ planet: "Ascendant", sign: "Aquarius", degree: 23.22 },
+		{ planet: "Midheaven", sign: "Scorpio", degree: 18.27 },
+	],
+	houses: [
+		{ house: 1, sign: "Aquarius", degree: 23.22 },
+		{ house: 2, sign: "Pisces", degree: 17.13 },
+		{ house: 3, sign: "Aries", degree: 15.63 },
+		{ house: 4, sign: "Taurus", degree: 18.27 },
+		{ house: 5, sign: "Gemini", degree: 22.17 },
+		{ house: 6, sign: "Cancer", degree: 24.23 },
+		{ house: 7, sign: "Leo", degree: 23.22 },
+		{ house: 8, sign: "Virgo", degree: 17.13 },
+		{ house: 9, sign: "Libra", degree: 15.63 },
+		{ house: 10, sign: "Scorpio", degree: 18.27 },
+		{ house: 11, sign: "Sagittarius", degree: 22.17 },
+		{ house: 12, sign: "Capricorn", degree: 24.23 },
+	],
+	aspects: [],
 };
 
 export default function ChartPage() {
-  return (
-    <AstroMandala
-      chart={chart}
-      size={600}
-      showAspects={true}
-      showDegrees={true}
-      theme="dark"
-    />
-  );
+	return (
+		<AstroMandala
+			chart={chart}
+			size={600}
+			showAspects={true}
+			showDegrees={true}
+			theme="dark"
+		/>
+	);
 }
 ```
 
 ### With Modal and Settings
 
 ```tsx
-'use client';
+"use client";
 
-import { AstroMandalaWithModal } from 'astromandala';
+import { AstroMandalaWithModal } from "astromandala";
 
 export default function ChartPage() {
-  return (
-    <AstroMandalaWithModal
-      chart={chart}
-      size={500}
-      showExpandButton={true}
-      showChartInfo={false}
-      theme="dark"
-      language="es"
-    />
-  );
+	return (
+		<AstroMandalaWithModal
+			chart={chart}
+			size={500}
+			showExpandButton={true}
+			showChartInfo={false}
+			theme="dark"
+			language="es"
+		/>
+	);
 }
 ```
 
@@ -131,13 +131,13 @@ const chart2: AstrologicalChart = {
 
 // Calculate synastry aspects between charts
 const synastryAspects: SynastryAspect[] = [
-  { 
-    planet1: 'Sun', 
+  {
+    planet1: 'Sun',
     chart1Owner: 'chart1',
-    planet2: 'Moon', 
+    planet2: 'Moon',
     chart2Owner: 'chart2',
-    aspect: 'trine', 
-    orb: 1.5 
+    aspect: 'trine',
+    orb: 1.5
   },
   // ... more aspects
 ];
@@ -172,78 +172,113 @@ Extended component with expand button, fullscreen modal, and settings panel.
 Standalone component to display planet positions, houses, and elements.
 
 ```tsx
-import { ChartInfoPanel } from 'astromandala';
+import { ChartInfoPanel } from "astromandala";
 
 <ChartInfoPanel
-  chart={chart}
-  secondChart={chart2} // Optional - for synastry view
-  theme="dark"
-  language="es"
-/>
+	chart={chart}
+	secondChart={chart2} // Optional - for synastry view
+	theme="dark"
+	language="es"
+/>;
 ```
 
 ## Props
 
 ### AstroMandala Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `chart` | `AstrologicalChart` | required | Primary chart data |
-| `secondChart` | `AstrologicalChart` | undefined | Secondary chart for synastry |
-| `synastryAspects` | `SynastryAspect[]` | undefined | Aspects between two charts |
-| `size` | `number` | 500 | Size in pixels |
-| `showAspects` | `boolean` | true | Show aspect lines |
-| `showDegrees` | `boolean` | false | Show degree numbers |
-| `showHouses` | `boolean` | true | Show house divisions |
-| `showSecondChartHouses` | `boolean` | true | Show second chart houses in synastry |
-| `showPlanetProjections` | `boolean` | true | Show planet projection lines |
-| `aspectTypesFilter` | `AspectType[]` | major aspects | Filter which aspects to show |
-| `includeAnglesInSynastry` | `boolean` | false | Include AC/MC in synastry aspects |
-| `innerChartColor` | `string` | '#4a90d9' | Color for inner chart |
-| `outerChartColor` | `string` | '#d94a4a' | Color for outer chart |
-| `theme` | `'light' \| 'dark'` | 'light' | Theme |
-| `className` | `string` | undefined | CSS class |
+| Prop                      | Type                | Default       | Description                          |
+| ------------------------- | ------------------- | ------------- | ------------------------------------ |
+| `chart`                   | `AstrologicalChart` | required      | Primary chart data                   |
+| `secondChart`             | `AstrologicalChart` | undefined     | Secondary chart for synastry         |
+| `synastryAspects`         | `SynastryAspect[]`  | undefined     | Aspects between two charts           |
+| `size`                    | `number`            | 500           | Size in pixels                       |
+| `showAspects`             | `boolean`           | true          | Show aspect lines                    |
+| `showDegrees`             | `boolean`           | false         | Show degree numbers                  |
+| `showHouses`              | `boolean`           | true          | Show house divisions                 |
+| `showSecondChartHouses`   | `boolean`           | true          | Show second chart houses in synastry |
+| `showPlanetProjections`   | `boolean`           | true          | Show planet projection lines         |
+| `aspectTypesFilter`       | `AspectType[]`      | major aspects | Filter which aspects to show         |
+| `includeAnglesInSynastry` | `boolean`           | false         | Include AC/MC in synastry aspects    |
+| `innerChartColor`         | `string`            | '#4a90d9'     | Color for inner chart                |
+| `outerChartColor`         | `string`            | '#d94a4a'     | Color for outer chart                |
+| `theme`                   | `'light' \| 'dark'` | 'light'       | Theme                                |
+| `className`               | `string`            | undefined     | CSS class                            |
 
 ### AstroMandalaWithModal Additional Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `language` | `'en' \| 'es'` | 'en' | UI language |
-| `showExpandButton` | `boolean` | true | Show expand button |
-| `showChartInfo` | `boolean` | false | Show chart info panel |
+| Prop               | Type                 | Default   | Description              |
+| ------------------ | -------------------- | --------- | ------------------------ |
+| `language`         | `'en' \| 'es'`       | 'en'      | UI language              |
+| `showExpandButton` | `boolean`            | true      | Show expand button       |
+| `showChartInfo`    | `boolean`            | false     | Show chart info panel    |
 | `onSettingsChange` | `(settings) => void` | undefined | Settings change callback |
 
 ## Types
 
 ```typescript
-type ZodiacSign = 'Aries' | 'Taurus' | 'Gemini' | 'Cancer' | 'Leo' | 'Virgo' 
-  | 'Libra' | 'Scorpio' | 'Sagittarius' | 'Capricorn' | 'Aquarius' | 'Pisces';
+type ZodiacSign =
+	| "Aries"
+	| "Taurus"
+	| "Gemini"
+	| "Cancer"
+	| "Leo"
+	| "Virgo"
+	| "Libra"
+	| "Scorpio"
+	| "Sagittarius"
+	| "Capricorn"
+	| "Aquarius"
+	| "Pisces";
 
-type PlanetName = 'Sun' | 'Moon' | 'Mercury' | 'Venus' | 'Mars' | 'Jupiter' 
-  | 'Saturn' | 'Uranus' | 'Neptune' | 'Pluto' | 'NorthNode' | 'SouthNode' 
-  | 'Chiron' | 'Lilith' | 'Ascendant' | 'Midheaven';
+type PlanetName =
+	| "Sun"
+	| "Moon"
+	| "Mercury"
+	| "Venus"
+	| "Mars"
+	| "Jupiter"
+	| "Saturn"
+	| "Uranus"
+	| "Neptune"
+	| "Pluto"
+	| "NorthNode"
+	| "SouthNode"
+	| "Chiron"
+	| "Lilith"
+	| "Ascendant"
+	| "Midheaven";
 
-type AspectType = 'conjunction' | 'opposition' | 'trine' | 'square' | 'sextile' 
-  | 'quincunx' | 'semisextile' | 'semisquare' | 'sesquiquadrate' | 'quintile' | 'biquintile';
+type AspectType =
+	| "conjunction"
+	| "opposition"
+	| "trine"
+	| "square"
+	| "sextile"
+	| "quincunx"
+	| "semisextile"
+	| "semisquare"
+	| "sesquiquadrate"
+	| "quintile"
+	| "biquintile";
 
 interface PlanetPosition {
-  planet: PlanetName;
-  sign: ZodiacSign;
-  degree: number;
-  retrograde?: boolean;
+	planet: PlanetName;
+	sign: ZodiacSign;
+	degree: number;
+	retrograde?: boolean;
 }
 
 interface HousePosition {
-  house: number; // 1-12
-  sign: ZodiacSign;
-  degree: number;
+	house: number; // 1-12
+	sign: ZodiacSign;
+	degree: number;
 }
 
 interface AstrologicalChart {
-  label?: string;
-  planets: PlanetPosition[];
-  houses: HousePosition[];
-  aspects: Aspect[];
+	label?: string;
+	planets: PlanetPosition[];
+	houses: HousePosition[];
+	aspects: Aspect[];
 }
 ```
 
@@ -257,22 +292,22 @@ This library only handles visualization. To calculate astrological charts from b
 Example with `circular-natal-horoscope-js`:
 
 ```tsx
-import { Horoscope, Origin } from 'circular-natal-horoscope-js';
+import { Horoscope, Origin } from "circular-natal-horoscope-js";
 
 const origin = new Origin({
-  year: 1984,
-  month: 7, // 0-indexed (August)
-  date: 16,
-  hour: 18,
-  minute: 15,
-  latitude: -34.6037,
-  longitude: -58.3816,
+	year: 1984,
+	month: 7, // 0-indexed (August)
+	date: 16,
+	hour: 18,
+	minute: 15,
+	latitude: -34.6037,
+	longitude: -58.3816,
 });
 
 const horoscope = new Horoscope({
-  origin,
-  houseSystem: 'placidus',
-  zodiac: 'tropical',
+	origin,
+	houseSystem: "placidus",
+	zodiac: "tropical",
 });
 
 // Extract data from horoscope object to create AstrologicalChart

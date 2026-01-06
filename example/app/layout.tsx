@@ -1,13 +1,13 @@
 export default function RootLayout({
-  children,
+    children,
 }: {
-  children: React.ReactNode;
+    children: React.ReactNode;
 }) {
-  return (
-    <html lang="en">
-      <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <style>{`
+    return (
+        <html lang="en">
+            <head>
+                <meta name="viewport" content="width=device-width, initial-scale=1" />
+                <style>{`
           * {
             box-sizing: border-box;
           }
@@ -21,8 +21,8 @@ export default function RootLayout({
             }
           }
         `}</style>
-      </head>
-      <body>{children}</body>
-    </html>
-  );
+            </head>
+            <body>{children}</body>
+        </html>
+    );
 }

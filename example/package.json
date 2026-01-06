@@ -1,18 +1,18 @@
 {
-  "name": "astromandala-test",
-  "private": true,
-  "scripts": {
-    "dev": "next dev -p 3456",
-    "build": "next build"
-  },
-  "dependencies": {
-    "astromandala": "file:..",
-    "circular-natal-horoscope-js": "^1.1.0",
-    "next": "^14.0.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
-  },
-  "devDependencies": {
-    "@types/node": "25.0.3"
-  }
+    "name": "astromandala-test",
+    "private": true,
+    "scripts": {
+        "dev": "next dev -p 3456",
+        "build": "next build"
+    },
+    "dependencies": {
+        "astromandala": "file:..",
+        "circular-natal-horoscope-js": "^1.1.0",
+        "next": "^14.0.0",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0"
+    },
+    "devDependencies": {
+        "@types/node": "25.0.3"
+    }
 }

@@ -275,7 +275,7 @@ export default function Home() {
     const [includeAnglesInSynastry, setIncludeAnglesInSynastry] = useState(false);
     const [theme, setTheme] = useState<MandalaTheme>('light');
     const [language, setLanguage] = useState<MandalaLanguage>('es');
-    
+
     // Get translations
     const t = useMemo(() => getTranslations(language), [language]);
 
@@ -331,7 +331,7 @@ export default function Home() {
     }, [chart1, chart2, showSynastry]);
 
     const isDark = theme === 'dark';
-    
+
     const pageStyle = {
         padding: '1rem',
         fontFamily: 'system-ui, sans-serif',
@@ -560,11 +560,11 @@ export default function Home() {
                     <h3 style={{ marginBottom: '0.5rem', fontSize: '14px', color: isDark ? '#aaa' : '#666' }}>
                         {t.desktop} (650px) - AstroMandalaWithModal
                     </h3>
-                    <div style={{ 
-                        display: 'flex', 
-                        justifyContent: 'center', 
-                        background: isDark ? '#1a1a2e' : '#f5f5f5', 
-                        padding: '1rem', 
+                    <div style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        background: isDark ? '#1a1a2e' : '#f5f5f5',
+                        padding: '1rem',
                         borderRadius: '8px',
                         overflow: 'hidden',
                     }}>
@@ -594,11 +594,11 @@ export default function Home() {
                     <h3 style={{ marginBottom: '0.5rem', fontSize: '14px', color: isDark ? '#aaa' : '#666' }}>
                         {t.tablet} (450px)
                     </h3>
-                    <div style={{ 
-                        display: 'flex', 
-                        justifyContent: 'center', 
-                        background: isDark ? '#1a1a2e' : '#f5f5f5', 
-                        padding: '1rem', 
+                    <div style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        background: isDark ? '#1a1a2e' : '#f5f5f5',
+                        padding: '1rem',
                         borderRadius: '8px',
                         overflow: 'hidden',
                     }}>
@@ -626,11 +626,11 @@ export default function Home() {
                     <h3 style={{ marginBottom: '0.5rem', fontSize: '14px', color: isDark ? '#aaa' : '#666' }}>
                         {t.mobile} (320px)
                     </h3>
-                    <div style={{ 
-                        display: 'flex', 
-                        justifyContent: 'center', 
-                        background: isDark ? '#1a1a2e' : '#f5f5f5', 
-                        padding: '0.5rem', 
+                    <div style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        background: isDark ? '#1a1a2e' : '#f5f5f5',
+                        padding: '0.5rem',
                         borderRadius: '8px',
                         overflow: 'hidden',
                         maxWidth: '340px',
