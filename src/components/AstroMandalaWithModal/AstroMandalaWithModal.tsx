@@ -4,7 +4,7 @@ import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom';
 import { AstroMandala } from '../AstroMandala';
 import { ChartInfoPanel } from '../ChartInfoPanel';
-import { AstroMandalaProps, AspectType, MandalaLanguage, MandalaTheme } from '../../types';
+import { AstroMandalaProps, AspectType, MandalaLanguage, MandalaTheme, BirthData } from '../../types';
 import { getTranslations } from '../../constants';
 
 // CSS reset for modal isolation - prevents host page styles from affecting the modal
@@ -61,6 +61,14 @@ export interface AstroMandalaWithModalProps extends AstroMandalaProps {
     showExpandButton?: boolean;
     /** Whether to show chart info panel (default: false) */
     showChartInfo?: boolean;
+    /** Title to display in the modal header when expanded */
+    title?: string;
+    /** Birth data for the primary chart */
+    birthData?: BirthData;
+    /** Birth data for the secondary chart (synastry) */
+    secondBirthData?: BirthData;
+    /** Whether to show birth data on the chart by default (default: false) */
+    showBirthData?: boolean;
     /** Callback when settings change */
     onSettingsChange?: (settings: ModalSettings) => void;
 }
@@ -72,6 +80,7 @@ export interface ModalSettings {
     showSecondChartHouses: boolean;
     showPlanetProjections: boolean;
     showChartInfo: boolean;
+    showBirthData: boolean;
     includeAnglesInSynastry: boolean;
     aspectTypesFilter: AspectType[];
     theme: MandalaTheme;
@@ -99,6 +108,7 @@ export function AstroMandalaWithModal({
     showSecondChartHouses: initialShowSecondChartHouses = true,
     showPlanetProjections: initialShowPlanetProjections = true,
     showChartInfo: initialShowChartInfo = false,
+    showBirthData: initialShowBirthData = false,
     aspectTypesFilter: initialAspectTypesFilter,
     includeAnglesInSynastry: initialIncludeAnglesInSynastry = false,
     innerChartColor = '#4a90d9',
@@ -108,10 +118,14 @@ export function AstroMandalaWithModal({
     language: initialLanguage = 'en',
     className,
     showExpandButton = true,
+    title,
+    birthData,
+    secondBirthData,
     onSettingsChange,
 }: AstroMandalaWithModalProps) {
-    // Ref for portal container
+    // Ref for portal container and mandala for image export
     const portalContainerRef = useRef<HTMLDivElement | null>(null);
+    const mandalaContainerRef = useRef<HTMLDivElement | null>(null);
     const scrollPositionRef = useRef<number>(0);
 
     // Mobile detection and window size tracking
@@ -260,9 +274,118 @@ export function AstroMandalaWithModal({
     const [showHouses, setShowHouses] = useState(initialShowHouses);
     const [showSecondChartHouses, setShowSecondChartHouses] = useState(initialShowSecondChartHouses);
     const [showPlanetProjections, setShowPlanetProjections] = useState(initialShowPlanetProjections);
+    const [showBirthDataOnChart, setShowBirthDataOnChart] = useState(initialShowBirthData);
     const [includeAnglesInSynastry, setIncludeAnglesInSynastry] = useState(initialIncludeAnglesInSynastry);
     const [theme, setTheme] = useState<MandalaTheme>(initialTheme);
     const [language, setLanguage] = useState<MandalaLanguage>(initialLanguage);
+
+    // Function to download the chart as PNG image
+    const downloadChartAsImage = useCallback(async () => {
+        if (!mandalaContainerRef.current) return;
+
+        try {
+            const container = mandalaContainerRef.current;
+            const svg = container.querySelector('svg');
+            if (!svg) return;
+
+            // Clone the SVG and add birth data text if enabled
+            const svgClone = svg.cloneNode(true) as SVGSVGElement;
+            const svgSize = parseInt(svg.getAttribute('width') || '500');
+
+            // Add birth data text to SVG if enabled
+            if (showBirthDataOnChart && birthData) {
+                const textGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                const isDarkTheme = theme === 'dark';
+                const textColor = isDarkTheme ? '#e0e0e0' : '#333';
+                const fontSize = Math.max(10, svgSize * 0.022);
+                let yOffset = svgSize + fontSize + 5;
+
+                const addTextLine = (text: string) => {
+                    const textEl = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    textEl.setAttribute('x', (svgSize / 2).toString());
+                    textEl.setAttribute('y', yOffset.toString());
+                    textEl.setAttribute('text-anchor', 'middle');
+                    textEl.setAttribute('fill', textColor);
+                    textEl.setAttribute('font-size', fontSize.toString());
+                    textEl.setAttribute('font-family', 'Arial, sans-serif');
+                    textEl.textContent = text;
+                    textGroup.appendChild(textEl);
+                    yOffset += fontSize + 4;
+                };
+
+                if (birthData.name) addTextLine(birthData.name);
+                if (birthData.date) addTextLine(birthData.date + (birthData.time ? ` - ${birthData.time}` : ''));
+                if (birthData.location) addTextLine(birthData.location);
+
+                if (secondBirthData) {
+                    yOffset += 5;
+                    if (secondBirthData.name) addTextLine(secondBirthData.name);
+                    if (secondBirthData.date) addTextLine(secondBirthData.date + (secondBirthData.time ? ` - ${secondBirthData.time}` : ''));
+                    if (secondBirthData.location) addTextLine(secondBirthData.location);
+                }
+
+                // Expand viewBox to include text
+                const extraHeight = yOffset - svgSize;
+                svgClone.setAttribute('height', (svgSize + extraHeight).toString());
+                svgClone.setAttribute('viewBox', `0 0 ${svgSize} ${svgSize + extraHeight}`);
+                svgClone.appendChild(textGroup);
+            }
+
+            // Convert SVG to canvas
+            const svgData = new XMLSerializer().serializeToString(svgClone);
+            const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+            const svgUrl = URL.createObjectURL(svgBlob);
+
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const scale = 2; // Higher resolution
+                canvas.width = img.width * scale;
+                canvas.height = img.height * scale;
+
+                const ctx = canvas.getContext('2d');
+                if (!ctx) return;
+
+                // Fill background
+                ctx.fillStyle = theme === 'dark' ? '#1a1a2e' : '#fafafa';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                ctx.scale(scale, scale);
+                ctx.drawImage(img, 0, 0);
+
+                // Download
+                const link = document.createElement('a');
+                // Build filename from title and/or names
+                let fileName = 'astromandala_chart.png';
+                const sanitize = (str: string) => str.replace(/[^a-zA-Z0-9áéíóúñÁÉÍÓÚÑ\s]/g, '').replace(/\s+/g, '_').trim();
+
+                if (title && birthData?.name && secondBirthData?.name) {
+                    // Title + both names
+                    fileName = `${sanitize(title)}_${sanitize(birthData.name)}_${sanitize(secondBirthData.name)}.png`;
+                } else if (title && birthData?.name) {
+                    // Title + first name
+                    fileName = `${sanitize(title)}_${sanitize(birthData.name)}.png`;
+                } else if (birthData?.name && secondBirthData?.name) {
+                    // Both names (synastry)
+                    fileName = `sinastria_${sanitize(birthData.name)}_${sanitize(secondBirthData.name)}.png`;
+                } else if (title) {
+                    // Only title
+                    fileName = `${sanitize(title)}.png`;
+                } else if (birthData?.name) {
+                    // Only first name
+                    fileName = `carta_${sanitize(birthData.name)}.png`;
+                }
+                link.download = fileName;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+
+                URL.revokeObjectURL(svgUrl);
+            };
+            img.src = svgUrl;
+        } catch (error) {
+            console.error('Error downloading chart:', error);
+        }
+    }, [showBirthDataOnChart, birthData, secondBirthData, theme, title]);
 
     // Sync theme and language with props when they change
     useEffect(() => {
@@ -306,13 +429,14 @@ export function AstroMandalaWithModal({
                 showSecondChartHouses,
                 showPlanetProjections,
                 showChartInfo,
+                showBirthData: showBirthDataOnChart,
                 includeAnglesInSynastry,
                 aspectTypesFilter,
                 theme,
                 language,
             });
         }
-    }, [showAspects, showDegrees, showHouses, showSecondChartHouses, showPlanetProjections, showChartInfo, includeAnglesInSynastry, aspectTypesFilter, theme, language, onSettingsChange]);
+    }, [showAspects, showDegrees, showHouses, showSecondChartHouses, showPlanetProjections, showChartInfo, showBirthDataOnChart, includeAnglesInSynastry, aspectTypesFilter, theme, language, onSettingsChange]);
 
     // Common mandala props for MODAL (uses internal state)
     const modalMandalaProps = {
@@ -425,6 +549,21 @@ export function AstroMandalaWithModal({
                 }}
             >
                 <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '0.25rem' : '1rem', flexShrink: 1, overflow: 'hidden' }}>
+                    {/* Title */}
+                    {title && (
+                        <h1 style={{
+                            margin: 0,
+                            fontSize: isMobile ? '14px' : '18px',
+                            fontWeight: 600,
+                            color: isDark ? '#fff' : '#333',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            maxWidth: isMobile ? '120px' : '300px',
+                        }}>
+                            {title}
+                        </h1>
+                    )}
                     <button
                         onClick={() => setShowModalSettings(!showModalSettings)}
                         style={{
@@ -468,6 +607,21 @@ export function AstroMandalaWithModal({
                         }}
                     >
                         {isDark ? '☀️' : '🌙'}
+                    </button>
+
+                    {/* Download image button */}
+                    <button
+                        onClick={downloadChartAsImage}
+                        style={{
+                            ...buttonStyle,
+                            padding: isMobile ? '0.25rem 0.4rem' : buttonStyle.padding,
+                            fontSize: isMobile ? '14px' : buttonStyle.fontSize,
+                            minWidth: isMobile ? 'auto' : undefined,
+                            backgroundColor: isDark ? 'rgba(74, 144, 217, 0.3)' : 'rgba(74, 144, 217, 0.15)',
+                        }}
+                        title={t.downloadImage}
+                    >
+                        📥{isMobile ? '' : ` ${t.downloadImage}`}
                     </button>
                 </div>
 
@@ -571,6 +725,17 @@ export function AstroMandalaWithModal({
                                 {t.showChartInfo}
                             </label>
 
+                            {(birthData || secondBirthData) && (
+                                <label style={checkboxLabelStyle}>
+                                    <input
+                                        type="checkbox"
+                                        checked={showBirthDataOnChart}
+                                        onChange={(e) => setShowBirthDataOnChart(e.target.checked)}
+                                    />
+                                    {t.showBirthData}
+                                </label>
+                            )}
+
                             {isSynastry && showAspects && (
                                 <label style={checkboxLabelStyle}>
                                     <input
@@ -642,21 +807,62 @@ export function AstroMandalaWithModal({
                         maxWidth: '100%',
                     }}
                 >
-                    <div style={{
-                        width: modalMandalaSize,
-                        height: modalMandalaSize,
-                        maxWidth: '100%',
-                        maxHeight: '100%',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        flexShrink: 1,
-                    }}>
-                        <AstroMandala
-                            {...modalMandalaProps}
-                            size={modalMandalaSize}
-                            key={`modal-mandala-${modalMandalaSize}-${showChartInfo}`}
-                        />
+                    <div
+                        ref={mandalaContainerRef}
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            gap: '0.5rem',
+                        }}
+                    >
+                        <div style={{
+                            width: modalMandalaSize,
+                            height: modalMandalaSize,
+                            maxWidth: '100%',
+                            maxHeight: '100%',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            flexShrink: 1,
+                        }}>
+                            <AstroMandala
+                                {...modalMandalaProps}
+                                size={modalMandalaSize}
+                                key={`modal-mandala-${modalMandalaSize}-${showChartInfo}`}
+                            />
+                        </div>
+
+                        {/* Birth data display */}
+                        {showBirthDataOnChart && (birthData || secondBirthData) && (
+                            <div style={{
+                                textAlign: 'center',
+                                color: isDark ? '#e0e0e0' : '#333',
+                                fontSize: isMobile ? '11px' : '13px',
+                                lineHeight: 1.4,
+                                maxWidth: modalMandalaSize,
+                                padding: '0.5rem',
+                            }}>
+                                {birthData && (
+                                    <div style={{ marginBottom: secondBirthData ? '0.5rem' : 0, color: innerChartColor }}>
+                                        {birthData.name && <div style={{ fontWeight: 600 }}>{birthData.name}</div>}
+                                        {(birthData.date || birthData.time) && (
+                                            <div>{birthData.date}{birthData.time ? ` - ${birthData.time}` : ''}</div>
+                                        )}
+                                        {birthData.location && <div>{birthData.location}</div>}
+                                    </div>
+                                )}
+                                {secondBirthData && (
+                                    <div style={{ color: outerChartColor }}>
+                                        {secondBirthData.name && <div style={{ fontWeight: 600 }}>{secondBirthData.name}</div>}
+                                        {(secondBirthData.date || secondBirthData.time) && (
+                                            <div>{secondBirthData.date}{secondBirthData.time ? ` - ${secondBirthData.time}` : ''}</div>
+                                        )}
+                                        {secondBirthData.location && <div>{secondBirthData.location}</div>}
+                                    </div>
+                                )}
+                            </div>
+                        )}
                     </div>
 
                     {/* Chart Info Panel - shows next to mandala on desktop (vertically centered) */}

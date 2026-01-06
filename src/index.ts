@@ -18,6 +18,7 @@ export type {
     Aspect,
     SynastryAspect,
     AstrologicalChart,
+    BirthData,
     AspectColors,
     AstroMandalaProps,
     MandalaTheme,

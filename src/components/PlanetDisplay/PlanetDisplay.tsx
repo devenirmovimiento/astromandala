@@ -116,7 +116,7 @@ export function PlanetDisplay({
                         >
                             {symbol}&#xFE0E;
                             {planet.retrograde && (
-                                <tspan fontSize={fontSize * 0.5} dy={-fontSize * 0.3}>
+                                <tspan fontSize={fontSize * 0.35} dy={fontSize * 0.15} dx={fontSize * 0.05}>
                                     ℞
                                 </tspan>
                             )}

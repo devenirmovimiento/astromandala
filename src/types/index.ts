@@ -126,6 +126,20 @@ export interface AstrologicalChart {
     label?: string;
 }
 
+/**
+ * Birth data for a person
+ */
+export interface BirthData {
+    /** Person's name */
+    name?: string;
+    /** Birth date as string (e.g., "July 16, 1984" or "16/07/1984") */
+    date?: string;
+    /** Birth time as string (e.g., "18:15" or "6:15 PM") */
+    time?: string;
+    /** Birth location as string (e.g., "Buenos Aires, Argentina") */
+    location?: string;
+}
+
 // ============================================
 // Types compatible with circular-natal-horoscope-js
 // ============================================

@@ -59,6 +59,13 @@ export interface Translations {
     // Legend
     legend: string;
     aspectColors: string;
+
+    // Birth data display
+    showBirthData: string;
+    downloadImage: string;
+    birthDate: string;
+    birthTime: string;
+    birthLocation: string;
 }
 
 export const TRANSLATIONS: Record<MandalaLanguage, Translations> = {
@@ -118,6 +125,13 @@ export const TRANSLATIONS: Record<MandalaLanguage, Translations> = {
         // Legend
         legend: 'Legend',
         aspectColors: 'Aspect colors',
+
+        // Birth data display
+        showBirthData: 'Show Birth Data on Chart',
+        downloadImage: 'Download Image',
+        birthDate: 'Date',
+        birthTime: 'Time',
+        birthLocation: 'Location',
     },
     es: {
         // Angle labels
@@ -175,6 +189,13 @@ export const TRANSLATIONS: Record<MandalaLanguage, Translations> = {
         // Legend
         legend: 'Leyenda',
         aspectColors: 'Colores de aspectos',
+
+        // Birth data display
+        showBirthData: 'Mostrar Datos de Nacimiento',
+        downloadImage: 'Descargar Imagen',
+        birthDate: 'Fecha',
+        birthTime: 'Hora',
+        birthLocation: 'Lugar',
     },
 };
 

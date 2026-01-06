@@ -1,7 +1,7 @@
 'use client';
 
 import { AstroMandala, AstroMandalaWithModal, getTranslations } from 'astromandala';
-import type { AstrologicalChart, SynastryAspect, ZodiacSign, PlanetName, AspectType, MandalaTheme, MandalaLanguage } from 'astromandala';
+import type { AstrologicalChart, SynastryAspect, ZodiacSign, PlanetName, AspectType, MandalaTheme, MandalaLanguage, BirthData } from 'astromandala';
 import { useState, useMemo, useEffect } from 'react';
 // @ts-ignore - no types available
 import { Horoscope, Origin } from 'circular-natal-horoscope-js';
@@ -256,6 +256,7 @@ export default function Home() {
     const [lat1, setLat1] = useState(DEFAULT_LAT.toString());
     const [lng1, setLng1] = useState(DEFAULT_LNG.toString());
     const [label1, setLabel1] = useState('Person A');
+    const [location1, setLocation1] = useState('Buenos Aires, Argentina');
 
     // Chart 2
     const [date2, setDate2] = useState('1997-08-07');
@@ -263,6 +264,11 @@ export default function Home() {
     const [lat2, setLat2] = useState(DEFAULT_LAT.toString());
     const [lng2, setLng2] = useState(DEFAULT_LNG.toString());
     const [label2, setLabel2] = useState('Person B');
+    const [location2, setLocation2] = useState('Buenos Aires, Argentina');
+
+    // Chart title
+    const [chartTitle, setChartTitle] = useState('Carta Natal');
+    const [showBirthData, setShowBirthData] = useState(true);
 
     // Display options
     const [showSynastry, setShowSynastry] = useState(false);
@@ -396,6 +402,20 @@ export default function Home() {
                 </div>
             </div>
 
+            {/* Chart Title Input */}
+            <div style={{ marginBottom: '1.5rem' }}>
+                <label style={{ ...labelStyle, display: 'block', maxWidth: '400px' }}>
+                    Chart Title
+                    <input
+                        type="text"
+                        value={chartTitle}
+                        onChange={(e) => setChartTitle(e.target.value)}
+                        style={inputStyle}
+                        placeholder="e.g., Synastry Chart - John & Jane"
+                    />
+                </label>
+            </div>
+
             <div style={{ display: 'grid', gridTemplateColumns: showSynastry ? '1fr 1fr' : '1fr', gap: '2rem', marginBottom: '1.5rem' }}>
                 {/* Chart 1 inputs */}
                 <div style={{ padding: '1rem', background: isDark ? '#1e3a4d' : '#e8f4fc', borderRadius: '8px' }}>
@@ -412,6 +432,10 @@ export default function Home() {
                         <label style={labelStyle}>
                             Time
                             <input type="time" value={time1} onChange={(e) => setTime1(e.target.value)} style={inputStyle} />
+                        </label>
+                        <label style={labelStyle}>
+                            Location
+                            <input type="text" value={location1} onChange={(e) => setLocation1(e.target.value)} style={inputStyle} placeholder="City, Country" />
                         </label>
                         <label style={labelStyle}>
                             Latitude
@@ -440,6 +464,10 @@ export default function Home() {
                             <label style={labelStyle}>
                                 Time
                                 <input type="time" value={time2} onChange={(e) => setTime2(e.target.value)} style={inputStyle} />
+                            </label>
+                            <label style={labelStyle}>
+                                Location
+                                <input type="text" value={location2} onChange={(e) => setLocation2(e.target.value)} style={inputStyle} placeholder="City, Country" />
                             </label>
                             <label style={labelStyle}>
                                 Latitude
@@ -585,6 +613,20 @@ export default function Home() {
                             outerChartColor="#d94a4a"
                             theme={theme}
                             language={language}
+                            title={showSynastry ? 'Sinastría' : chartTitle}
+                            birthData={{
+                                name: label1,
+                                date: new Date(date1).toLocaleDateString(language === 'es' ? 'es-ES' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
+                                time: time1,
+                                location: location1,
+                            }}
+                            secondBirthData={showSynastry ? {
+                                name: label2,
+                                date: new Date(date2).toLocaleDateString(language === 'es' ? 'es-ES' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
+                                time: time2,
+                                location: location2,
+                            } : undefined}
+                            showBirthData={showBirthData}
                         />
                     </div>
                 </div>
