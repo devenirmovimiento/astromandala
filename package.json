@@ -1,0 +1,59 @@
+{
+  "name": "astromandala",
+  "version": "1.0.0",
+  "description": "Astrological mandala visualization component for React/Next.js - Display single or synastry charts",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "eslint src/",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "astrology",
+    "mandala",
+    "chart",
+    "synastry",
+    "zodiac",
+    "horoscope",
+    "react",
+    "nextjs",
+    "visualization"
+  ],
+  "author": "",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "eslint": "^8.57.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.3.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/devenirmovimiento/astromandala.git"
+  },
+  "bugs": {
+    "url": "https://github.com/devenirmovimiento/astromandala/issues"
+  },
+  "homepage": "https://github.com/devenirmovimiento/astromandala#readme"
+}
