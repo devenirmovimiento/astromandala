@@ -1,10 +1,58 @@
 'use client';
 
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { AstroMandala } from '../AstroMandala';
 import { ChartInfoPanel } from '../ChartInfoPanel';
 import { AstroMandalaProps, AspectType, MandalaLanguage, MandalaTheme } from '../../types';
 import { getTranslations } from '../../constants';
+
+// CSS reset for modal isolation - prevents host page styles from affecting the modal
+const MODAL_CSS_RESET = `
+  .astromandala-modal-root,
+  .astromandala-modal-root *,
+  .astromandala-modal-root *::before,
+  .astromandala-modal-root *::after {
+    box-sizing: border-box !important;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+  }
+  .astromandala-modal-root {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    z-index: 2147483647 !important;
+    isolation: isolate !important;
+  }
+  .astromandala-modal-root button {
+    font-family: inherit !important;
+    cursor: pointer !important;
+  }
+  .astromandala-modal-root select {
+    font-family: inherit !important;
+    cursor: pointer !important;
+  }
+  .astromandala-modal-root input[type="checkbox"] {
+    cursor: pointer !important;
+    width: 16px !important;
+    height: 16px !important;
+  }
+  .astromandala-modal-root label {
+    cursor: pointer !important;
+  }
+  body.astromandala-modal-open {
+    overflow: hidden !important;
+    position: fixed !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+`;
 
 export interface AstroMandalaWithModalProps extends AstroMandalaProps {
     /** Initial language setting */
@@ -62,11 +110,24 @@ export function AstroMandalaWithModal({
     showExpandButton = true,
     onSettingsChange,
 }: AstroMandalaWithModalProps) {
+    // Ref for portal container
+    const portalContainerRef = useRef<HTMLDivElement | null>(null);
+    const scrollPositionRef = useRef<number>(0);
+
     // Mobile detection and window size tracking
     const [isMobile, setIsMobile] = useState(false);
     const [windowSize, setWindowSize] = useState({ width: 600, height: 600 });
+    const [isMounted, setIsMounted] = useState(false);
+
+    // Handle initial mount for SSR compatibility
+    useEffect(() => {
+        setIsMounted(true);
+        return () => setIsMounted(false);
+    }, []);
 
     useEffect(() => {
+        if (!isMounted) return;
+
         const handleResize = () => {
             const w = window.innerWidth;
             const h = window.innerHeight;
@@ -76,20 +137,85 @@ export function AstroMandalaWithModal({
         // Call immediately
         handleResize();
         window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
+
+        // Also listen for orientation change on mobile
+        window.addEventListener('orientationchange', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+            window.removeEventListener('orientationchange', handleResize);
+        };
+    }, [isMounted]);
 
     // Modal state - settings start closed on mobile
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [showModalSettings, setShowModalSettings] = useState(false);
 
-    // Force recalculate size when modal opens
+    // Create/cleanup portal container and manage body scroll lock
     useEffect(() => {
+        if (!isMounted) return;
+
         if (isModalOpen) {
-            // Immediately update window size when modal opens
+            // Save current scroll position
+            scrollPositionRef.current = window.scrollY;
+
+            // Create portal container
+            const container = document.createElement('div');
+            container.id = 'astromandala-modal-portal';
+            document.body.appendChild(container);
+            portalContainerRef.current = container;
+
+            // Inject CSS reset styles
+            const styleElement = document.createElement('style');
+            styleElement.id = 'astromandala-modal-styles';
+            styleElement.textContent = MODAL_CSS_RESET;
+            document.head.appendChild(styleElement);
+
+            // Lock body scroll
+            document.body.classList.add('astromandala-modal-open');
+            document.body.style.top = `-${scrollPositionRef.current}px`;
+
+            // Force update to trigger portal render
             setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+
+            return () => {
+                // Remove portal container
+                if (portalContainerRef.current && document.body.contains(portalContainerRef.current)) {
+                    document.body.removeChild(portalContainerRef.current);
+                    portalContainerRef.current = null;
+                }
+
+                // Remove CSS reset styles
+                const styleEl = document.getElementById('astromandala-modal-styles');
+                if (styleEl) {
+                    document.head.removeChild(styleEl);
+                }
+
+                // Unlock body scroll and restore position
+                document.body.classList.remove('astromandala-modal-open');
+                document.body.style.top = '';
+                window.scrollTo(0, scrollPositionRef.current);
+            };
         }
-    }, [isModalOpen]);
+    }, [isModalOpen, isMounted]);
+
+    // Handle Escape key to close modal
+    useEffect(() => {
+        if (!isModalOpen || !isMounted) return;
+
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') {
+                e.preventDefault();
+                e.stopPropagation();
+                setIsModalOpen(false);
+            }
+        };
+
+        document.addEventListener('keydown', handleKeyDown, { capture: true });
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown, { capture: true });
+        };
+    }, [isModalOpen, isMounted]);
 
     // Open settings by default on desktop when modal opens
     useEffect(() => {
@@ -268,6 +394,308 @@ export function AstroMandalaWithModal({
         borderRadius: '6px',
     };
 
+    // Modal content - rendered via portal for isolation
+    const modalContent = isModalOpen && isMounted && portalContainerRef.current ? (
+        <div
+            className="astromandala-modal-root"
+            style={{
+                backgroundColor: isDark ? '#121212' : '#ffffff',
+                display: 'flex',
+                flexDirection: 'column',
+                overflow: 'hidden',
+            }}
+            // Prevent click events from propagating to parent
+            onClick={(e) => e.stopPropagation()}
+        >
+            {/* Modal Header */}
+            <div
+                style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    padding: isMobile ? '0.25rem 0.5rem' : '0.5rem 1rem',
+                    borderBottom: isDark ? '1px solid #333' : '1px solid #ddd',
+                    backgroundColor: isDark ? '#1a1a1a' : '#f5f5f5',
+                    flexShrink: 0,
+                    minHeight: isMobile ? '40px' : '48px',
+                    maxHeight: isMobile ? '40px' : '48px',
+                    width: '100%',
+                    boxSizing: 'border-box',
+                    overflow: 'hidden',
+                }}
+            >
+                <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '0.25rem' : '1rem', flexShrink: 1, overflow: 'hidden' }}>
+                    <button
+                        onClick={() => setShowModalSettings(!showModalSettings)}
+                        style={{
+                            ...buttonStyle,
+                            padding: isMobile ? '0.25rem 0.4rem' : buttonStyle.padding,
+                            fontSize: isMobile ? '14px' : buttonStyle.fontSize,
+                            minWidth: isMobile ? 'auto' : undefined,
+                        }}
+                        title={t.settings}
+                    >
+                        ⚙{isMobile ? '' : ` ${showModalSettings ? '▼' : '▶'} ${t.settings}`}
+                    </button>
+
+                    {/* Language selector */}
+                    <select
+                        value={language}
+                        onChange={(e) => setLanguage(e.target.value as MandalaLanguage)}
+                        style={{
+                            padding: isMobile ? '0.25rem' : '0.5rem',
+                            borderRadius: '4px',
+                            border: isDark ? '1px solid #444' : '1px solid #ccc',
+                            backgroundColor: isDark ? '#333' : '#fff',
+                            color: isDark ? '#fff' : '#333',
+                            cursor: 'pointer',
+                            fontSize: isMobile ? '14px' : '14px',
+                            minWidth: isMobile ? 'auto' : undefined,
+                        }}
+                    >
+                        <option value="en">{isMobile ? '🇬🇧' : '🇬🇧 English'}</option>
+                        <option value="es">{isMobile ? '🇪🇸' : '🇪🇸 Español'}</option>
+                    </select>
+
+                    {/* Theme toggle */}
+                    <button
+                        onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+                        style={{
+                            ...buttonStyle,
+                            padding: isMobile ? '0.25rem 0.4rem' : buttonStyle.padding,
+                            fontSize: isMobile ? '14px' : buttonStyle.fontSize,
+                            minWidth: isMobile ? 'auto' : undefined,
+                        }}
+                    >
+                        {isDark ? '☀️' : '🌙'}
+                    </button>
+                </div>
+
+                <button
+                    onClick={() => setIsModalOpen(false)}
+                    style={{
+                        ...buttonStyle,
+                        backgroundColor: isDark ? '#c53030' : '#e53e3e',
+                        color: '#fff',
+                        padding: isMobile ? '0.25rem 0.5rem' : buttonStyle.padding,
+                        fontSize: isMobile ? '14px' : buttonStyle.fontSize,
+                        minWidth: isMobile ? 'auto' : undefined,
+                        flexShrink: 0,
+                        marginLeft: isMobile ? '0.25rem' : undefined,
+                    }}
+                >
+                    ✕
+                </button>
+            </div>
+
+            {/* Modal Body */}
+            <div
+                style={{
+                    flex: 1,
+                    display: 'flex',
+                    overflow: 'hidden',
+                }}
+            >
+                {/* Settings Panel */}
+                {showModalSettings && (
+                    <div
+                        style={{
+                            width: '280px',
+                            minWidth: '280px',
+                            padding: '1rem',
+                            overflowY: 'auto',
+                            borderRight: isDark ? '1px solid #333' : '1px solid #ddd',
+                            backgroundColor: isDark ? '#1a1a1a' : '#fafafa',
+                            color: isDark ? '#e0e0e0' : '#333',
+                        }}
+                    >
+                        {/* Display options */}
+                        <div style={sectionStyle}>
+                            <h4 style={{ margin: '0 0 0.5rem 0', fontSize: '13px', textTransform: 'uppercase', opacity: 0.7 }}>
+                                {t.settings}
+                            </h4>
+
+                            <label style={checkboxLabelStyle}>
+                                <input
+                                    type="checkbox"
+                                    checked={showAspects}
+                                    onChange={(e) => setShowAspects(e.target.checked)}
+                                />
+                                {t.showAspects}
+                            </label>
+
+                            <label style={checkboxLabelStyle}>
+                                <input
+                                    type="checkbox"
+                                    checked={showDegrees}
+                                    onChange={(e) => setShowDegrees(e.target.checked)}
+                                />
+                                {t.showDegrees}
+                            </label>
+
+                            <label style={checkboxLabelStyle}>
+                                <input
+                                    type="checkbox"
+                                    checked={showHouses}
+                                    onChange={(e) => setShowHouses(e.target.checked)}
+                                />
+                                {t.showHouses}
+                            </label>
+
+                            {isSynastry && (
+                                <label style={checkboxLabelStyle}>
+                                    <input
+                                        type="checkbox"
+                                        checked={showSecondChartHouses}
+                                        onChange={(e) => setShowSecondChartHouses(e.target.checked)}
+                                    />
+                                    {t.showChart2Houses}
+                                </label>
+                            )}
+
+                            <label style={checkboxLabelStyle}>
+                                <input
+                                    type="checkbox"
+                                    checked={showPlanetProjections}
+                                    onChange={(e) => setShowPlanetProjections(e.target.checked)}
+                                />
+                                {t.showPlanetProjections}
+                            </label>
+
+                            <label style={checkboxLabelStyle}>
+                                <input
+                                    type="checkbox"
+                                    checked={showChartInfo}
+                                    onChange={(e) => setShowChartInfo(e.target.checked)}
+                                />
+                                {t.showChartInfo}
+                            </label>
+
+                            {isSynastry && showAspects && (
+                                <label style={checkboxLabelStyle}>
+                                    <input
+                                        type="checkbox"
+                                        checked={includeAnglesInSynastry}
+                                        onChange={(e) => setIncludeAnglesInSynastry(e.target.checked)}
+                                    />
+                                    {t.includeAnglesInSynastry}
+                                </label>
+                            )}
+                        </div>
+
+                        {/* Aspect Types */}
+                        {showAspects && (
+                            <div style={sectionStyle}>
+                                <h4 style={{ margin: '0 0 0.5rem 0', fontSize: '13px', textTransform: 'uppercase', opacity: 0.7 }}>
+                                    {t.aspectTypes}
+                                </h4>
+
+                                <div style={{ marginBottom: '0.5rem' }}>
+                                    <span style={{ fontSize: '12px', opacity: 0.6 }}>{t.majorAspects}</span>
+                                </div>
+
+                                {MAJOR_ASPECTS.map(aspect => (
+                                    <label key={aspect} style={{ ...checkboxLabelStyle, fontSize: '13px' }}>
+                                        <input
+                                            type="checkbox"
+                                            checked={aspectFilters[aspect]}
+                                            onChange={() => toggleAspectFilter(aspect)}
+                                        />
+                                        {t[aspect]}
+                                    </label>
+                                ))}
+
+                                <div style={{ marginTop: '0.75rem', marginBottom: '0.5rem' }}>
+                                    <span style={{ fontSize: '12px', opacity: 0.6 }}>{t.minorAspects}</span>
+                                </div>
+
+                                {ALL_ASPECT_TYPES.filter(a => !MAJOR_ASPECTS.includes(a)).map(aspect => (
+                                    <label key={aspect} style={{ ...checkboxLabelStyle, fontSize: '13px' }}>
+                                        <input
+                                            type="checkbox"
+                                            checked={aspectFilters[aspect]}
+                                            onChange={() => toggleAspectFilter(aspect)}
+                                        />
+                                        {t[aspect]}
+                                    </label>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                )}
+
+                {/* Mandala Container */}
+                <div
+                    style={{
+                        flex: 1,
+                        display: 'flex',
+                        flexDirection: isMobile ? 'column' : 'row',
+                        justifyContent: isMobile ? 'flex-start' : 'center',
+                        alignItems: 'center',
+                        padding: isMobile ? '0.5rem' : '1rem',
+                        backgroundColor: isDark ? '#0d0d1a' : '#f0f0f0',
+                        overflow: 'hidden',
+                        boxSizing: 'border-box',
+                        minHeight: 0,
+                        gap: '0.5rem',
+                        width: '100%',
+                        maxWidth: '100%',
+                    }}
+                >
+                    <div style={{
+                        width: modalMandalaSize,
+                        height: modalMandalaSize,
+                        maxWidth: '100%',
+                        maxHeight: '100%',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        flexShrink: 1,
+                    }}>
+                        <AstroMandala
+                            {...modalMandalaProps}
+                            size={modalMandalaSize}
+                            key={`modal-mandala-${modalMandalaSize}-${showChartInfo}`}
+                        />
+                    </div>
+
+                    {/* Chart Info Panel - shows next to mandala on desktop (vertically centered) */}
+                    {showChartInfo && !isMobile && (
+                        <div style={{
+                            alignSelf: 'center',
+                            maxHeight: modalMandalaSize * 0.85,
+                            overflowY: 'auto',
+                        }}>
+                            <ChartInfoPanel
+                                chart={chart}
+                                secondChart={secondChart}
+                                theme={theme}
+                                language={language}
+                            />
+                        </div>
+                    )}
+
+                    {/* Chart Info Panel for Mobile - shows below mandala (horizontally centered) */}
+                    {showChartInfo && isMobile && (
+                        <div style={{
+                            width: '100%',
+                            maxWidth: '100%',
+                            display: 'flex',
+                            justifyContent: 'center',
+                        }}>
+                            <ChartInfoPanel
+                                chart={chart}
+                                secondChart={secondChart}
+                                theme={theme}
+                                language={language}
+                            />
+                        </div>
+                    )}
+                </div>
+            </div>
+        </div>
+    ) : null;
+
     return (
         <>
             {/* Main container with expand button */}
@@ -284,327 +712,8 @@ export function AstroMandalaWithModal({
                 <AstroMandala {...mainMandalaProps} size={size} />
             </div>
 
-            {/* Fullscreen Modal */}
-            {isModalOpen && (
-                <div
-                    style={{
-                        position: 'fixed',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        width: '100vw',
-                        maxWidth: '100vw',
-                        backgroundColor: isDark ? '#121212' : '#ffffff',
-                        zIndex: 9999,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        overflow: 'hidden',
-                        boxSizing: 'border-box',
-                    }}
-                >
-                    {/* Modal Header */}
-                    <div
-                        style={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            padding: isMobile ? '0.25rem 0.5rem' : '0.5rem 1rem',
-                            borderBottom: isDark ? '1px solid #333' : '1px solid #ddd',
-                            backgroundColor: isDark ? '#1a1a1a' : '#f5f5f5',
-                            flexShrink: 0,
-                            minHeight: isMobile ? '40px' : '48px',
-                            maxHeight: isMobile ? '40px' : '48px',
-                            width: '100%',
-                            boxSizing: 'border-box',
-                            overflow: 'hidden',
-                        }}
-                    >
-                        <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '0.25rem' : '1rem', flexShrink: 1, overflow: 'hidden' }}>
-                            <button
-                                onClick={() => setShowModalSettings(!showModalSettings)}
-                                style={{
-                                    ...buttonStyle,
-                                    padding: isMobile ? '0.25rem 0.4rem' : buttonStyle.padding,
-                                    fontSize: isMobile ? '14px' : buttonStyle.fontSize,
-                                    minWidth: isMobile ? 'auto' : undefined,
-                                }}
-                                title={t.settings}
-                            >
-                                ⚙{isMobile ? '' : ` ${showModalSettings ? '▼' : '▶'} ${t.settings}`}
-                            </button>
-
-                            {/* Language selector */}
-                            <select
-                                value={language}
-                                onChange={(e) => setLanguage(e.target.value as MandalaLanguage)}
-                                style={{
-                                    padding: isMobile ? '0.25rem' : '0.5rem',
-                                    borderRadius: '4px',
-                                    border: isDark ? '1px solid #444' : '1px solid #ccc',
-                                    backgroundColor: isDark ? '#333' : '#fff',
-                                    color: isDark ? '#fff' : '#333',
-                                    cursor: 'pointer',
-                                    fontSize: isMobile ? '14px' : '14px',
-                                    minWidth: isMobile ? 'auto' : undefined,
-                                }}
-                            >
-                                <option value="en">{isMobile ? '🇬🇧' : '🇬🇧 English'}</option>
-                                <option value="es">{isMobile ? '🇪🇸' : '🇪🇸 Español'}</option>
-                            </select>
-
-                            {/* Theme toggle */}
-                            <button
-                                onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-                                style={{
-                                    ...buttonStyle,
-                                    padding: isMobile ? '0.25rem 0.4rem' : buttonStyle.padding,
-                                    fontSize: isMobile ? '14px' : buttonStyle.fontSize,
-                                    minWidth: isMobile ? 'auto' : undefined,
-                                }}
-                            >
-                                {isDark ? '☀️' : '🌙'}
-                            </button>
-                        </div>
-
-                        <button
-                            onClick={() => setIsModalOpen(false)}
-                            style={{
-                                ...buttonStyle,
-                                backgroundColor: isDark ? '#c53030' : '#e53e3e',
-                                color: '#fff',
-                                padding: isMobile ? '0.25rem 0.5rem' : buttonStyle.padding,
-                                fontSize: isMobile ? '14px' : buttonStyle.fontSize,
-                                minWidth: isMobile ? 'auto' : undefined,
-                                flexShrink: 0,
-                                marginLeft: isMobile ? '0.25rem' : undefined,
-                            }}
-                        >
-                            ✕
-                        </button>
-                    </div>
-
-                    {/* Modal Body */}
-                    <div
-                        style={{
-                            flex: 1,
-                            display: 'flex',
-                            overflow: 'hidden',
-                        }}
-                    >
-                        {/* Settings Panel */}
-                        {showModalSettings && (
-                            <div
-                                style={{
-                                    width: '280px',
-                                    minWidth: '280px',
-                                    padding: '1rem',
-                                    overflowY: 'auto',
-                                    borderRight: isDark ? '1px solid #333' : '1px solid #ddd',
-                                    backgroundColor: isDark ? '#1a1a1a' : '#fafafa',
-                                    color: isDark ? '#e0e0e0' : '#333',
-                                }}
-                            >
-                                {/* Display options */}
-                                <div style={sectionStyle}>
-                                    <h4 style={{ margin: '0 0 0.5rem 0', fontSize: '13px', textTransform: 'uppercase', opacity: 0.7 }}>
-                                        {t.settings}
-                                    </h4>
-
-                                    <label style={checkboxLabelStyle}>
-                                        <input
-                                            type="checkbox"
-                                            checked={showAspects}
-                                            onChange={(e) => setShowAspects(e.target.checked)}
-                                        />
-                                        {t.showAspects}
-                                    </label>
-
-                                    <label style={checkboxLabelStyle}>
-                                        <input
-                                            type="checkbox"
-                                            checked={showDegrees}
-                                            onChange={(e) => setShowDegrees(e.target.checked)}
-                                        />
-                                        {t.showDegrees}
-                                    </label>
-
-                                    <label style={checkboxLabelStyle}>
-                                        <input
-                                            type="checkbox"
-                                            checked={showHouses}
-                                            onChange={(e) => setShowHouses(e.target.checked)}
-                                        />
-                                        {t.showHouses}
-                                    </label>
-
-                                    {isSynastry && (
-                                        <label style={checkboxLabelStyle}>
-                                            <input
-                                                type="checkbox"
-                                                checked={showSecondChartHouses}
-                                                onChange={(e) => setShowSecondChartHouses(e.target.checked)}
-                                            />
-                                            {t.showChart2Houses}
-                                        </label>
-                                    )}
-
-                                    <label style={checkboxLabelStyle}>
-                                        <input
-                                            type="checkbox"
-                                            checked={showPlanetProjections}
-                                            onChange={(e) => setShowPlanetProjections(e.target.checked)}
-                                        />
-                                        {t.showPlanetProjections}
-                                    </label>
-
-                                    <label style={checkboxLabelStyle}>
-                                        <input
-                                            type="checkbox"
-                                            checked={showChartInfo}
-                                            onChange={(e) => setShowChartInfo(e.target.checked)}
-                                        />
-                                        {t.showChartInfo}
-                                    </label>
-
-                                    {isSynastry && showAspects && (
-                                        <label style={checkboxLabelStyle}>
-                                            <input
-                                                type="checkbox"
-                                                checked={includeAnglesInSynastry}
-                                                onChange={(e) => setIncludeAnglesInSynastry(e.target.checked)}
-                                            />
-                                            {t.includeAnglesInSynastry}
-                                        </label>
-                                    )}
-                                </div>
-
-                                {/* Aspect Types */}
-                                {showAspects && (
-                                    <div style={sectionStyle}>
-                                        <h4 style={{ margin: '0 0 0.5rem 0', fontSize: '13px', textTransform: 'uppercase', opacity: 0.7 }}>
-                                            {t.aspectTypes}
-                                        </h4>
-
-                                        <div style={{ marginBottom: '0.5rem' }}>
-                                            <span style={{ fontSize: '12px', opacity: 0.6 }}>{t.majorAspects}</span>
-                                        </div>
-
-                                        {MAJOR_ASPECTS.map(aspect => (
-                                            <label key={aspect} style={{ ...checkboxLabelStyle, fontSize: '13px' }}>
-                                                <input
-                                                    type="checkbox"
-                                                    checked={aspectFilters[aspect]}
-                                                    onChange={() => toggleAspectFilter(aspect)}
-                                                />
-                                                {t[aspect]}
-                                            </label>
-                                        ))}
-
-                                        <div style={{ marginTop: '0.75rem', marginBottom: '0.5rem' }}>
-                                            <span style={{ fontSize: '12px', opacity: 0.6 }}>{t.minorAspects}</span>
-                                        </div>
-
-                                        {ALL_ASPECT_TYPES.filter(a => !MAJOR_ASPECTS.includes(a)).map(aspect => (
-                                            <label key={aspect} style={{ ...checkboxLabelStyle, fontSize: '13px' }}>
-                                                <input
-                                                    type="checkbox"
-                                                    checked={aspectFilters[aspect]}
-                                                    onChange={() => toggleAspectFilter(aspect)}
-                                                />
-                                                {t[aspect]}
-                                            </label>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-                        )}
-
-                        {/* Mandala Container */}
-                        <div
-                            style={{
-                                flex: 1,
-                                display: 'flex',
-                                flexDirection: isMobile ? 'column' : 'row',
-                                justifyContent: isMobile ? 'flex-start' : 'center',
-                                alignItems: 'center',
-                                padding: isMobile ? '0.5rem' : '1rem',
-                                backgroundColor: isDark ? '#0d0d1a' : '#f0f0f0',
-                                overflow: 'hidden',
-                                boxSizing: 'border-box',
-                                minHeight: 0,
-                                gap: '0.5rem',
-                                width: '100%',
-                                maxWidth: '100%',
-                            }}
-                        >
-                            <div style={{
-                                width: modalMandalaSize,
-                                height: modalMandalaSize,
-                                maxWidth: '100%',
-                                maxHeight: '100%',
-                                display: 'flex',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                flexShrink: 1,
-                            }}>
-                                <AstroMandala
-                                    {...modalMandalaProps}
-                                    size={modalMandalaSize}
-                                    key={`modal-mandala-${modalMandalaSize}-${showChartInfo}`}
-                                />
-                            </div>
-
-                            {/* Chart Info Panel - shows next to mandala on desktop (vertically centered) */}
-                            {showChartInfo && !isMobile && (
-                                <div style={{
-                                    alignSelf: 'center',
-                                    maxHeight: modalMandalaSize * 0.85,
-                                    overflowY: 'auto',
-                                }}>
-                                    <ChartInfoPanel
-                                        chart={chart}
-                                        secondChart={secondChart}
-                                        theme={theme}
-                                        language={language}
-                                    />
-                                </div>
-                            )}
-
-                            {/* Chart Info Panel for Mobile - shows below mandala (horizontally centered) */}
-                            {showChartInfo && isMobile && (
-                                <div style={{
-                                    width: '100%',
-                                    maxWidth: '100%',
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                }}>
-                                    <ChartInfoPanel
-                                        chart={chart}
-                                        secondChart={secondChart}
-                                        theme={theme}
-                                        language={language}
-                                    />
-                                </div>
-                            )}
-                        </div>
-                    </div>
-
-                    {/* Mobile: Toggle settings button (shown only on small screens) */}
-                    <style>{`
-            @media (max-width: 600px) {
-              .modal-settings-panel {
-                position: absolute !important;
-                left: 0 !important;
-                top: 60px !important;
-                bottom: 0 !important;
-                width: 100% !important;
-                z-index: 100 !important;
-              }
-            }
-          `}</style>
-                </div>
-            )}
+            {/* Render modal via portal for isolation from parent page */}
+            {modalContent && portalContainerRef.current && createPortal(modalContent, portalContainerRef.current)}
         </>
     );
 }

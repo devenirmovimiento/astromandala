@@ -22,6 +22,9 @@ export type {
     AstroMandalaProps,
     MandalaTheme,
     MandalaLanguage,
+    // Orb configuration types
+    PlanetCategory,
+    OrbConfiguration,
     // Types for circular-natal-horoscope-js compatibility
     HoroscopeResult,
     HoroscopeCelestialBody,
@@ -32,6 +35,9 @@ export type {
     HoroscopeChartPosition,
     HoroscopeSign,
 } from './types';
+
+// Orb configuration constants
+export { DEFAULT_ORBS, PLANET_CATEGORIES } from './types';
 
 // Constants for reference
 export {
@@ -60,4 +66,6 @@ export {
     // Horoscope conversion utilities
     convertHoroscopeToChart,
     calculateSynastryAspects,
+    calculateNatalAspects,
+    getOrbForPlanets,
 } from './utils';

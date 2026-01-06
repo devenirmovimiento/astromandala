@@ -2,6 +2,8 @@
 
 A React/Next.js component library for displaying beautiful astrological charts (birth charts/mandalas). Supports single chart visualization, synastry (two charts comparison), themes (light/dark), multiple languages (English/Spanish), and an expandable modal with settings panel.
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-blue?style=for-the-badge)](https://devenirmovimiento.github.io/astromandala/)
+
 ![Astromandala Example](https://raw.githubusercontent.com/devenirmovimiento/astromandala/main/example.png)
 
 ## Features
@@ -415,16 +417,70 @@ export default function SynastryPage() {
 | ---------------------------- | ------------------------------------------------------------- |
 | `convertHoroscopeToChart()`  | Converts a Horoscope result to AstrologicalChart format       |
 | `calculateSynastryAspects()` | Calculates aspects between two Horoscope results for synastry |
+| `calculateNatalAspects()`    | Calculates aspects within a single chart                      |
+| `getOrbForPlanets()`         | Gets the orb for an aspect between two specific planets       |
 
 ```typescript
 // Convert horoscope to chart
 const chart = convertHoroscopeToChart(horoscope, "Optional Label");
 
-// Calculate synastry aspects with custom orbs
-const aspects = calculateSynastryAspects(horoscope1, horoscope2, {
-	conjunction: 10, // wider orb for conjunctions
-	trine: 6, // narrower orb for trines
-});
+// Calculate synastry aspects with default orbs
+const aspects = calculateSynastryAspects(horoscope1, horoscope2);
+
+// Calculate natal aspects
+const natalAspects = calculateNatalAspects(horoscope);
+```
+
+### Configuring Aspect Orbs
+
+The library uses configurable orbs based on planet categories. By default:
+
+| Category        | Planets                | Default Orb |
+| --------------- | ---------------------- | ----------- |
+| `luminaries`    | Sun, Moon              | 10°         |
+| `personal`      | Mercury, Venus, Mars   | 8°          |
+| `social`        | Jupiter, Saturn        | 6°          |
+| `transpersonal` | Uranus, Neptune, Pluto | 5°          |
+| `points`        | Nodes, Chiron, Lilith  | 5°          |
+| `angles`        | Ascendant, Midheaven   | 5°          |
+
+When calculating aspects between two planets, the library uses the **average** of both planets' orbs.
+
+```typescript
+import {
+	calculateSynastryAspects,
+	calculateNatalAspects,
+	DEFAULT_ORBS,
+	type OrbConfiguration,
+} from "astromandala";
+
+// Use default orbs
+const aspects = calculateSynastryAspects(horoscope1, horoscope2);
+
+// Use custom orbs (partial configuration - unspecified use defaults)
+const customOrbs: OrbConfiguration = {
+	luminaries: 12, // Sun, Moon: 12°
+	personal: 10, // Mercury, Venus, Mars: 10°
+	transpersonal: 4, // Uranus, Neptune, Pluto: 4°
+};
+
+const aspectsWithCustomOrbs = calculateSynastryAspects(
+	horoscope1,
+	horoscope2,
+	customOrbs
+);
+
+// Calculate natal aspects with custom orbs
+const natalAspects = calculateNatalAspects(horoscope, customOrbs);
+
+// Calculate only major aspects
+const majorAspects = calculateNatalAspects(horoscope, customOrbs, [
+	"conjunction",
+	"opposition",
+	"trine",
+	"square",
+	"sextile",
+]);
 ```
 
 ---

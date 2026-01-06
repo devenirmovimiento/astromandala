@@ -12,6 +12,10 @@ import {
     HoroscopeAngle,
     HoroscopeHouse,
     HoroscopeAspect,
+    OrbConfiguration,
+    DEFAULT_ORBS,
+    PLANET_CATEGORIES,
+    PlanetCategory,
 } from '../types';
 
 /**
@@ -284,74 +288,104 @@ export function convertHoroscopeToChart(
 }
 
 /**
+ * Aspect angles for each aspect type
+ */
+const ASPECT_ANGLES: Record<AspectType, number> = {
+    conjunction: 0,
+    opposition: 180,
+    trine: 120,
+    square: 90,
+    sextile: 60,
+    quincunx: 150,
+    semisextile: 30,
+    semisquare: 45,
+    sesquiquadrate: 135,
+    quintile: 72,
+    biquintile: 144,
+};
+
+/**
+ * Get the orb for an aspect between two planets based on their categories.
+ * Uses the average of both planets' orbs for the aspect calculation.
+ * 
+ * @param planet1 - First planet name
+ * @param planet2 - Second planet name
+ * @param orbConfig - Custom orb configuration (optional)
+ * @returns The orb to use for this aspect
+ */
+export function getOrbForPlanets(
+    planet1: PlanetName,
+    planet2: PlanetName,
+    orbConfig: OrbConfiguration = {}
+): number {
+    const config = { ...DEFAULT_ORBS, ...orbConfig };
+
+    const cat1 = PLANET_CATEGORIES[planet1];
+    const cat2 = PLANET_CATEGORIES[planet2];
+
+    const orb1 = config[cat1];
+    const orb2 = config[cat2];
+
+    // Use the average of both orbs
+    return (orb1 + orb2) / 2;
+}
+
+/**
+ * Get planets with their ecliptic degrees from a Horoscope
+ */
+function getPlanetsWithDegrees(horoscope: HoroscopeResult): Array<{ key: string; degrees: number }> {
+    const result: Array<{ key: string; degrees: number }> = [];
+
+    if (horoscope.CelestialBodies?.all) {
+        for (const body of horoscope.CelestialBodies.all) {
+            result.push({ key: body.key, degrees: body.ChartPosition.Ecliptic.DecimalDegrees });
+        }
+    }
+
+    if (horoscope.CelestialPoints?.all) {
+        for (const point of horoscope.CelestialPoints.all) {
+            result.push({ key: point.key, degrees: point.ChartPosition.Ecliptic.DecimalDegrees });
+        }
+    }
+
+    if (horoscope.Ascendant) {
+        result.push({ key: 'ascendant', degrees: horoscope.Ascendant.ChartPosition.Ecliptic.DecimalDegrees });
+    }
+
+    if (horoscope.Midheaven) {
+        result.push({ key: 'midheaven', degrees: horoscope.Midheaven.ChartPosition.Ecliptic.DecimalDegrees });
+    }
+
+    return result;
+}
+
+/**
  * Calculate synastry aspects between two Horoscope results
  * 
  * @param horoscope1 - First Horoscope from circular-natal-horoscope-js
  * @param horoscope2 - Second Horoscope from circular-natal-horoscope-js
- * @param orbs - Custom orbs for each aspect type (optional)
+ * @param orbConfig - Custom orbs by planet category (optional)
  * @returns Array of SynastryAspect objects
+ * 
+ * @example
+ * ```typescript
+ * // Using default orbs (Sun/Moon: 10°, Personal: 8°, etc.)
+ * const aspects = calculateSynastryAspects(horoscope1, horoscope2);
+ * 
+ * // Using custom orbs
+ * const aspects = calculateSynastryAspects(horoscope1, horoscope2, {
+ *   luminaries: 12,  // Sun, Moon
+ *   personal: 10,    // Mercury, Venus, Mars
+ *   transpersonal: 6 // Uranus, Neptune, Pluto
+ * });
+ * ```
  */
 export function calculateSynastryAspects(
     horoscope1: HoroscopeResult,
     horoscope2: HoroscopeResult,
-    orbs: Partial<Record<AspectType, number>> = {}
+    orbConfig: OrbConfiguration = {}
 ): import('../types').SynastryAspect[] {
-    const defaultOrbs: Record<AspectType, number> = {
-        conjunction: 8,
-        opposition: 8,
-        trine: 8,
-        square: 7,
-        sextile: 6,
-        quincunx: 5,
-        semisextile: 2,
-        semisquare: 2,
-        sesquiquadrate: 2,
-        quintile: 2,
-        biquintile: 2,
-    };
-
-    const aspectAngles: Record<AspectType, number> = {
-        conjunction: 0,
-        opposition: 180,
-        trine: 120,
-        square: 90,
-        sextile: 60,
-        quincunx: 150,
-        semisextile: 30,
-        semisquare: 45,
-        sesquiquadrate: 135,
-        quintile: 72,
-        biquintile: 144,
-    };
-
     const synastryAspects: import('../types').SynastryAspect[] = [];
-
-    // Get all planets from both charts
-    const getPlanetsWithDegrees = (horoscope: HoroscopeResult): Array<{ key: string; degrees: number }> => {
-        const result: Array<{ key: string; degrees: number }> = [];
-
-        if (horoscope.CelestialBodies?.all) {
-            for (const body of horoscope.CelestialBodies.all) {
-                result.push({ key: body.key, degrees: body.ChartPosition.Ecliptic.DecimalDegrees });
-            }
-        }
-
-        if (horoscope.CelestialPoints?.all) {
-            for (const point of horoscope.CelestialPoints.all) {
-                result.push({ key: point.key, degrees: point.ChartPosition.Ecliptic.DecimalDegrees });
-            }
-        }
-
-        if (horoscope.Ascendant) {
-            result.push({ key: 'ascendant', degrees: horoscope.Ascendant.ChartPosition.Ecliptic.DecimalDegrees });
-        }
-
-        if (horoscope.Midheaven) {
-            result.push({ key: 'midheaven', degrees: horoscope.Midheaven.ChartPosition.Ecliptic.DecimalDegrees });
-        }
-
-        return result;
-    };
 
     const planets1 = getPlanetsWithDegrees(horoscope1);
     const planets2 = getPlanetsWithDegrees(horoscope2);
@@ -359,27 +393,29 @@ export function calculateSynastryAspects(
     // Check each pair for aspects
     for (const p1 of planets1) {
         for (const p2 of planets2) {
+            const planet1 = convertPlanetKey(p1.key);
+            const planet2 = convertPlanetKey(p2.key);
+
+            if (!planet1 || !planet2) continue;
+
             const diff = Math.abs(p1.degrees - p2.degrees);
             const normalizedDiff = diff > 180 ? 360 - diff : diff;
 
-            for (const [aspectType, angle] of Object.entries(aspectAngles)) {
-                const orb = orbs[aspectType as AspectType] ?? defaultOrbs[aspectType as AspectType];
+            // Get the orb based on both planets' categories
+            const maxOrb = getOrbForPlanets(planet1, planet2, orbConfig);
+
+            for (const [aspectType, angle] of Object.entries(ASPECT_ANGLES)) {
                 const aspectDiff = Math.abs(normalizedDiff - angle);
 
-                if (aspectDiff <= orb) {
-                    const planet1 = convertPlanetKey(p1.key);
-                    const planet2 = convertPlanetKey(p2.key);
-
-                    if (planet1 && planet2) {
-                        synastryAspects.push({
-                            planet1,
-                            chart1Owner: 'chart1',
-                            planet2,
-                            chart2Owner: 'chart2',
-                            aspect: aspectType as AspectType,
-                            orb: aspectDiff,
-                        });
-                    }
+                if (aspectDiff <= maxOrb) {
+                    synastryAspects.push({
+                        planet1,
+                        chart1Owner: 'chart1',
+                        planet2,
+                        chart2Owner: 'chart2',
+                        aspect: aspectType as AspectType,
+                        orb: aspectDiff,
+                    });
                     break; // Only one aspect per pair
                 }
             }
@@ -387,4 +423,74 @@ export function calculateSynastryAspects(
     }
 
     return synastryAspects;
+}
+
+/**
+ * Calculate natal aspects within a single Horoscope
+ * 
+ * This function calculates aspects between all planets in a single chart
+ * using configurable orbs based on planet categories.
+ * 
+ * @param horoscope - Horoscope from circular-natal-horoscope-js
+ * @param orbConfig - Custom orbs by planet category (optional)
+ * @param aspectTypes - Which aspect types to calculate (optional, defaults to all)
+ * @returns Array of Aspect objects
+ * 
+ * @example
+ * ```typescript
+ * // Calculate all aspects with default orbs
+ * const aspects = calculateNatalAspects(horoscope);
+ * 
+ * // Calculate only major aspects with tighter orbs
+ * const aspects = calculateNatalAspects(horoscope, 
+ *   { luminaries: 8, personal: 6, transpersonal: 4 },
+ *   ['conjunction', 'opposition', 'trine', 'square', 'sextile']
+ * );
+ * ```
+ */
+export function calculateNatalAspects(
+    horoscope: HoroscopeResult,
+    orbConfig: OrbConfiguration = {},
+    aspectTypes?: AspectType[]
+): Aspect[] {
+    const aspects: Aspect[] = [];
+    const planets = getPlanetsWithDegrees(horoscope);
+
+    const typesToCheck = aspectTypes || (Object.keys(ASPECT_ANGLES) as AspectType[]);
+
+    // Check each pair for aspects (avoid duplicates)
+    for (let i = 0; i < planets.length; i++) {
+        for (let j = i + 1; j < planets.length; j++) {
+            const p1 = planets[i];
+            const p2 = planets[j];
+
+            const planet1 = convertPlanetKey(p1.key);
+            const planet2 = convertPlanetKey(p2.key);
+
+            if (!planet1 || !planet2) continue;
+
+            const diff = Math.abs(p1.degrees - p2.degrees);
+            const normalizedDiff = diff > 180 ? 360 - diff : diff;
+
+            // Get the orb based on both planets' categories
+            const maxOrb = getOrbForPlanets(planet1, planet2, orbConfig);
+
+            for (const aspectType of typesToCheck) {
+                const angle = ASPECT_ANGLES[aspectType];
+                const aspectDiff = Math.abs(normalizedDiff - angle);
+
+                if (aspectDiff <= maxOrb) {
+                    aspects.push({
+                        planet1,
+                        planet2,
+                        aspect: aspectType,
+                        orb: aspectDiff,
+                    });
+                    break; // Only one aspect per pair
+                }
+            }
+        }
+    }
+
+    return aspects;
 }

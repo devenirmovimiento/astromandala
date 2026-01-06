@@ -103,7 +103,17 @@ export function AstroMandala({
             height={size}
             viewBox={`0 0 ${size} ${size}`}
             className={className}
-            style={{ fontFamily: 'Arial, sans-serif', maxWidth: '100%', height: 'auto' }}
+            style={{
+                fontFamily: 'Arial, sans-serif',
+                maxWidth: '100%',
+                height: 'auto',
+                display: 'block',
+                overflow: 'visible',
+                // Prevent external CSS from affecting the SVG
+                contain: 'layout style',
+            }}
+            // Ensure SVG maintains aspect ratio
+            preserveAspectRatio="xMidYMid meet"
         >
             {/* Background */}
             <circle

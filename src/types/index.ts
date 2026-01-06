@@ -250,6 +250,71 @@ export interface HoroscopeResult {
 }
 
 /**
+ * Planet categories for orb configuration
+ */
+export type PlanetCategory = 'luminaries' | 'personal' | 'social' | 'transpersonal' | 'points' | 'angles';
+
+/**
+ * Configuration for aspect orbs by planet category
+ * 
+ * Default values:
+ * - luminaries (Sun, Moon): 10°
+ * - personal (Mercury, Venus, Mars): 8°
+ * - social (Jupiter, Saturn): 6°
+ * - transpersonal (Uranus, Neptune, Pluto): 5°
+ * - points (Nodes, Chiron, Lilith): 5°
+ * - angles (Ascendant, Midheaven): 5°
+ */
+export interface OrbConfiguration {
+    /** Orb for Sun and Moon (default: 10) */
+    luminaries?: number;
+    /** Orb for Mercury, Venus, Mars (default: 8) */
+    personal?: number;
+    /** Orb for Jupiter, Saturn (default: 6) */
+    social?: number;
+    /** Orb for Uranus, Neptune, Pluto (default: 5) */
+    transpersonal?: number;
+    /** Orb for Nodes, Chiron, Lilith (default: 5) */
+    points?: number;
+    /** Orb for Ascendant, Midheaven (default: 5) */
+    angles?: number;
+}
+
+/**
+ * Default orb values by planet category
+ */
+export const DEFAULT_ORBS: Required<OrbConfiguration> = {
+    luminaries: 10,
+    personal: 8,
+    social: 6,
+    transpersonal: 5,
+    points: 5,
+    angles: 5,
+};
+
+/**
+ * Map planets to their categories
+ */
+export const PLANET_CATEGORIES: Record<PlanetName, PlanetCategory> = {
+    Sun: 'luminaries',
+    Moon: 'luminaries',
+    Mercury: 'personal',
+    Venus: 'personal',
+    Mars: 'personal',
+    Jupiter: 'social',
+    Saturn: 'social',
+    Uranus: 'transpersonal',
+    Neptune: 'transpersonal',
+    Pluto: 'transpersonal',
+    NorthNode: 'points',
+    SouthNode: 'points',
+    Chiron: 'points',
+    Lilith: 'points',
+    Ascendant: 'angles',
+    Midheaven: 'angles',
+};
+
+/**
  * Colors for different aspect types
  */
 export interface AspectColors {
