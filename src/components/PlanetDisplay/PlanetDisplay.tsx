@@ -49,8 +49,8 @@ export function PlanetDisplay({
         absoluteDegree: getPlanetAbsoluteDegree(planet),
     }));
 
-    // Adjust positions to avoid overlapping
-    const adjustedPlanets = adjustPlanetPositions(planetsWithDegrees);
+    // Adjust positions to avoid overlapping (including angle labels)
+    const adjustedPlanets = adjustPlanetPositions(planetsWithDegrees, 8, ascendantDegree);
 
     // Different radii for inner and outer chart planets
     // Inner planets are placed between zodiac ring and house numbers
@@ -121,12 +121,25 @@ export function PlanetDisplay({
                             }}
                         >
                             {symbol}&#xFE0E;
-                            {planet.retrograde && (
-                                <tspan fontSize={fontSize * 0.35} dy={fontSize * 0.15} dx={fontSize * 0.05}>
-                                    ℞
-                                </tspan>
-                            )}
                         </text>
+
+                        {/* Retrograde symbol - positioned below/beside to avoid collisions */}
+                        {planet.retrograde && (
+                            <text
+                                x={symbolPos.x + fontSize * 0.45}
+                                y={symbolPos.y - fontSize * 0.35}
+                                textAnchor="start"
+                                dominantBaseline="central"
+                                fontSize={fontSize * 0.32}
+                                fill={color}
+                                opacity={0.9}
+                                style={{
+                                    fontFamily: 'Segoe UI Symbol, Symbola, sans-serif',
+                                }}
+                            >
+                                R
+                            </text>
+                        )}
 
                         {/* Degree display */}
                         {showDegrees && (

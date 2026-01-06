@@ -99,22 +99,71 @@ function angularDistance(deg1: number, deg2: number): number {
 }
 
 /**
+ * Protected zones for angle labels (AS, MC, DS, IC) relative to ascendant
+ * These are the positions where angle labels appear
+ */
+const ANGLE_LABEL_ZONES = [
+    { house: 1, label: 'AS', relativeOffset: 0 },     // Ascendant at 0°
+    { house: 4, label: 'IC', relativeOffset: 270 },   // IC at 270° (bottom)
+    { house: 7, label: 'DS', relativeOffset: 180 },   // Descendant at 180°
+    { house: 10, label: 'MC', relativeOffset: 90 },   // Midheaven at 90° (top)
+];
+
+/**
+ * Check if a display angle is too close to any angle label zone
+ */
+function isInAngleLabelZone(
+    displayAngle: number,
+    ascendantDegree: number,
+    threshold: number = 10
+): { inZone: boolean; pushDirection: number; zoneDegree: number } {
+    for (const zone of ANGLE_LABEL_ZONES) {
+        // The label appears at the house cusp position
+        // In the mandala, angles are displayed at specific positions
+        const zoneDegree = normalizeAngle(zone.relativeOffset);
+        const diff = displayAngle - zoneDegree;
+        const normalizedDiff = ((diff + 180) % 360) - 180; // Range: -180 to 180
+
+        if (Math.abs(normalizedDiff) < threshold) {
+            // Planet is too close to an angle label
+            // Push in the direction away from the label
+            return {
+                inZone: true,
+                pushDirection: normalizedDiff > 0 ? 1 : -1,
+                zoneDegree
+            };
+        }
+    }
+    return { inZone: false, pushDirection: 0, zoneDegree: 0 };
+}
+
+/**
  * Adjust planet positions to avoid overlapping
  * Uses an iterative force-based approach to spread out clustered planets
+ * Also avoids collisions with angle labels (AS, MC, DS, IC)
  * Returns adjusted positions with offset angles
  */
 export function adjustPlanetPositions(
     planets: Array<{ planet: PlanetPosition; absoluteDegree: number }>,
-    threshold: number = 8
+    threshold: number = 8,
+    ascendantDegree: number = 0
 ): Array<{ planet: PlanetPosition; absoluteDegree: number; offset: number }> {
     if (planets.length === 0) return [];
-    if (planets.length === 1) return [{ ...planets[0], offset: 0 }];
+    if (planets.length === 1) {
+        // Even single planets need angle label avoidance
+        const p = planets[0];
+        const displayAngle = getMandalaAngle(p.absoluteDegree, ascendantDegree);
+        const angleCheck = isInAngleLabelZone(displayAngle, ascendantDegree, 10);
+        const offset = angleCheck.inZone ? angleCheck.pushDirection * 12 : 0;
+        return [{ ...p, offset }];
+    }
 
-    // Initialize with small random offsets to break ties
-    const result = planets.map((p, i) => ({
+    // Initialize offsets
+    const result = planets.map((p) => ({
         ...p,
         offset: 0,
-        displayDegree: p.absoluteDegree
+        displayDegree: p.absoluteDegree,
+        displayAngle: getMandalaAngle(p.absoluteDegree, ascendantDegree)
     }));
 
     // Sort by absolute degree initially
@@ -122,15 +171,27 @@ export function adjustPlanetPositions(
 
     // Iterative relaxation algorithm
     const minSpacing = threshold;
-    const maxIterations = 50;
+    const maxIterations = 80;
+    const angleLabelThreshold = 10; // Extra space around angle labels
 
     for (let iteration = 0; iteration < maxIterations; iteration++) {
         let hasCollision = false;
 
-        // Update display degrees
+        // Update display degrees and angles
         result.forEach(p => {
             p.displayDegree = normalizeAngle(p.absoluteDegree + p.offset);
+            p.displayAngle = getMandalaAngle(p.displayDegree, ascendantDegree);
         });
+
+        // Check collisions with angle labels (AS, MC, DS, IC)
+        for (const planet of result) {
+            const angleCheck = isInAngleLabelZone(planet.displayAngle, ascendantDegree, angleLabelThreshold);
+            if (angleCheck.inZone) {
+                hasCollision = true;
+                // Push away from the angle label
+                planet.offset += angleCheck.pushDirection * 2;
+            }
+        }
 
         // Sort by display degree for collision detection
         const sortedByDisplay = [...result].sort((a, b) => a.displayDegree - b.displayDegree);
@@ -161,12 +222,12 @@ export function adjustPlanetPositions(
 
         // Dampen offsets slightly to prevent oscillation
         result.forEach(p => {
-            p.offset *= 0.95;
+            p.offset *= 0.92;
         });
     }
 
     // Final pass: limit maximum offset to prevent planets from drifting too far
-    const maxOffset = 25;
+    const maxOffset = 30;
     result.forEach(p => {
         p.offset = Math.max(-maxOffset, Math.min(maxOffset, p.offset));
     });
