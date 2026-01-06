@@ -37,8 +37,14 @@ export function PlanetDisplay({
 }: PlanetDisplayProps) {
     const isDark = theme === 'dark';
     const offsetLineColor = isDark ? '#555' : '#ccc';
+    
+    // Filter out Ascendant and Midheaven as they are already shown in HouseWheel as ASC/MC labels
+    const filteredPlanets = planets.filter(
+        (planet) => planet.planet !== 'Ascendant' && planet.planet !== 'Midheaven'
+    );
+    
     // Calculate absolute degrees for all planets
-    const planetsWithDegrees = planets.map((planet) => ({
+    const planetsWithDegrees = filteredPlanets.map((planet) => ({
         planet,
         absoluteDegree: getPlanetAbsoluteDegree(planet),
     }));

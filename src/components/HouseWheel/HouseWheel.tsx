@@ -18,9 +18,9 @@ interface HouseWheelProps {
  * Angle labels for the four cardinal points
  */
 const ANGLE_LABELS: Record<number, string> = {
-    1: 'ASC',
+    1: 'AS',
     4: 'IC',
-    7: 'DSC',
+    7: 'DS',
     10: 'MC',
 };
 
@@ -77,7 +77,8 @@ export function HouseWheel({
                 const angleLabel = ANGLE_LABELS[house.house];
 
                 // Position for angle label (ASC, MC, DSC, IC)
-                const labelRadius = outerRadius * 1.02;
+                // For second chart, place labels slightly inside; for primary, slightly outside
+                const labelRadius = isSecondChart ? innerRadius * 0.92 : outerRadius * 1.02;
                 const labelPos = getPointOnCircle(centerX, centerY, labelRadius, angle);
 
                 return (
@@ -107,16 +108,17 @@ export function HouseWheel({
                             {house.house}
                         </text>
 
-                        {/* Angle label (ASC, MC, DSC, IC) - only show for primary chart */}
-                        {!isSecondChart && angleLabel && (
+                        {/* Angle label (AS, MC, DS, IC) */}
+                        {angleLabel && (
                             <text
                                 x={labelPos.x}
                                 y={labelPos.y}
                                 textAnchor="middle"
                                 dominantBaseline="central"
-                                fontSize={outerRadius * 0.06}
+                                fontSize={outerRadius * (isSecondChart ? 0.05 : 0.06)}
                                 fill={angleLabelColor}
                                 fontWeight="bold"
+                                opacity={isSecondChart ? 0.85 : 1}
                             >
                                 {angleLabel}
                             </text>
