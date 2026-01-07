@@ -45,7 +45,7 @@ export function AstroMandala({
     // Interactive hover states
     const [hoveredPlanet, setHoveredPlanet] = useState<PlanetName | null>(null);
     const [hoveredSign, setHoveredSign] = useState<ZodiacSign | null>(null);
-    const [hoveredHouse, setHoveredHouse] = useState<number | null>(null);
+    const [hoveredHouse, setHoveredHouse] = useState<{ house: number; isSecondChart: boolean } | null>(null);
 
     // Callbacks for hover events
     const handlePlanetHover = useCallback((planet: PlanetName | null) => {
@@ -56,9 +56,18 @@ export function AstroMandala({
         setHoveredSign(sign);
     }, []);
 
-    const handleHouseHover = useCallback((house: number | null) => {
-        setHoveredHouse(house);
+    const handleHouseHover = useCallback((house: number | null, isSecondChart: boolean = false) => {
+        setHoveredHouse(house !== null ? { house, isSecondChart } : null);
     }, []);
+
+    // Create specific handlers for each chart's houses
+    const handlePrimaryHouseHover = useCallback((house: number | null) => {
+        handleHouseHover(house, false);
+    }, [handleHouseHover]);
+
+    const handleSecondHouseHover = useCallback((house: number | null) => {
+        handleHouseHover(house, true);
+    }, [handleHouseHover]);
 
     // Reset all hover states when mouse leaves the SVG
     const handleSvgMouseLeave = useCallback(() => {
@@ -204,8 +213,8 @@ export function AstroMandala({
                     houses={chart.houses}
                     ascendantDegree={ascendantDegree}
                     theme={theme}
-                    onHouseHover={handleHouseHover}
-                    hoveredHouse={hoveredHouse}
+                    onHouseHover={handlePrimaryHouseHover}
+                    hoveredHouse={hoveredHouse && !hoveredHouse.isSecondChart ? hoveredHouse.house : null}
                     onHouseClick={onHouseClick}
                     onAngleClick={onAngleClick}
                 />
@@ -223,8 +232,8 @@ export function AstroMandala({
                     isSecondChart={true}
                     color={outerChartColor}
                     theme={theme}
-                    onHouseHover={handleHouseHover}
-                    hoveredHouse={hoveredHouse}
+                    onHouseHover={handleSecondHouseHover}
+                    hoveredHouse={hoveredHouse && hoveredHouse.isSecondChart ? hoveredHouse.house : null}
                     onHouseClick={onHouseClick}
                     onAngleClick={onAngleClick}
                 />
@@ -262,8 +271,8 @@ export function AstroMandala({
                 onPlanetHover={handlePlanetHover}
                 hoveredPlanet={hoveredPlanet}
                 highlightedSign={hoveredSign}
-                highlightedHouse={hoveredHouse}
-                houses={chart.houses}
+                highlightedHouse={hoveredHouse?.house ?? null}
+                houses={hoveredHouse ? (hoveredHouse.isSecondChart ? (secondChart?.houses || []) : chart.houses) : chart.houses}
                 onPlanetClick={onPlanetClick}
             />
 
@@ -282,8 +291,8 @@ export function AstroMandala({
                     onPlanetHover={handlePlanetHover}
                     hoveredPlanet={hoveredPlanet}
                     highlightedSign={hoveredSign}
-                    highlightedHouse={hoveredHouse}
-                    houses={secondChart?.houses || []}
+                    highlightedHouse={hoveredHouse?.house ?? null}
+                    houses={hoveredHouse ? (hoveredHouse.isSecondChart ? (secondChart?.houses || []) : chart.houses) : (secondChart?.houses || [])}
                     onPlanetClick={onPlanetClick}
                 />
             )}

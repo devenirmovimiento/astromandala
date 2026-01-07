@@ -2850,21 +2850,38 @@ function HouseWheel({
           opacity: isSecondChart ? 0.7 : 1
         }
       ),
-      /* @__PURE__ */ jsx(
-        "text",
+      /* @__PURE__ */ jsxs(
+        "g",
         {
-          x: numberPos.x,
-          y: numberPos.y,
-          textAnchor: "middle",
-          dominantBaseline: "central",
-          fontSize: outerRadius * 0.055,
-          fill: textColor,
-          fontWeight: isAngularHouse ? "bold" : "normal",
           style: { cursor: "pointer" },
           onMouseEnter: () => onHouseHover?.(house.house),
           onMouseLeave: () => onHouseHover?.(null),
           onClick: () => onHouseClick?.(house.house, house.sign),
-          children: house.house
+          children: [
+            /* @__PURE__ */ jsx(
+              "circle",
+              {
+                cx: numberPos.x,
+                cy: numberPos.y,
+                r: outerRadius * 0.035,
+                fill: "transparent"
+              }
+            ),
+            /* @__PURE__ */ jsx(
+              "text",
+              {
+                x: numberPos.x,
+                y: numberPos.y,
+                textAnchor: "middle",
+                dominantBaseline: "central",
+                fontSize: outerRadius * 0.055,
+                fill: textColor,
+                fontWeight: isAngularHouse ? "bold" : "normal",
+                style: { pointerEvents: "none" },
+                children: house.house
+              }
+            )
+          ]
         }
       ),
       angleLabel && /* @__PURE__ */ jsx(
@@ -3279,9 +3296,15 @@ function AstroMandala({
   const handleSignHover = useCallback((sign) => {
     setHoveredSign(sign);
   }, []);
-  const handleHouseHover = useCallback((house) => {
-    setHoveredHouse(house);
+  const handleHouseHover = useCallback((house, isSecondChart = false) => {
+    setHoveredHouse(house !== null ? { house, isSecondChart } : null);
   }, []);
+  const handlePrimaryHouseHover = useCallback((house) => {
+    handleHouseHover(house, false);
+  }, [handleHouseHover]);
+  const handleSecondHouseHover = useCallback((house) => {
+    handleHouseHover(house, true);
+  }, [handleHouseHover]);
   const handleSvgMouseLeave = useCallback(() => {
     setHoveredPlanet(null);
     setHoveredSign(null);
@@ -3406,8 +3429,8 @@ function AstroMandala({
             houses: chart.houses,
             ascendantDegree,
             theme,
-            onHouseHover: handleHouseHover,
-            hoveredHouse,
+            onHouseHover: handlePrimaryHouseHover,
+            hoveredHouse: hoveredHouse && !hoveredHouse.isSecondChart ? hoveredHouse.house : null,
             onHouseClick,
             onAngleClick
           }
@@ -3424,8 +3447,8 @@ function AstroMandala({
             isSecondChart: true,
             color: outerChartColor,
             theme,
-            onHouseHover: handleHouseHover,
-            hoveredHouse,
+            onHouseHover: handleSecondHouseHover,
+            hoveredHouse: hoveredHouse && hoveredHouse.isSecondChart ? hoveredHouse.house : null,
             onHouseClick,
             onAngleClick
           }
@@ -3462,8 +3485,8 @@ function AstroMandala({
             onPlanetHover: handlePlanetHover,
             hoveredPlanet,
             highlightedSign: hoveredSign,
-            highlightedHouse: hoveredHouse,
-            houses: chart.houses,
+            highlightedHouse: hoveredHouse?.house ?? null,
+            houses: hoveredHouse ? hoveredHouse.isSecondChart ? secondChart?.houses || [] : chart.houses : chart.houses,
             onPlanetClick
           }
         ),
@@ -3482,8 +3505,8 @@ function AstroMandala({
             onPlanetHover: handlePlanetHover,
             hoveredPlanet,
             highlightedSign: hoveredSign,
-            highlightedHouse: hoveredHouse,
-            houses: secondChart?.houses || [],
+            highlightedHouse: hoveredHouse?.house ?? null,
+            houses: hoveredHouse ? hoveredHouse.isSecondChart ? secondChart?.houses || [] : chart.houses : secondChart?.houses || [],
             onPlanetClick
           }
         )

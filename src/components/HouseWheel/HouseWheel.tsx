@@ -117,22 +117,33 @@ export function HouseWheel({
                             opacity={isSecondChart ? 0.7 : 1}
                         />
 
-                        {/* House number */}
-                        <text
-                            x={numberPos.x}
-                            y={numberPos.y}
-                            textAnchor="middle"
-                            dominantBaseline="central"
-                            fontSize={outerRadius * 0.055}
-                            fill={textColor}
-                            fontWeight={isAngularHouse ? 'bold' : 'normal'}
+                        {/* House number with smaller hover area */}
+                        <g
                             style={{ cursor: 'pointer' }}
                             onMouseEnter={() => onHouseHover?.(house.house)}
                             onMouseLeave={() => onHouseHover?.(null)}
                             onClick={() => onHouseClick?.(house.house, house.sign)}
                         >
-                            {house.house}
-                        </text>
+                            {/* Invisible hit area - smaller circle */}
+                            <circle
+                                cx={numberPos.x}
+                                cy={numberPos.y}
+                                r={outerRadius * 0.035}
+                                fill="transparent"
+                            />
+                            <text
+                                x={numberPos.x}
+                                y={numberPos.y}
+                                textAnchor="middle"
+                                dominantBaseline="central"
+                                fontSize={outerRadius * 0.055}
+                                fill={textColor}
+                                fontWeight={isAngularHouse ? 'bold' : 'normal'}
+                                style={{ pointerEvents: 'none' }}
+                            >
+                                {house.house}
+                            </text>
+                        </g>
 
                         {/* Angle label (AS, MC, DS, IC) */}
                         {angleLabel && (
