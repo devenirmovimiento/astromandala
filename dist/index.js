@@ -5388,26 +5388,12 @@ function AstroMandalaWithModal({
                         language
                       }
                     ) }),
-                    showChartInfo && (isMobile || chartInfoPosition === "bottom") && /* @__PURE__ */ jsxRuntime.jsx("div", { style: {
-                      width: "100%",
-                      maxWidth: "100%",
-                      display: "flex",
-                      justifyContent: "center"
-                    }, children: /* @__PURE__ */ jsxRuntime.jsx(
-                      ChartInfoPanel,
-                      {
-                        chart,
-                        secondChart,
-                        theme,
-                        language
-                      }
-                    ) }),
-                    isInfoModeActive && clickedItem && /* @__PURE__ */ jsxRuntime.jsx("div", { style: {
-                      alignSelf: isMobile ? "stretch" : "center",
-                      maxHeight: isMobile ? "none" : modalMandalaSize * 0.85,
+                    !isMobile && isInfoModeActive && clickedItem && /* @__PURE__ */ jsxRuntime.jsx("div", { style: {
+                      alignSelf: "center",
+                      maxHeight: modalMandalaSize * 0.85,
                       overflowY: "auto",
-                      width: isMobile ? "100%" : "auto",
-                      maxWidth: isMobile ? "100%" : "400px"
+                      width: "auto",
+                      maxWidth: "400px"
                     }, children: /* @__PURE__ */ jsxRuntime.jsx(
                       EducationalInfoPanel,
                       {
@@ -5418,6 +5404,41 @@ function AstroMandalaWithModal({
                         language,
                         onClose: handleInfoPanelClose,
                         onItemClick: handleInfoPanelItemClick
+                      }
+                    ) }),
+                    isMobile && isInfoModeActive && clickedItem && /* @__PURE__ */ jsxRuntime.jsx("div", { style: {
+                      width: "100%",
+                      maxWidth: "100%",
+                      display: "flex",
+                      justifyContent: "center",
+                      order: 2
+                      // Ensure it comes before Chart Info Panel
+                    }, children: /* @__PURE__ */ jsxRuntime.jsx("div", { style: { width: "100%", maxWidth: "100%" }, children: /* @__PURE__ */ jsxRuntime.jsx(
+                      EducationalInfoPanel,
+                      {
+                        clickedItem,
+                        chart,
+                        secondChart,
+                        theme,
+                        language,
+                        onClose: handleInfoPanelClose,
+                        onItemClick: handleInfoPanelItemClick
+                      }
+                    ) }) }),
+                    showChartInfo && (isMobile || chartInfoPosition === "bottom") && /* @__PURE__ */ jsxRuntime.jsx("div", { style: {
+                      width: "100%",
+                      maxWidth: "100%",
+                      display: "flex",
+                      justifyContent: "center",
+                      order: 3
+                      // Ensure it comes after Educational Info Panel
+                    }, children: /* @__PURE__ */ jsxRuntime.jsx(
+                      ChartInfoPanel,
+                      {
+                        chart,
+                        secondChart,
+                        theme,
+                        language
                       }
                     ) })
                   ]

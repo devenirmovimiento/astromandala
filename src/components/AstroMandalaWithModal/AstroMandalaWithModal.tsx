@@ -1028,7 +1028,7 @@ export function AstroMandalaWithModal({
                         )}
                     </div>
 
-                    {/* Chart Info Panel - shows next to mandala on desktop (vertically centered) */}
+                    {/* Desktop: Chart Info Panel - shows next to mandala (vertically centered) */}
                     {showChartInfo && !isMobile && chartInfoPosition === 'right' && (
                         <div style={{
                             alignSelf: 'center',
@@ -1044,31 +1044,14 @@ export function AstroMandalaWithModal({
                         </div>
                     )}
 
-                    {/* Chart Info Panel for Mobile - shows below mandala (horizontally centered) */}
-                    {showChartInfo && (isMobile || chartInfoPosition === 'bottom') && (
+                    {/* Desktop: Educational Info Panel - shows next to mandala when info mode is active */}
+                    {!isMobile && isInfoModeActive && clickedItem && (
                         <div style={{
-                            width: '100%',
-                            maxWidth: '100%',
-                            display: 'flex',
-                            justifyContent: 'center',
-                        }}>
-                            <ChartInfoPanel
-                                chart={chart}
-                                secondChart={secondChart}
-                                theme={theme}
-                                language={language}
-                            />
-                        </div>
-                    )}
-
-                    {/* Educational Info Panel - shows when info mode is active and an item is clicked */}
-                    {isInfoModeActive && clickedItem && (
-                        <div style={{
-                            alignSelf: isMobile ? 'stretch' : 'center',
-                            maxHeight: isMobile ? 'none' : modalMandalaSize * 0.85,
+                            alignSelf: 'center',
+                            maxHeight: modalMandalaSize * 0.85,
                             overflowY: 'auto',
-                            width: isMobile ? '100%' : 'auto',
-                            maxWidth: isMobile ? '100%' : '400px',
+                            width: 'auto',
+                            maxWidth: '400px',
                         }}>
                             <EducationalInfoPanel
                                 clickedItem={clickedItem}
@@ -1078,6 +1061,47 @@ export function AstroMandalaWithModal({
                                 language={language}
                                 onClose={handleInfoPanelClose}
                                 onItemClick={handleInfoPanelItemClick}
+                            />
+                        </div>
+                    )}
+
+                    {/* Mobile: Educational Info Panel - shows FIRST, below mandala, when item clicked */}
+                    {isMobile && isInfoModeActive && clickedItem && (
+                        <div style={{
+                            width: '100%',
+                            maxWidth: '100%',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            order: 2, // Ensure it comes before Chart Info Panel
+                        }}>
+                            <div style={{ width: '100%', maxWidth: '100%' }}>
+                                <EducationalInfoPanel
+                                    clickedItem={clickedItem}
+                                    chart={chart}
+                                    secondChart={secondChart}
+                                    theme={theme}
+                                    language={language}
+                                    onClose={handleInfoPanelClose}
+                                    onItemClick={handleInfoPanelItemClick}
+                                />
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Mobile/Bottom: Chart Info Panel - shows LAST, below educational panel (horizontally centered) */}
+                    {showChartInfo && (isMobile || chartInfoPosition === 'bottom') && (
+                        <div style={{
+                            width: '100%',
+                            maxWidth: '100%',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            order: 3, // Ensure it comes after Educational Info Panel
+                        }}>
+                            <ChartInfoPanel
+                                chart={chart}
+                                secondChart={secondChart}
+                                theme={theme}
+                                language={language}
                             />
                         </div>
                     )}
