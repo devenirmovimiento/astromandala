@@ -1,6 +1,6 @@
 {
     "name": "astromandala",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Astrological mandala visualization component for React/Next.js - Display single or synastry charts",
     "main": "dist/index.js",
     "module": "dist/index.mjs",
