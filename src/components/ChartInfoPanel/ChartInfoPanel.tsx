@@ -3,6 +3,7 @@
 import React, { useMemo } from 'react';
 import { AstrologicalChart, MandalaTheme, MandalaLanguage, PlanetName, ZodiacSign, PlanetPosition, HousePosition } from '../../types';
 import { ZODIAC_SYMBOLS, PLANET_SYMBOLS, SIGN_ELEMENTS, getTranslations } from '../../constants';
+import { PlanetSymbol } from '../PlanetSymbol';
 
 interface ChartInfoPanelProps {
     chart: AstrologicalChart;
@@ -163,8 +164,8 @@ export function ChartInfoPanel({
 
                         return (
                             <tr key={planetName}>
-                                <td style={{ ...cellStyle, ...symbolStyle, color: isDark ? '#888' : '#666', width: '24px' }}>
-                                    {PLANET_SYMBOLS[planetName]}
+                                <td style={{ ...cellStyle, width: '24px', textAlign: 'center' }}>
+                                    <PlanetSymbol planet={planetName} size={16} color={isDark ? '#888' : '#666'} />
                                 </td>
                                 <td style={{ ...cellStyle, fontWeight: 500, minWidth: '70px' }}>
                                     {getPlanetName(planetName)}

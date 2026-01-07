@@ -10,6 +10,37 @@ import {
     getAbsoluteDegree,
 } from '../../utils';
 
+/**
+ * Renders a custom SVG symbol for Pluto (more compatible with Android)
+ */
+function PlutoSymbol({ x, y, size, color }: { x: number; y: number; size: number; color: string }) {
+    const scale = size / 20; // Base size is 20
+    return (
+        <g transform={`translate(${x - size / 2}, ${y - size / 2}) scale(${scale})`}>
+            {/* Circle at top */}
+            <circle cx="10" cy="6" r="3" fill="none" stroke={color} strokeWidth="1.5" />
+            {/* Cross in middle */}
+            <line x1="10" y1="9" x2="10" y2="17" stroke={color} strokeWidth="1.5" />
+            <line x1="6" y1="13" x2="14" y2="13" stroke={color} strokeWidth="1.5" />
+            {/* Curved arms */}
+            <path
+                d="M 6 13 Q 4 15 4 17"
+                fill="none"
+                stroke={color}
+                strokeWidth="1.5"
+                strokeLinecap="round"
+            />
+            <path
+                d="M 14 13 Q 16 15 16 17"
+                fill="none"
+                stroke={color}
+                strokeWidth="1.5"
+                strokeLinecap="round"
+            />
+        </g>
+    );
+}
+
 interface PlanetDisplayProps {
     centerX: number;
     centerY: number;
@@ -195,21 +226,30 @@ export function PlanetDisplay({
                         )}
 
                         {/* Planet symbol */}
-                        <text
-                            x={symbolPos.x}
-                            y={symbolPos.y}
-                            textAnchor="middle"
-                            dominantBaseline="central"
-                            fontSize={(isHighlighted || isInHighlightedHouse || isHighlightedByAspect) ? fontSize * 1.15 : fontSize}
-                            fill={color}
-                            fontWeight={isAngle || isHighlighted || isInHighlightedHouse || isHighlightedByAspect ? 'bold' : 'normal'}
-                            style={{
-                                fontFamily: 'Segoe UI Symbol, Symbola, sans-serif',
-                                transition: 'font-size 0.15s ease-out',
-                            }}
-                        >
-                            {symbol}&#xFE0E;
-                        </text>
+                        {planet.planet === 'Pluto' ? (
+                            <PlutoSymbol
+                                x={symbolPos.x}
+                                y={symbolPos.y}
+                                size={fontSize}
+                                color={color}
+                            />
+                        ) : (
+                            <text
+                                x={symbolPos.x}
+                                y={symbolPos.y}
+                                textAnchor="middle"
+                                dominantBaseline="central"
+                                fontSize={(isHighlighted || isInHighlightedHouse || isHighlightedByAspect) ? fontSize * 1.15 : fontSize}
+                                fill={color}
+                                fontWeight={isAngle || isHighlighted || isInHighlightedHouse || isHighlightedByAspect ? 'bold' : 'normal'}
+                                style={{
+                                    fontFamily: 'Segoe UI Symbol, Symbola, sans-serif',
+                                    transition: 'font-size 0.15s ease-out',
+                                }}
+                            >
+                                {symbol}&#xFE0E;
+                            </text>
+                        )}
 
                         {/* Retrograde symbol - positioned below/beside to avoid collisions */}
                         {planet.retrograde && (

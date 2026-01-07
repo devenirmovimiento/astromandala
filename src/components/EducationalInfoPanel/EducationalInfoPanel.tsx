@@ -23,6 +23,7 @@ import {
     infoTransitosAspectos,
     infoEjesAngulares,
 } from '../../constants';
+import { PlanetSymbol } from '../PlanetSymbol';
 
 // Types for what was clicked
 export type ClickedItemType = 'sign' | 'planet' | 'house' | 'aspect' | 'angle';
@@ -175,12 +176,13 @@ function ExpandableSection({ title, children, defaultExpanded = false, theme }: 
 interface LinkItemProps {
     label: string;
     symbol?: string;
+    planetName?: PlanetName;
     onClick: () => void;
     theme: MandalaTheme;
     color?: string;
 }
 
-function LinkItem({ label, symbol, onClick, theme, color }: LinkItemProps) {
+function LinkItem({ label, symbol, planetName, onClick, theme, color }: LinkItemProps) {
     const isDark = theme === 'dark';
 
     return (
@@ -201,7 +203,11 @@ function LinkItem({ label, symbol, onClick, theme, color }: LinkItemProps) {
                 textDecoration: 'none',
             }}
         >
-            {symbol && <span style={{ fontSize: '14px' }}>{symbol}</span>}
+            {planetName ? (
+                <PlanetSymbol planet={planetName} size={14} color={color || (isDark ? '#a8c8f0' : '#2563eb')} />
+            ) : symbol ? (
+                <span style={{ fontSize: '14px' }}>{symbol}</span>
+            ) : null}
             <span>{label}</span>
         </button>
     );
@@ -459,7 +465,7 @@ export function EducationalInfoPanel({
                                 return (
                                     <LinkItem
                                         key={p.planet}
-                                        symbol={PLANET_SYMBOLS[p.planet]}
+                                        planetName={p.planet}
                                         label={`${t.inHouse} ${house}`}
                                         onClick={() => handleItemClick({
                                             type: 'planet',
@@ -513,7 +519,7 @@ export function EducationalInfoPanel({
                         gap: '0.5rem',
                         marginBottom: '0.5rem',
                     }}>
-                        <span style={{ fontSize: '28px' }}>{PLANET_SYMBOLS[clickedItem.planet]}</span>
+                        <PlanetSymbol planet={clickedItem.planet} size={28} color={isDark ? '#fff' : '#333'} />
                         <div>
                             <h3 style={{ margin: 0, fontSize: '20px', color: isDark ? '#fff' : '#333' }}>
                                 {planetInfo.label[lang]}
@@ -647,7 +653,7 @@ export function EducationalInfoPanel({
                                     >
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                                             <LinkItem
-                                                symbol={PLANET_SYMBOLS[otherPlanet]}
+                                                planetName={otherPlanet}
                                                 label=""
                                                 onClick={() => {
                                                     const p = chart.planets.find(pl => pl.planet === otherPlanet);
@@ -776,7 +782,7 @@ export function EducationalInfoPanel({
                             {planetsInHouse.map(p => (
                                 <LinkItem
                                     key={p.planet}
-                                    symbol={PLANET_SYMBOLS[p.planet]}
+                                    planetName={p.planet}
                                     label={`${p.degree.toFixed(0)}° ${ZODIAC_SYMBOLS[p.sign]}${p.retrograde ? ' ℞' : ''}`}
                                     onClick={() => handleItemClick({
                                         type: 'planet',
@@ -810,8 +816,10 @@ export function EducationalInfoPanel({
                         {aspectInfo.label[lang]}
                     </h3>
                     {clickedItem.aspectPlanet1 && clickedItem.aspectPlanet2 && (
-                        <p style={{ margin: 0, fontSize: '13px', color: isDark ? '#aaa' : '#666' }}>
-                            {PLANET_SYMBOLS[clickedItem.aspectPlanet1]} - {PLANET_SYMBOLS[clickedItem.aspectPlanet2]}
+                        <p style={{ margin: 0, fontSize: '13px', color: isDark ? '#aaa' : '#666', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                            <PlanetSymbol planet={clickedItem.aspectPlanet1} size={13} />
+                            <span>-</span>
+                            <PlanetSymbol planet={clickedItem.aspectPlanet2} size={13} />
                         </p>
                     )}
                     <p style={{
@@ -886,7 +894,7 @@ export function EducationalInfoPanel({
                                 return (
                                     <LinkItem
                                         key={pName}
-                                        symbol={PLANET_SYMBOLS[pName]}
+                                        planetName={pName}
                                         label={`${t.inSign} ${ZODIAC_SYMBOLS[p.sign]}`}
                                         onClick={() => handleItemClick({
                                             type: 'planet',

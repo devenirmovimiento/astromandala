@@ -2898,6 +2898,34 @@ function HouseWheel({
     ] }, `house-${house.house}${isSecondChart ? "-second" : ""}`);
   }) });
 }
+function PlutoSymbol({ x, y, size, color }) {
+  const scale = size / 20;
+  return /* @__PURE__ */ jsxs("g", { transform: `translate(${x - size / 2}, ${y - size / 2}) scale(${scale})`, children: [
+    /* @__PURE__ */ jsx("circle", { cx: "10", cy: "6", r: "3", fill: "none", stroke: color, strokeWidth: "1.5" }),
+    /* @__PURE__ */ jsx("line", { x1: "10", y1: "9", x2: "10", y2: "17", stroke: color, strokeWidth: "1.5" }),
+    /* @__PURE__ */ jsx("line", { x1: "6", y1: "13", x2: "14", y2: "13", stroke: color, strokeWidth: "1.5" }),
+    /* @__PURE__ */ jsx(
+      "path",
+      {
+        d: "M 6 13 Q 4 15 4 17",
+        fill: "none",
+        stroke: color,
+        strokeWidth: "1.5",
+        strokeLinecap: "round"
+      }
+    ),
+    /* @__PURE__ */ jsx(
+      "path",
+      {
+        d: "M 14 13 Q 16 15 16 17",
+        fill: "none",
+        stroke: color,
+        strokeWidth: "1.5",
+        strokeLinecap: "round"
+      }
+    )
+  ] });
+}
 function PlanetDisplay({
   centerX,
   centerY,
@@ -3014,7 +3042,15 @@ function PlanetDisplay({
               }
             )
           ] }),
-          /* @__PURE__ */ jsxs(
+          planet.planet === "Pluto" ? /* @__PURE__ */ jsx(
+            PlutoSymbol,
+            {
+              x: symbolPos.x,
+              y: symbolPos.y,
+              size: fontSize,
+              color
+            }
+          ) : /* @__PURE__ */ jsxs(
             "text",
             {
               x: symbolPos.x,
@@ -3465,6 +3501,72 @@ function AstroMandala({
     }
   );
 }
+function PlutoSVG({ size, color }) {
+  const viewBox = "0 0 20 20";
+  return /* @__PURE__ */ jsxs(
+    "svg",
+    {
+      width: size,
+      height: size,
+      viewBox,
+      style: { display: "inline-block", verticalAlign: "middle" },
+      children: [
+        /* @__PURE__ */ jsx("circle", { cx: "10", cy: "6", r: "3", fill: "none", stroke: color, strokeWidth: "1.5" }),
+        /* @__PURE__ */ jsx("line", { x1: "10", y1: "9", x2: "10", y2: "17", stroke: color, strokeWidth: "1.5" }),
+        /* @__PURE__ */ jsx("line", { x1: "6", y1: "13", x2: "14", y2: "13", stroke: color, strokeWidth: "1.5" }),
+        /* @__PURE__ */ jsx(
+          "path",
+          {
+            d: "M 6 13 Q 4 15 4 17",
+            fill: "none",
+            stroke: color,
+            strokeWidth: "1.5",
+            strokeLinecap: "round"
+          }
+        ),
+        /* @__PURE__ */ jsx(
+          "path",
+          {
+            d: "M 14 13 Q 16 15 16 17",
+            fill: "none",
+            stroke: color,
+            strokeWidth: "1.5",
+            strokeLinecap: "round"
+          }
+        )
+      ]
+    }
+  );
+}
+function PlanetSymbol({
+  planet,
+  size = 16,
+  color = "currentColor",
+  style = {},
+  className = ""
+}) {
+  const symbol = PLANET_SYMBOLS[planet];
+  if (planet === "Pluto") {
+    const numSize = typeof size === "number" ? size : parseFloat(size.toString());
+    return /* @__PURE__ */ jsx(PlutoSVG, { size: numSize, color });
+  }
+  return /* @__PURE__ */ jsxs(
+    "span",
+    {
+      style: {
+        fontFamily: "Segoe UI Symbol, Symbola, sans-serif",
+        fontSize: size,
+        color,
+        ...style
+      },
+      className,
+      children: [
+        symbol,
+        "\uFE0E"
+      ]
+    }
+  );
+}
 var PLANET_NAMES = {
   en: {
     Sun: "Sun",
@@ -3605,7 +3707,7 @@ function ChartInfoPanel({
       const planet2 = sortedPlanets2.find((p) => p.planet === planetName);
       if (!planet1 && !planet2) return null;
       return /* @__PURE__ */ jsxs("tr", { children: [
-        /* @__PURE__ */ jsx("td", { style: { ...cellStyle, ...symbolStyle, color: isDark ? "#888" : "#666", width: "24px" }, children: PLANET_SYMBOLS[planetName] }),
+        /* @__PURE__ */ jsx("td", { style: { ...cellStyle, width: "24px", textAlign: "center" }, children: /* @__PURE__ */ jsx(PlanetSymbol, { planet: planetName, size: 16, color: isDark ? "#888" : "#666" }) }),
         /* @__PURE__ */ jsx("td", { style: { ...cellStyle, fontWeight: 500, minWidth: "70px" }, children: getPlanetName(planetName) }),
         /* @__PURE__ */ jsx("td", { style: { ...cellStyle, minWidth: "90px" }, children: renderPosition(planet1, isSynastry ? chart1Color : isDark ? "#e0e0e0" : "#333") }),
         isSynastry && /* @__PURE__ */ jsx("td", { style: { ...cellStyle, minWidth: "90px" }, children: renderPosition(planet2, chart2Color) })
@@ -3771,7 +3873,7 @@ function ExpandableSection({ title, children, defaultExpanded = false, theme }) 
     expanded && /* @__PURE__ */ jsx("div", { style: { padding: "0 0.75rem 0.75rem" }, children })
   ] });
 }
-function LinkItem({ label, symbol, onClick, theme, color }) {
+function LinkItem({ label, symbol, planetName, onClick, theme, color }) {
   const isDark = theme === "dark";
   return /* @__PURE__ */ jsxs(
     "button",
@@ -3792,7 +3894,7 @@ function LinkItem({ label, symbol, onClick, theme, color }) {
         textDecoration: "none"
       },
       children: [
-        symbol && /* @__PURE__ */ jsx("span", { style: { fontSize: "14px" }, children: symbol }),
+        planetName ? /* @__PURE__ */ jsx(PlanetSymbol, { planet: planetName, size: 14, color: color || (isDark ? "#a8c8f0" : "#2563eb") }) : symbol ? /* @__PURE__ */ jsx("span", { style: { fontSize: "14px" }, children: symbol }) : null,
         /* @__PURE__ */ jsx("span", { children: label })
       ]
     }
@@ -3987,7 +4089,7 @@ function EducationalInfoPanel({
         return /* @__PURE__ */ jsx(
           LinkItem,
           {
-            symbol: PLANET_SYMBOLS[p.planet],
+            planetName: p.planet,
             label: `${t.inHouse} ${house}`,
             onClick: () => handleItemClick({
               type: "planet",
@@ -4028,7 +4130,7 @@ function EducationalInfoPanel({
           gap: "0.5rem",
           marginBottom: "0.5rem"
         }, children: [
-          /* @__PURE__ */ jsx("span", { style: { fontSize: "28px" }, children: PLANET_SYMBOLS[clickedItem.planet] }),
+          /* @__PURE__ */ jsx(PlanetSymbol, { planet: clickedItem.planet, size: 28, color: isDark ? "#fff" : "#333" }),
           /* @__PURE__ */ jsxs("div", { children: [
             /* @__PURE__ */ jsx("h3", { style: { margin: 0, fontSize: "20px", color: isDark ? "#fff" : "#333" }, children: planetInfo.label[lang] }),
             clickedItem.planetSign && /* @__PURE__ */ jsxs("p", { style: {
@@ -4123,7 +4225,7 @@ function EducationalInfoPanel({
                 /* @__PURE__ */ jsx(
                   LinkItem,
                   {
-                    symbol: PLANET_SYMBOLS[otherPlanet],
+                    planetName: otherPlanet,
                     label: "",
                     onClick: () => {
                       const p = chart.planets.find((pl) => pl.planet === otherPlanet);
@@ -4224,7 +4326,7 @@ function EducationalInfoPanel({
       planetsInHouse.length > 0 && /* @__PURE__ */ jsx(ExpandableSection, { title: `${t.relatedPositions} (${planetsInHouse.length})`, theme, defaultExpanded: true, children: /* @__PURE__ */ jsx("div", { style: { display: "flex", flexWrap: "wrap", gap: "0.25rem" }, children: planetsInHouse.map((p) => /* @__PURE__ */ jsx(
         LinkItem,
         {
-          symbol: PLANET_SYMBOLS[p.planet],
+          planetName: p.planet,
           label: `${p.degree.toFixed(0)}\xB0 ${ZODIAC_SYMBOLS[p.sign]}${p.retrograde ? " \u211E" : ""}`,
           onClick: () => handleItemClick({
             type: "planet",
@@ -4247,10 +4349,10 @@ function EducationalInfoPanel({
     return /* @__PURE__ */ jsxs(Fragment, { children: [
       /* @__PURE__ */ jsxs("div", { style: { marginBottom: "1rem" }, children: [
         /* @__PURE__ */ jsx("h3", { style: { margin: "0 0 0.25rem 0", fontSize: "20px", color: isDark ? "#fff" : "#333" }, children: aspectInfo.label[lang] }),
-        clickedItem.aspectPlanet1 && clickedItem.aspectPlanet2 && /* @__PURE__ */ jsxs("p", { style: { margin: 0, fontSize: "13px", color: isDark ? "#aaa" : "#666" }, children: [
-          PLANET_SYMBOLS[clickedItem.aspectPlanet1],
-          " - ",
-          PLANET_SYMBOLS[clickedItem.aspectPlanet2]
+        clickedItem.aspectPlanet1 && clickedItem.aspectPlanet2 && /* @__PURE__ */ jsxs("p", { style: { margin: 0, fontSize: "13px", color: isDark ? "#aaa" : "#666", display: "flex", alignItems: "center", gap: "0.25rem" }, children: [
+          /* @__PURE__ */ jsx(PlanetSymbol, { planet: clickedItem.aspectPlanet1, size: 13 }),
+          /* @__PURE__ */ jsx("span", { children: "-" }),
+          /* @__PURE__ */ jsx(PlanetSymbol, { planet: clickedItem.aspectPlanet2, size: 13 })
         ] }),
         /* @__PURE__ */ jsxs("p", { style: {
           margin: "0.25rem 0 0 0",
@@ -4308,7 +4410,7 @@ function EducationalInfoPanel({
         return /* @__PURE__ */ jsx(
           LinkItem,
           {
-            symbol: PLANET_SYMBOLS[pName],
+            planetName: pName,
             label: `${t.inSign} ${ZODIAC_SYMBOLS[p.sign]}`,
             onClick: () => handleItemClick({
               type: "planet",

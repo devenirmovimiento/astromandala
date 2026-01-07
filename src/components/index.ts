@@ -9,3 +9,4 @@ export { PlanetProjections } from './PlanetProjections';
 export { ChartInfoPanel } from './ChartInfoPanel';
 export { EducationalInfoPanel } from './EducationalInfoPanel';
 export type { ClickedItem, ClickedItemType, EducationalInfoPanelProps } from './EducationalInfoPanel';
+export { PlanetSymbol } from './PlanetSymbol';
