@@ -2901,29 +2901,19 @@ function HouseWheel({
 function PlutoSymbol({ x, y, size, color }) {
   const scale = size / 20;
   return /* @__PURE__ */ jsxs("g", { transform: `translate(${x - size / 2}, ${y - size / 2}) scale(${scale})`, children: [
-    /* @__PURE__ */ jsx("circle", { cx: "10", cy: "6", r: "3", fill: "none", stroke: color, strokeWidth: "1.5" }),
-    /* @__PURE__ */ jsx("line", { x1: "10", y1: "9", x2: "10", y2: "17", stroke: color, strokeWidth: "1.5" }),
-    /* @__PURE__ */ jsx("line", { x1: "6", y1: "13", x2: "14", y2: "13", stroke: color, strokeWidth: "1.5" }),
+    /* @__PURE__ */ jsx("circle", { cx: "10", cy: "5.5", r: "2.8", fill: "none", stroke: color, strokeWidth: "1.4" }),
     /* @__PURE__ */ jsx(
       "path",
       {
-        d: "M 6 13 Q 4 15 4 17",
+        d: "M 4.5 6 Q 4.5 12 10 12 Q 15.5 12 15.5 6",
         fill: "none",
         stroke: color,
-        strokeWidth: "1.5",
+        strokeWidth: "1.4",
         strokeLinecap: "round"
       }
     ),
-    /* @__PURE__ */ jsx(
-      "path",
-      {
-        d: "M 14 13 Q 16 15 16 17",
-        fill: "none",
-        stroke: color,
-        strokeWidth: "1.5",
-        strokeLinecap: "round"
-      }
-    )
+    /* @__PURE__ */ jsx("line", { x1: "10", y1: "12", x2: "10", y2: "18.5", stroke: color, strokeWidth: "1.4" }),
+    /* @__PURE__ */ jsx("line", { x1: "6", y1: "15.5", x2: "14", y2: "15.5", stroke: color, strokeWidth: "1.4" })
   ] });
 }
 function PlanetDisplay({
@@ -3511,29 +3501,19 @@ function PlutoSVG({ size, color }) {
       viewBox,
       style: { display: "inline-block", verticalAlign: "middle" },
       children: [
-        /* @__PURE__ */ jsx("circle", { cx: "10", cy: "6", r: "3", fill: "none", stroke: color, strokeWidth: "1.5" }),
-        /* @__PURE__ */ jsx("line", { x1: "10", y1: "9", x2: "10", y2: "17", stroke: color, strokeWidth: "1.5" }),
-        /* @__PURE__ */ jsx("line", { x1: "6", y1: "13", x2: "14", y2: "13", stroke: color, strokeWidth: "1.5" }),
+        /* @__PURE__ */ jsx("circle", { cx: "10", cy: "5.5", r: "2.8", fill: "none", stroke: color, strokeWidth: "1.4" }),
         /* @__PURE__ */ jsx(
           "path",
           {
-            d: "M 6 13 Q 4 15 4 17",
+            d: "M 4.5 6 Q 4.5 12 10 12 Q 15.5 12 15.5 6",
             fill: "none",
             stroke: color,
-            strokeWidth: "1.5",
+            strokeWidth: "1.4",
             strokeLinecap: "round"
           }
         ),
-        /* @__PURE__ */ jsx(
-          "path",
-          {
-            d: "M 14 13 Q 16 15 16 17",
-            fill: "none",
-            stroke: color,
-            strokeWidth: "1.5",
-            strokeLinecap: "round"
-          }
-        )
+        /* @__PURE__ */ jsx("line", { x1: "10", y1: "12", x2: "10", y2: "18.5", stroke: color, strokeWidth: "1.4" }),
+        /* @__PURE__ */ jsx("line", { x1: "6", y1: "15.5", x2: "14", y2: "15.5", stroke: color, strokeWidth: "1.4" })
       ]
     }
   );
