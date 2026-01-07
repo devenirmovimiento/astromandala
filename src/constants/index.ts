@@ -158,3 +158,29 @@ export const ASPECT_LINE_STYLES: Record<AspectType, { dashArray?: string; stroke
 // Export translations
 export { TRANSLATIONS, getTranslations } from './translations';
 export type { Translations } from './translations';
+
+// Export information data for educational mode
+export {
+    infoElementos,
+    infoSignos,
+    infoCasas,
+    infoCuerpos,
+    infoRetrogradacion,
+    infoTransitosAspectos,
+    infoEjesAngulares,
+} from './information';
+export type {
+    InfoElementos,
+    ElementoId,
+    InfoSignos,
+    SignoId,
+    InfoCasas,
+    CasaId,
+    InfoCuerpos,
+    CuerpoId,
+    InfoRetrogradacion,
+    InfoTransitosAspectos,
+    AspectoId,
+    InfoEjesAngulares,
+    EjeAngularId,
+} from './information';

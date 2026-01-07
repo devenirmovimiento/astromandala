@@ -12,6 +12,14 @@ interface HouseWheelProps {
     isSecondChart?: boolean;
     color?: string;
     theme?: MandalaTheme;
+    /** Callback when mouse hovers over a house number */
+    onHouseHover?: (house: number | null) => void;
+    /** Currently hovered house */
+    hoveredHouse?: number | null;
+    /** Callback when a house is clicked */
+    onHouseClick?: (house: number, houseSign: HousePosition['sign']) => void;
+    /** Callback when an angle is clicked (AS, MC, DS, IC) */
+    onAngleClick?: (angle: 'ascendant' | 'descendant' | 'midheaven' | 'imum_coeli', sign: HousePosition['sign']) => void;
 }
 
 /**
@@ -22,6 +30,16 @@ const ANGLE_LABELS: Record<number, string> = {
     4: 'IC',
     7: 'DS',
     10: 'MC',
+};
+
+/**
+ * Map house number to angle type
+ */
+const HOUSE_TO_ANGLE: Record<number, 'ascendant' | 'descendant' | 'midheaven' | 'imum_coeli'> = {
+    1: 'ascendant',
+    4: 'imum_coeli',
+    7: 'descendant',
+    10: 'midheaven',
 };
 
 /**
@@ -37,6 +55,10 @@ export function HouseWheel({
     isSecondChart = false,
     color,
     theme = 'light',
+    onHouseHover,
+    hoveredHouse,
+    onHouseClick,
+    onAngleClick,
 }: HouseWheelProps) {
     // Sort houses by number
     const sortedHouses = [...houses].sort((a, b) => a.house - b.house);
@@ -104,6 +126,10 @@ export function HouseWheel({
                             fontSize={outerRadius * 0.055}
                             fill={textColor}
                             fontWeight={isAngularHouse ? 'bold' : 'normal'}
+                            style={{ cursor: 'pointer' }}
+                            onMouseEnter={() => onHouseHover?.(house.house)}
+                            onMouseLeave={() => onHouseHover?.(null)}
+                            onClick={() => onHouseClick?.(house.house, house.sign)}
                         >
                             {house.house}
                         </text>
@@ -119,6 +145,8 @@ export function HouseWheel({
                                 fill={angleLabelColor}
                                 fontWeight="bold"
                                 opacity={isSecondChart ? 0.85 : 1}
+                                style={{ cursor: 'pointer' }}
+                                onClick={() => onAngleClick?.(HOUSE_TO_ANGLE[house.house], house.sign)}
                             >
                                 {angleLabel}
                             </text>

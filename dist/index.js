@@ -64,7 +64,44 @@ var TRANSLATIONS = {
     downloadImage: "Download Image",
     birthDate: "Date",
     birthTime: "Time",
-    birthLocation: "Location"
+    birthLocation: "Location",
+    // Educational mode
+    infoMode: "Info Mode",
+    infoModeDescription: "Click on any element of the chart to learn more",
+    clickToLearnMore: "Click to learn more",
+    showMore: "Show more",
+    showLess: "Show less",
+    element: "Element",
+    sign: "Sign",
+    house: "House",
+    planet: "Planet",
+    aspect: "Aspect",
+    retrograde: "Retrograde",
+    coreTheme: "Core Theme",
+    lightQualities: "Light Qualities",
+    shadowQualities: "Shadow Aspects",
+    questions: "Reflective Questions",
+    chartHints: "Chart Hints",
+    relatedPositions: "Related Positions",
+    aspectsTable: "Aspects",
+    inSign: "in",
+    inHouse: "in House",
+    atDegree: "at",
+    isRetrograde: "is retrograde",
+    balance: "Balance",
+    balanced: "Balanced",
+    excess: "Excess",
+    lack: "Lack",
+    microTip: "Quick Tip",
+    keyIdeas: "Key Ideas",
+    howItFeels: "How It Feels",
+    inNatalChart: "In Natal Chart",
+    inTransit: "In Transit",
+    notAProblem: "Remember",
+    commonPatterns: "Common Patterns",
+    examples: "Examples",
+    intro: "Introduction",
+    learning: "Learning"
   },
   es: {
     // Angle labels
@@ -122,12 +159,1948 @@ var TRANSLATIONS = {
     downloadImage: "Descargar Imagen",
     birthDate: "Fecha",
     birthTime: "Hora",
-    birthLocation: "Lugar"
+    birthLocation: "Lugar",
+    // Educational mode
+    infoMode: "Modo Info",
+    infoModeDescription: "Haz clic en cualquier elemento del gr\xE1fico para aprender m\xE1s",
+    clickToLearnMore: "Clic para m\xE1s informaci\xF3n",
+    showMore: "Ver m\xE1s",
+    showLess: "Ver menos",
+    element: "Elemento",
+    sign: "Signo",
+    house: "Casa",
+    planet: "Planeta",
+    aspect: "Aspecto",
+    retrograde: "Retr\xF3grado",
+    coreTheme: "Tema Central",
+    lightQualities: "Cualidades Luminosas",
+    shadowQualities: "Aspectos de Sombra",
+    questions: "Preguntas Reflexivas",
+    chartHints: "Pistas en la Carta",
+    relatedPositions: "Posiciones Relacionadas",
+    aspectsTable: "Aspectos",
+    inSign: "en",
+    inHouse: "en Casa",
+    atDegree: "a",
+    isRetrograde: "est\xE1 retr\xF3grado",
+    balance: "Balance",
+    balanced: "Equilibrado",
+    excess: "Exceso",
+    lack: "Falta",
+    microTip: "Tip R\xE1pido",
+    keyIdeas: "Ideas Clave",
+    howItFeels: "C\xF3mo Se Vive",
+    inNatalChart: "En Carta Natal",
+    inTransit: "En Tr\xE1nsito",
+    notAProblem: "Recordar",
+    commonPatterns: "Patrones Comunes",
+    examples: "Ejemplos",
+    intro: "Introducci\xF3n",
+    learning: "Aprendizaje"
   }
 };
 function getTranslations(language = "en") {
   return TRANSLATIONS[language];
 }
+
+// src/constants/information.ts
+var infoElementos = {
+  agua: {
+    id: "agua",
+    label: { es: "Agua", en: "Water" },
+    title: {
+      es: "Agua: emoci\xF3n, v\xEDnculo y memoria",
+      en: "Water: emotion, bonding, and memory"
+    },
+    intro: {
+      es: "El elemento Agua describe c\xF3mo sentimos, c\xF3mo nos vinculamos y c\xF3mo nos afecta el mundo emocional. Habla de sensibilidad, intimidad, empat\xEDa y memoria emocional.",
+      en: "The Water element describes how we feel, bond, and emotionally experience life. It relates to sensitivity, intimacy, empathy, and emotional memory."
+    },
+    light: {
+      es: [
+        "Empat\xEDa y capacidad de contenci\xF3n.",
+        "Intuici\xF3n y percepci\xF3n emocional.",
+        "Profundidad afectiva y lealtad.",
+        "Conexi\xF3n con lo simb\xF3lico y lo imaginario."
+      ],
+      en: [
+        "Empathy and emotional containment.",
+        "Strong intuition and emotional perception.",
+        "Emotional depth and loyalty.",
+        "Connection to symbols and imagination."
+      ]
+    },
+    shadow: {
+      es: [
+        "Hipersensibilidad y susceptibilidad.",
+        "Fusi\xF3n emocional o dependencia.",
+        "Evasi\xF3n emocional o idealizaci\xF3n.",
+        "Cambios de \xE1nimo intensos."
+      ],
+      en: [
+        "Hypersensitivity and emotional overwhelm.",
+        "Emotional fusion or dependency.",
+        "Emotional avoidance or idealization.",
+        "Intense mood fluctuations."
+      ]
+    },
+    balance: {
+      balanced: {
+        es: "El Agua equilibrada permite sentir profundamente sin perder l\xEDmites. Hay cuidado, ternura y capacidad de sost\xE9n emocional.",
+        en: "Balanced Water allows deep feeling without losing boundaries. There is care, tenderness, and emotional stability."
+      },
+      excess: {
+        es: "El exceso de Agua puede llevar a desborde emocional, dependencia o dificultad para sostener estructura.",
+        en: "Excess Water can lead to emotional overwhelm, dependency, or difficulty maintaining structure."
+      },
+      lack: {
+        es: "La falta de Agua puede manifestarse como dificultad para registrar emociones o intimar emocionalmente.",
+        en: "Lack of Water may appear as difficulty recognizing emotions or forming emotional intimacy."
+      }
+    },
+    questions: {
+      es: [
+        "\xBFQu\xE9 emoci\xF3n estoy evitando sentir?",
+        "\xBFD\xF3nde necesito poner un l\xEDmite emocional?",
+        "\xBFEstoy cuidando o fusion\xE1ndome?"
+      ],
+      en: [
+        "Which emotion am I avoiding?",
+        "Where do I need an emotional boundary?",
+        "Am I caring or merging?"
+      ]
+    },
+    chartHints: {
+      es: [
+        "Planetas en C\xE1ncer, Escorpio o Piscis.",
+        "\xC9nfasis en casas 4, 8 o 12.",
+        "Aspectos fuertes a la Luna o Neptuno."
+      ],
+      en: [
+        "Planets in Cancer, Scorpio, or Pisces.",
+        "Emphasis on houses 4, 8, or 12.",
+        "Strong aspects to the Moon or Neptune."
+      ]
+    },
+    microTip: {
+      es: "Regular el Agua implica cuerpo y pausa: respiraci\xF3n consciente, escritura emocional o contacto con agua.",
+      en: "Regulating Water involves body and pause: conscious breathing, emotional writing, or contact with water."
+    }
+  },
+  tierra: {
+    id: "tierra",
+    label: { es: "Tierra", en: "Earth" },
+    title: {
+      es: "Tierra: realidad, cuerpo y construcci\xF3n",
+      en: "Earth: reality, body, and construction"
+    },
+    intro: {
+      es: "La Tierra representa lo concreto: el cuerpo, los recursos, el trabajo y la capacidad de construir estabilidad.",
+      en: "Earth represents the concrete: the body, resources, work, and the ability to build stability."
+    },
+    light: {
+      es: [
+        "Constancia y coherencia.",
+        "Capacidad de materializar.",
+        "Sentido pr\xE1ctico y realismo.",
+        "Cuidado del cuerpo y los recursos."
+      ],
+      en: [
+        "Consistency and coherence.",
+        "Ability to materialize ideas.",
+        "Practical sense and realism.",
+        "Care for the body and resources."
+      ]
+    },
+    shadow: {
+      es: [
+        "Rigidez y miedo al cambio.",
+        "Control excesivo o perfeccionismo.",
+        "Apego a lo seguro.",
+        "Materialismo."
+      ],
+      en: [
+        "Rigidity and fear of change.",
+        "Excessive control or perfectionism.",
+        "Attachment to security.",
+        "Materialism."
+      ]
+    },
+    balance: {
+      balanced: {
+        es: "La Tierra equilibrada permite construir con flexibilidad y sostener procesos a largo plazo.",
+        en: "Balanced Earth allows long-term building with flexibility."
+      },
+      excess: {
+        es: "El exceso de Tierra puede generar estancamiento o resistencia al cambio.",
+        en: "Excess Earth can create stagnation or resistance to change."
+      },
+      lack: {
+        es: "La falta de Tierra puede manifestarse como dispersi\xF3n, desorden o dificultad para concretar.",
+        en: "Lack of Earth may show as dispersion, disorganization, or difficulty materializing."
+      }
+    },
+    questions: {
+      es: [
+        "\xBFQu\xE9 acci\xF3n concreta puedo hacer hoy?",
+        "\xBFQu\xE9 h\xE1bito me sostiene?",
+        "\xBFEstoy evitando cambiar por miedo?"
+      ],
+      en: [
+        "What concrete action can I take today?",
+        "Which habit supports me?",
+        "Am I avoiding change out of fear?"
+      ]
+    },
+    chartHints: {
+      es: [
+        "Planetas en Tauro, Virgo o Capricornio.",
+        "\xC9nfasis en casas 2, 6 o 10.",
+        "Saturno fuerte o aspectado."
+      ],
+      en: [
+        "Planets in Taurus, Virgo, or Capricorn.",
+        "Emphasis on houses 2, 6, or 10.",
+        "Strong or emphasized Saturn."
+      ]
+    },
+    microTip: {
+      es: "La Tierra se fortalece con rutinas simples y acciones peque\xF1as pero sostenidas.",
+      en: "Earth is strengthened through simple routines and small, consistent actions."
+    }
+  },
+  fuego: {
+    id: "fuego",
+    label: { es: "Fuego", en: "Fire" },
+    title: {
+      es: "Fuego: deseo, vitalidad y direcci\xF3n",
+      en: "Fire: desire, vitality, and direction"
+    },
+    intro: {
+      es: "El Fuego representa el impulso vital, la motivaci\xF3n, el deseo y la capacidad de afirmarse.",
+      en: "Fire represents vital impulse, motivation, desire, and self-assertion."
+    },
+    light: {
+      es: [
+        "Entusiasmo y coraje.",
+        "Iniciativa y liderazgo.",
+        "Creatividad y confianza.",
+        "Capacidad de inspirar."
+      ],
+      en: [
+        "Enthusiasm and courage.",
+        "Initiative and leadership.",
+        "Creativity and confidence.",
+        "Ability to inspire."
+      ]
+    },
+    shadow: {
+      es: [
+        "Impulsividad y reactividad.",
+        "Egocentrismo o ansiedad.",
+        "Exceso de intensidad.",
+        "Poca tolerancia a la frustraci\xF3n."
+      ],
+      en: [
+        "Impulsiveness and reactivity.",
+        "Ego inflation or anxiety.",
+        "Excessive intensity.",
+        "Low frustration tolerance."
+      ]
+    },
+    balance: {
+      balanced: {
+        es: "El Fuego equilibrado impulsa la acci\xF3n con conciencia y prop\xF3sito.",
+        en: "Balanced Fire drives action with awareness and purpose."
+      },
+      excess: {
+        es: "El exceso de Fuego puede generar agotamiento o conflicto.",
+        en: "Excess Fire may lead to burnout or conflict."
+      },
+      lack: {
+        es: "La falta de Fuego se expresa como apat\xEDa, duda o dificultad para iniciar.",
+        en: "Lack of Fire appears as apathy, doubt, or difficulty initiating."
+      }
+    },
+    questions: {
+      es: [
+        "\xBFQu\xE9 deseo es aut\xE9ntico?",
+        "\xBFQu\xE9 me enciende?",
+        "\xBFD\xF3nde necesito animarme?"
+      ],
+      en: [
+        "Which desire is authentic?",
+        "What ignites me?",
+        "Where do I need courage?"
+      ]
+    },
+    chartHints: {
+      es: [
+        "Planetas en Aries, Leo o Sagitario.",
+        "\xC9nfasis en casas 1, 5 o 9.",
+        "Sol, Marte o J\xFApiter destacados."
+      ],
+      en: [
+        "Planets in Aries, Leo, or Sagittarius.",
+        "Emphasis on houses 1, 5, or 9.",
+        "Strong Sun, Mars, or Jupiter."
+      ]
+    },
+    microTip: {
+      es: "El Fuego necesita movimiento y direcci\xF3n: acci\xF3n breve con intenci\xF3n clara.",
+      en: "Fire needs movement and direction: short action with clear intention."
+    }
+  },
+  aire: {
+    id: "aire",
+    label: { es: "Aire", en: "Air" },
+    title: {
+      es: "Aire: mente, ideas y comunicaci\xF3n",
+      en: "Air: mind, ideas, and communication"
+    },
+    intro: {
+      es: "El Aire representa el pensamiento, la palabra, el intercambio y la capacidad de tomar perspectiva.",
+      en: "Air represents thinking, language, exchange, and perspective."
+    },
+    light: {
+      es: [
+        "Agilidad mental y curiosidad.",
+        "Comunicaci\xF3n clara.",
+        "Capacidad de vincular ideas.",
+        "Objetividad."
+      ],
+      en: [
+        "Mental agility and curiosity.",
+        "Clear communication.",
+        "Ability to connect ideas.",
+        "Objectivity."
+      ]
+    },
+    shadow: {
+      es: [
+        "Exceso de pensamiento.",
+        "Dispersi\xF3n o inconstancia.",
+        "Intelectualizaci\xF3n de la emoci\xF3n.",
+        "Par\xE1lisis por an\xE1lisis."
+      ],
+      en: [
+        "Overthinking.",
+        "Dispersion or inconsistency.",
+        "Intellectualizing emotions.",
+        "Analysis paralysis."
+      ]
+    },
+    balance: {
+      balanced: {
+        es: "El Aire equilibrado permite pensar, comunicar y decidir con claridad.",
+        en: "Balanced Air allows thinking, communicating, and deciding with clarity."
+      },
+      excess: {
+        es: "El exceso de Aire puede generar ansiedad mental o desconexi\xF3n emocional.",
+        en: "Excess Air may create mental anxiety or emotional disconnection."
+      },
+      lack: {
+        es: "La falta de Aire se manifiesta como confusi\xF3n o dificultad para expresarse.",
+        en: "Lack of Air appears as confusion or difficulty expressing oneself."
+      }
+    },
+    questions: {
+      es: [
+        "\xBFQu\xE9 historia me estoy contando?",
+        "\xBFQu\xE9 conversaci\xF3n necesito tener?",
+        "\xBFQu\xE9 decisi\xF3n estoy postergando?"
+      ],
+      en: [
+        "What story am I telling myself?",
+        "Which conversation do I need to have?",
+        "Which decision am I postponing?"
+      ]
+    },
+    chartHints: {
+      es: [
+        "Planetas en G\xE9minis, Libra o Acuario.",
+        "\xC9nfasis en casas 3, 7 u 11.",
+        "Mercurio o Urano destacados."
+      ],
+      en: [
+        "Planets in Gemini, Libra, or Aquarius.",
+        "Emphasis on houses 3, 7, or 11.",
+        "Strong Mercury or Uranus."
+      ]
+    },
+    microTip: {
+      es: "El Aire se ordena escribiendo y eligiendo una idea para accionar.",
+      en: "Air is organized by writing and choosing one idea to act on."
+    }
+  }
+};
+var infoSignos = {
+  aries: {
+    id: "aries",
+    label: { es: "Aries", en: "Aries" },
+    element: "fire",
+    modality: "cardinal",
+    coreTheme: {
+      es: "Iniciar, afirmarse, existir",
+      en: "Initiation, self-assertion, existence"
+    },
+    light: {
+      es: ["Coraje", "Iniciativa", "Acci\xF3n directa"],
+      en: ["Courage", "Initiative", "Direct action"]
+    },
+    shadow: {
+      es: ["Impulsividad", "Reactividad", "Falta de paciencia"],
+      en: ["Impulsiveness", "Reactivity", "Lack of patience"]
+    },
+    learning: {
+      es: "Aprender a sostener el impulso sin quemarse ni atropellar.",
+      en: "Learning to sustain impulse without burning out or overpowering."
+    },
+    questions: {
+      es: ["\xBFQu\xE9 quiero iniciar?", "\xBFDesde d\xF3nde act\xFAo?"],
+      en: ["What do I want to start?", "From where do I act?"]
+    },
+    chartHint: {
+      es: "Zona de deseo, acci\xF3n y liderazgo.",
+      en: "Area of desire, action, and leadership."
+    }
+  },
+  tauro: {
+    id: "tauro",
+    label: { es: "Tauro", en: "Taurus" },
+    element: "earth",
+    modality: "fixed",
+    coreTheme: {
+      es: "Sostener, valorar, construir seguridad",
+      en: "Sustain, value, build security"
+    },
+    light: {
+      es: ["Constancia", "Paciencia", "Capacidad de disfrute"],
+      en: ["Consistency", "Patience", "Ability to enjoy"]
+    },
+    shadow: {
+      es: ["Rigidez", "Apego", "Resistencia al cambio"],
+      en: ["Rigidity", "Attachment", "Resistance to change"]
+    },
+    learning: {
+      es: "Aprender a soltar sin perder estabilidad.",
+      en: "Learning to let go without losing stability."
+    },
+    questions: {
+      es: ["\xBFQu\xE9 me da seguridad real?", "\xBFQu\xE9 necesito actualizar?"],
+      en: ["What gives me real security?", "What needs to be updated?"]
+    },
+    chartHint: {
+      es: "Relaci\xF3n con valores, recursos y cuerpo.",
+      en: "Relationship with values, resources, and the body."
+    }
+  },
+  geminis: {
+    id: "geminis",
+    label: { es: "G\xE9minis", en: "Gemini" },
+    element: "air",
+    modality: "mutable",
+    coreTheme: {
+      es: "Aprender, comunicar, conectar",
+      en: "Learn, communicate, connect"
+    },
+    light: {
+      es: ["Curiosidad", "Agilidad mental", "Adaptabilidad"],
+      en: ["Curiosity", "Mental agility", "Adaptability"]
+    },
+    shadow: {
+      es: ["Dispersi\xF3n", "Superficialidad", "Inconstancia"],
+      en: ["Dispersion", "Superficiality", "Inconsistency"]
+    },
+    learning: {
+      es: "Aprender a profundizar y sostener foco.",
+      en: "Learning to deepen and maintain focus."
+    },
+    questions: {
+      es: ["\xBFQu\xE9 necesito integrar?", "\xBFQu\xE9 conversaci\xF3n es clave?"],
+      en: ["What do I need to integrate?", "Which conversation is key?"]
+    },
+    chartHint: {
+      es: "Zona de estudio, intercambio y v\xEDnculos cercanos.",
+      en: "Area of learning, exchange, and close connections."
+    }
+  },
+  cancer: {
+    id: "cancer",
+    label: { es: "C\xE1ncer", en: "Cancer" },
+    element: "water",
+    modality: "cardinal",
+    coreTheme: {
+      es: "Cuidar, proteger, pertenecer",
+      en: "Care, protect, belong"
+    },
+    light: {
+      es: ["Empat\xEDa", "Contenci\xF3n", "Sensibilidad"],
+      en: ["Empathy", "Nurturing", "Sensitivity"]
+    },
+    shadow: {
+      es: ["Apego", "Dependencia emocional", "Miedo a la p\xE9rdida"],
+      en: ["Attachment", "Emotional dependency", "Fear of loss"]
+    },
+    learning: {
+      es: "Aprender a cuidar sin anularse.",
+      en: "Learning to care without self-neglect."
+    },
+    questions: {
+      es: ["\xBFD\xF3nde busco seguridad?", "\xBFQu\xE9 emoci\xF3n pide lugar?"],
+      en: ["Where do I seek safety?", "Which emotion needs space?"]
+    },
+    chartHint: {
+      es: "Zona de ra\xEDces, familia y mundo emocional.",
+      en: "Area of roots, family, and emotional world."
+    }
+  },
+  leo: {
+    id: "leo",
+    label: { es: "Leo", en: "Leo" },
+    element: "fire",
+    modality: "fixed",
+    coreTheme: {
+      es: "Brillar, crear, expresar identidad",
+      en: "Shine, create, express identity"
+    },
+    light: {
+      es: ["Creatividad", "Confianza", "Calidez"],
+      en: ["Creativity", "Confidence", "Warmth"]
+    },
+    shadow: {
+      es: ["Egocentrismo", "Necesidad de reconocimiento", "Orgullo r\xEDgido"],
+      en: ["Egocentrism", "Need for validation", "Rigid pride"]
+    },
+    learning: {
+      es: "Aprender a brillar desde adentro.",
+      en: "Learning to shine from within."
+    },
+    questions: {
+      es: ["\xBFDesde d\xF3nde me expreso?", "\xBFQu\xE9 me hace sentir vivx?"],
+      en: ["From where do I express myself?", "What makes me feel alive?"]
+    },
+    chartHint: {
+      es: "Zona de creatividad, autoestima y expresi\xF3n personal.",
+      en: "Area of creativity, self-worth, and personal expression."
+    }
+  },
+  virgo: {
+    id: "virgo",
+    label: { es: "Virgo", en: "Virgo" },
+    element: "earth",
+    modality: "mutable",
+    coreTheme: {
+      es: "Ordenar, mejorar, servir",
+      en: "Organize, improve, serve"
+    },
+    light: {
+      es: ["Discernimiento", "Precisi\xF3n", "Capacidad de servicio"],
+      en: ["Discernment", "Precision", "Service orientation"]
+    },
+    shadow: {
+      es: ["Autoexigencia", "Cr\xEDtica excesiva", "Perfeccionismo"],
+      en: ["Self-criticism", "Excessive criticism", "Perfectionism"]
+    },
+    learning: {
+      es: "Aprender a aceptar la imperfecci\xF3n.",
+      en: "Learning to accept imperfection."
+    },
+    questions: {
+      es: ["\xBFQu\xE9 puedo mejorar sin exigirme?", "\xBFQu\xE9 necesita orden?"],
+      en: ["What can I improve gently?", "What needs organizing?"]
+    },
+    chartHint: {
+      es: "Zona de h\xE1bitos, trabajo y cuidado del cuerpo.",
+      en: "Area of habits, work, and body care."
+    }
+  },
+  libra: {
+    id: "libra",
+    label: { es: "Libra", en: "Libra" },
+    element: "air",
+    modality: "cardinal",
+    coreTheme: {
+      es: "Vincular, equilibrar, armonizar",
+      en: "Relate, balance, harmonize"
+    },
+    light: {
+      es: ["Diplomacia", "Empat\xEDa mental", "Sentido de justicia"],
+      en: ["Diplomacy", "Mental empathy", "Sense of justice"]
+    },
+    shadow: {
+      es: ["Indecisi\xF3n", "Complacencia", "Evitar el conflicto"],
+      en: ["Indecision", "People-pleasing", "Conflict avoidance"]
+    },
+    learning: {
+      es: "Aprender a elegir sin perder el v\xEDnculo.",
+      en: "Learning to choose without losing connection."
+    },
+    questions: {
+      es: ["\xBFQu\xE9 deseo realmente?", "\xBFD\xF3nde no me estoy eligiendo?"],
+      en: ["What do I truly want?", "Where am I not choosing myself?"]
+    },
+    chartHint: {
+      es: "Zona de v\xEDnculos, acuerdos y proyecci\xF3n en el otro.",
+      en: "Area of relationships, agreements, and projection."
+    }
+  },
+  escorpio: {
+    id: "escorpio",
+    label: { es: "Escorpio", en: "Scorpio" },
+    element: "water",
+    modality: "fixed",
+    coreTheme: {
+      es: "Transformar, profundizar, regenerar",
+      en: "Transform, deepen, regenerate"
+    },
+    light: {
+      es: ["Intensidad", "Capacidad de transformaci\xF3n", "Lealtad profunda"],
+      en: ["Intensity", "Transformational capacity", "Deep loyalty"]
+    },
+    shadow: {
+      es: ["Control", "Celos", "Miedo a la p\xE9rdida"],
+      en: ["Control", "Jealousy", "Fear of loss"]
+    },
+    learning: {
+      es: "Aprender a soltar el control y confiar.",
+      en: "Learning to release control and trust."
+    },
+    questions: {
+      es: ["\xBFQu\xE9 necesito soltar?", "\xBFD\xF3nde me resisto al cambio?"],
+      en: ["What do I need to release?", "Where do I resist change?"]
+    },
+    chartHint: {
+      es: "Zona de crisis, transformaci\xF3n y poder personal.",
+      en: "Area of crisis, transformation, and personal power."
+    }
+  },
+  sagitario: {
+    id: "sagitario",
+    label: { es: "Sagitario", en: "Sagittarius" },
+    element: "fire",
+    modality: "mutable",
+    coreTheme: {
+      es: "Expandir, creer, buscar sentido",
+      en: "Expand, believe, seek meaning"
+    },
+    light: {
+      es: ["Optimismo", "Visi\xF3n", "Esp\xEDritu aventurero"],
+      en: ["Optimism", "Vision", "Adventurous spirit"]
+    },
+    shadow: {
+      es: ["Exceso de confianza", "Dogmatismo", "Falta de l\xEDmites"],
+      en: ["Overconfidence", "Dogmatism", "Lack of boundaries"]
+    },
+    learning: {
+      es: "Aprender a integrar visi\xF3n con responsabilidad.",
+      en: "Learning to integrate vision with responsibility."
+    },
+    questions: {
+      es: ["\xBFQu\xE9 sentido busco?", "\xBFQu\xE9 creencia necesita revisi\xF3n?"],
+      en: ["What meaning am I seeking?", "Which belief needs revision?"]
+    },
+    chartHint: {
+      es: "Zona de expansi\xF3n, creencias y b\xFAsqueda de sentido.",
+      en: "Area of expansion, beliefs, and meaning."
+    }
+  },
+  capricornio: {
+    id: "capricornio",
+    label: { es: "Capricornio", en: "Capricorn" },
+    element: "earth",
+    modality: "cardinal",
+    coreTheme: {
+      es: "Construir, responsabilizarse, madurar",
+      en: "Build, take responsibility, mature"
+    },
+    light: {
+      es: ["Disciplina", "Responsabilidad", "Capacidad de logro"],
+      en: ["Discipline", "Responsibility", "Capacity for achievement"]
+    },
+    shadow: {
+      es: ["Rigidez", "Autoexigencia extrema", "Desconexi\xF3n emocional"],
+      en: ["Rigidity", "Extreme self-demand", "Emotional disconnection"]
+    },
+    learning: {
+      es: "Aprender a incluir sensibilidad en la ambici\xF3n.",
+      en: "Learning to include sensitivity within ambition."
+    },
+    questions: {
+      es: ["\xBFQu\xE9 meta es aut\xE9ntica?", "\xBFQu\xE9 carga no me corresponde?"],
+      en: ["Which goal is authentic?", "Which burden is not mine?"]
+    },
+    chartHint: {
+      es: "Zona de metas, vocaci\xF3n y estructura.",
+      en: "Area of goals, vocation, and structure."
+    }
+  },
+  acuario: {
+    id: "acuario",
+    label: { es: "Acuario", en: "Aquarius" },
+    element: "air",
+    modality: "fixed",
+    coreTheme: {
+      es: "Liberar, innovar, diferenciarse",
+      en: "Liberate, innovate, differentiate"
+    },
+    light: {
+      es: ["Originalidad", "Visi\xF3n colectiva", "Independencia"],
+      en: ["Originality", "Collective vision", "Independence"]
+    },
+    shadow: {
+      es: ["Desapego extremo", "Rebeld\xEDa reactiva", "Rigidez mental"],
+      en: ["Emotional detachment", "Reactive rebellion", "Mental rigidity"]
+    },
+    learning: {
+      es: "Aprender a integrar emoci\xF3n y pertenencia.",
+      en: "Learning to integrate emotion and belonging."
+    },
+    questions: {
+      es: ["\xBFD\xF3nde necesito ser aut\xE9nticx?", "\xBFQu\xE9 me diferencia?"],
+      en: ["Where do I need to be authentic?", "What makes me different?"]
+    },
+    chartHint: {
+      es: "Zona de grupos, futuro y conciencia colectiva.",
+      en: "Area of groups, future, and collective awareness."
+    }
+  },
+  piscis: {
+    id: "piscis",
+    label: { es: "Piscis", en: "Pisces" },
+    element: "water",
+    modality: "mutable",
+    coreTheme: {
+      es: "Disolver, empatizar, trascender",
+      en: "Dissolve, empathize, transcend"
+    },
+    light: {
+      es: ["Compasi\xF3n", "Sensibilidad espiritual", "Imaginaci\xF3n"],
+      en: ["Compassion", "Spiritual sensitivity", "Imagination"]
+    },
+    shadow: {
+      es: ["Evasi\xF3n", "Confusi\xF3n", "L\xEDmites difusos"],
+      en: ["Escapism", "Confusion", "Blurred boundaries"]
+    },
+    learning: {
+      es: "Aprender a poner l\xEDmites sin perder sensibilidad.",
+      en: "Learning to set boundaries without losing sensitivity."
+    },
+    questions: {
+      es: ["\xBFQu\xE9 estoy evitando?", "\xBFD\xF3nde necesito anclarme?"],
+      en: ["What am I avoiding?", "Where do I need grounding?"]
+    },
+    chartHint: {
+      es: "Zona de espiritualidad, inconsciente y entrega.",
+      en: "Area of spirituality, unconscious, and surrender."
+    }
+  }
+};
+var infoCasas = {
+  casa1: {
+    id: 1,
+    label: { es: "Casa 1", en: "House 1" },
+    coreTheme: {
+      es: "Identidad, inicio, presencia",
+      en: "Identity, beginnings, presence"
+    },
+    intro: {
+      es: "La Casa 1 habla de c\xF3mo iniciamos la vida y c\xF3mo nos presentamos al mundo. Describe la identidad visible, el temperamento y la forma espont\xE1nea de actuar.",
+      en: "House 1 describes how we begin life and present ourselves to the world. It reflects visible identity, temperament, and spontaneous behavior."
+    },
+    light: {
+      es: ["Autenticidad", "Iniciativa", "Vitalidad"],
+      en: ["Authenticity", "Initiative", "Vitality"]
+    },
+    shadow: {
+      es: ["Egocentrismo", "Reactividad", "Impulsividad"],
+      en: ["Egocentrism", "Reactivity", "Impulsiveness"]
+    },
+    questions: {
+      es: ["\xBFQui\xE9n soy cuando empiezo algo?", "\xBFC\xF3mo me muestro?"],
+      en: ["Who am I when I start something?", "How do I show myself?"]
+    }
+  },
+  casa2: {
+    id: 2,
+    label: { es: "Casa 2", en: "House 2" },
+    coreTheme: {
+      es: "Recursos, valor, seguridad",
+      en: "Resources, value, security"
+    },
+    intro: {
+      es: "La Casa 2 se relaciona con los recursos materiales y simb\xF3licos. Habla del dinero, la autoestima y aquello que sentimos como propio.",
+      en: "House 2 relates to material and symbolic resources. It speaks of money, self-worth, and what we consider ours."
+    },
+    light: {
+      es: ["Autovaloraci\xF3n", "Estabilidad", "Capacidad de sost\xE9n"],
+      en: ["Self-worth", "Stability", "Ability to sustain"]
+    },
+    shadow: {
+      es: ["Apego", "Miedo a la carencia", "Materialismo"],
+      en: ["Attachment", "Fear of scarcity", "Materialism"]
+    },
+    questions: {
+      es: ["\xBFQu\xE9 valoro?", "\xBFQu\xE9 me da seguridad?"],
+      en: ["What do I value?", "What gives me security?"]
+    }
+  },
+  casa3: {
+    id: 3,
+    label: { es: "Casa 3", en: "House 3" },
+    coreTheme: {
+      es: "Comunicaci\xF3n, aprendizaje, entorno cercano",
+      en: "Communication, learning, close environment"
+    },
+    intro: {
+      es: "La Casa 3 representa la mente concreta, el intercambio cotidiano, el aprendizaje temprano y la forma de comunicar.",
+      en: "House 3 represents practical thinking, daily exchange, early learning, and communication style."
+    },
+    light: {
+      es: ["Curiosidad", "Capacidad de aprendizaje", "Intercambio fluido"],
+      en: ["Curiosity", "Learning ability", "Fluid exchange"]
+    },
+    shadow: {
+      es: ["Dispersi\xF3n", "Superficialidad", "Ruido mental"],
+      en: ["Dispersion", "Superficiality", "Mental noise"]
+    },
+    questions: {
+      es: ["\xBFC\xF3mo me comunico?", "\xBFQu\xE9 necesito aprender?"],
+      en: ["How do I communicate?", "What do I need to learn?"]
+    }
+  },
+  casa4: {
+    id: 4,
+    label: { es: "Casa 4", en: "House 4" },
+    coreTheme: {
+      es: "Ra\xEDces, hogar, base emocional",
+      en: "Roots, home, emotional foundation"
+    },
+    intro: {
+      es: "La Casa 4 habla del origen, la familia, la infancia y la base emocional desde la cual nos construimos.",
+      en: "House 4 speaks of origin, family, childhood, and the emotional base from which we build ourselves."
+    },
+    light: {
+      es: ["Contenci\xF3n", "Pertenencia", "Intimidad"],
+      en: ["Emotional support", "Belonging", "Intimacy"]
+    },
+    shadow: {
+      es: ["Apego", "Dependencia emocional", "Encierro"],
+      en: ["Attachment", "Emotional dependency", "Withdrawal"]
+    },
+    questions: {
+      es: ["\xBFD\xF3nde me siento en casa?", "\xBFQu\xE9 necesito cuidar?"],
+      en: ["Where do I feel at home?", "What needs care?"]
+    }
+  },
+  casa5: {
+    id: 5,
+    label: { es: "Casa 5", en: "House 5" },
+    coreTheme: {
+      es: "Creatividad, disfrute, expresi\xF3n personal",
+      en: "Creativity, pleasure, self-expression"
+    },
+    intro: {
+      es: "La Casa 5 se vincula con la expresi\xF3n del yo, la creatividad, el juego, el romance y la capacidad de disfrutar.",
+      en: "House 5 relates to self-expression, creativity, play, romance, and enjoyment."
+    },
+    light: {
+      es: ["Creatividad", "Alegr\xEDa", "Autoexpresi\xF3n"],
+      en: ["Creativity", "Joy", "Self-expression"]
+    },
+    shadow: {
+      es: ["Egocentrismo", "B\xFAsqueda de aprobaci\xF3n", "Exceso de dramatismo"],
+      en: ["Egocentrism", "Need for approval", "Excess drama"]
+    },
+    questions: {
+      es: ["\xBFQu\xE9 me da placer?", "\xBFDesde d\xF3nde me expreso?"],
+      en: ["What brings me pleasure?", "From where do I express myself?"]
+    }
+  },
+  casa6: {
+    id: 6,
+    label: { es: "Casa 6", en: "House 6" },
+    coreTheme: {
+      es: "Trabajo, h\xE1bitos, servicio",
+      en: "Work, habits, service"
+    },
+    intro: {
+      es: "La Casa 6 habla del trabajo cotidiano, la organizaci\xF3n, la salud y la relaci\xF3n con el servicio y la utilidad.",
+      en: "House 6 speaks of daily work, organization, health, and service."
+    },
+    light: {
+      es: ["Disciplina", "Responsabilidad", "Capacidad de mejora"],
+      en: ["Discipline", "Responsibility", "Ability to improve"]
+    },
+    shadow: {
+      es: ["Autoexigencia", "Rutina opresiva", "Desgaste"],
+      en: ["Overwork", "Oppressive routine", "Burnout"]
+    },
+    questions: {
+      es: ["\xBFC\xF3mo me organizo?", "\xBFQu\xE9 necesita ajuste?"],
+      en: ["How do I organize myself?", "What needs adjustment?"]
+    }
+  },
+  casa7: {
+    id: 7,
+    label: { es: "Casa 7", en: "House 7" },
+    coreTheme: {
+      es: "V\xEDnculos, pareja, el otro",
+      en: "Relationships, partnership, the other"
+    },
+    intro: {
+      es: "La Casa 7 representa las relaciones significativas y aquello que proyectamos en el otro.",
+      en: "House 7 represents significant relationships and what we project onto others."
+    },
+    light: {
+      es: ["Cooperaci\xF3n", "Complementariedad", "Di\xE1logo"],
+      en: ["Cooperation", "Complementarity", "Dialogue"]
+    },
+    shadow: {
+      es: ["Dependencia", "Proyecci\xF3n", "Conflictos relacionales"],
+      en: ["Dependency", "Projection", "Relational conflict"]
+    },
+    questions: {
+      es: ["\xBFQu\xE9 busco en el otro?", "\xBFQu\xE9 proyecto?"],
+      en: ["What do I seek in others?", "What do I project?"]
+    }
+  },
+  casa8: {
+    id: 8,
+    label: { es: "Casa 8", en: "House 8" },
+    coreTheme: {
+      es: "Transformaci\xF3n, intimidad, poder",
+      en: "Transformation, intimacy, power"
+    },
+    intro: {
+      es: "La Casa 8 se asocia a los procesos de crisis, muerte y renacimiento simb\xF3lico, as\xED como a los recursos compartidos.",
+      en: "House 8 is linked to crisis, symbolic death and rebirth, and shared resources."
+    },
+    light: {
+      es: ["Profundidad", "Capacidad de transformaci\xF3n", "Intimidad real"],
+      en: ["Depth", "Transformational ability", "True intimacy"]
+    },
+    shadow: {
+      es: ["Control", "Miedo a perder", "Manipulaci\xF3n"],
+      en: ["Control", "Fear of loss", "Manipulation"]
+    },
+    questions: {
+      es: ["\xBFQu\xE9 necesito soltar?", "\xBFD\xF3nde me transformo?"],
+      en: ["What do I need to release?", "Where do I transform?"]
+    }
+  },
+  casa9: {
+    id: 9,
+    label: { es: "Casa 9", en: "House 9" },
+    coreTheme: {
+      es: "Sentido, creencias, expansi\xF3n",
+      en: "Meaning, beliefs, expansion"
+    },
+    intro: {
+      es: "La Casa 9 habla de la b\xFAsqueda de sentido, la filosof\xEDa de vida, los viajes y la expansi\xF3n de conciencia.",
+      en: "House 9 speaks of the search for meaning, life philosophy, travel, and expansion of consciousness."
+    },
+    light: {
+      es: ["Visi\xF3n", "Fe", "Apertura mental"],
+      en: ["Vision", "Faith", "Open-mindedness"]
+    },
+    shadow: {
+      es: ["Dogmatismo", "Exceso de idealismo", "Falta de l\xEDmites"],
+      en: ["Dogmatism", "Excessive idealism", "Lack of limits"]
+    },
+    questions: {
+      es: ["\xBFQu\xE9 sentido le doy a mi vida?", "\xBFQu\xE9 creencia reviso?"],
+      en: ["What meaning do I give my life?", "Which belief needs review?"]
+    }
+  },
+  casa10: {
+    id: 10,
+    label: { es: "Casa 10", en: "House 10" },
+    coreTheme: {
+      es: "Vocaci\xF3n, rol social, prop\xF3sito",
+      en: "Vocation, social role, purpose"
+    },
+    intro: {
+      es: "La Casa 10 se vincula con la vocaci\xF3n, la imagen p\xFAblica y el lugar que ocupamos en la sociedad.",
+      en: "House 10 relates to vocation, public image, and our place in society."
+    },
+    light: {
+      es: ["Responsabilidad", "Ambici\xF3n consciente", "Autoridad interna"],
+      en: ["Responsibility", "Conscious ambition", "Inner authority"]
+    },
+    shadow: {
+      es: ["Rigidez", "Exceso de control", "Desconexi\xF3n emocional"],
+      en: ["Rigidity", "Excess control", "Emotional disconnection"]
+    },
+    questions: {
+      es: ["\xBFQu\xE9 quiero construir?", "\xBFQu\xE9 rol asumo?"],
+      en: ["What do I want to build?", "Which role do I assume?"]
+    }
+  },
+  casa11: {
+    id: 11,
+    label: { es: "Casa 11", en: "House 11" },
+    coreTheme: {
+      es: "Grupos, futuro, visi\xF3n colectiva",
+      en: "Groups, future, collective vision"
+    },
+    intro: {
+      es: "La Casa 11 se relaciona con los grupos, las redes, los proyectos a futuro y la conciencia colectiva.",
+      en: "House 11 relates to groups, networks, future projects, and collective awareness."
+    },
+    light: {
+      es: ["Cooperaci\xF3n", "Innovaci\xF3n", "Visi\xF3n compartida"],
+      en: ["Cooperation", "Innovation", "Shared vision"]
+    },
+    shadow: {
+      es: ["Desapego", "Idealizaci\xF3n de grupos", "Rigidez ideol\xF3gica"],
+      en: ["Detachment", "Group idealization", "Ideological rigidity"]
+    },
+    questions: {
+      es: ["\xBFCon qui\xE9n construyo futuro?", "\xBFQu\xE9 aporto al colectivo?"],
+      en: ["With whom do I build the future?", "What do I contribute to the collective?"]
+    }
+  },
+  casa12: {
+    id: 12,
+    label: { es: "Casa 12", en: "House 12" },
+    coreTheme: {
+      es: "Inconsciente, cierre, trascendencia",
+      en: "Unconscious, closure, transcendence"
+    },
+    intro: {
+      es: "La Casa 12 habla de lo invisible, el inconsciente, los finales de ciclo y la entrega.",
+      en: "House 12 speaks of the invisible, the unconscious, cycle endings, and surrender."
+    },
+    light: {
+      es: ["Compasi\xF3n", "Sensibilidad espiritual", "Capacidad de cierre"],
+      en: ["Compassion", "Spiritual sensitivity", "Ability to close cycles"]
+    },
+    shadow: {
+      es: ["Evasi\xF3n", "Confusi\xF3n", "Sacrificio inconsciente"],
+      en: ["Escapism", "Confusion", "Unconscious sacrifice"]
+    },
+    questions: {
+      es: ["\xBFQu\xE9 necesito soltar?", "\xBFQu\xE9 ciclo se cierra?"],
+      en: ["What do I need to release?", "Which cycle is ending?"]
+    }
+  }
+};
+var infoCuerpos = {
+  sol: {
+    id: "sun",
+    label: { es: "Sol", en: "Sun" },
+    category: "planet",
+    coreTheme: {
+      es: "Identidad, voluntad, prop\xF3sito",
+      en: "Identity, will, purpose"
+    },
+    intro: {
+      es: "El Sol describe el centro de gravedad de la personalidad: lo que ven\xEDs a desarrollar, sostener y expresar. Habla de voluntad, vitalidad y direcci\xF3n.",
+      en: "The Sun describes the center of gravity of the personality: what you\u2019re here to develop, sustain, and express. It speaks to will, vitality, and direction."
+    },
+    light: {
+      es: ["Claridad de prop\xF3sito", "Confianza", "Creatividad", "Liderazgo interno"],
+      en: ["Clarity of purpose", "Confidence", "Creativity", "Inner leadership"]
+    },
+    shadow: {
+      es: ["Orgullo r\xEDgido", "Necesidad de reconocimiento", "Ego defensivo", "Autoimagen fr\xE1gil"],
+      en: ["Rigid pride", "Need for validation", "Defensive ego", "Fragile self-image"]
+    },
+    questions: {
+      es: ["\xBFQu\xE9 quiero ser y sostener?", "\xBFD\xF3nde pongo mi energ\xEDa vital?"],
+      en: ["What do I want to become and sustain?", "Where do I place my vital energy?"]
+    },
+    chartHint: {
+      es: "El signo muestra el estilo de identidad; la casa, el \xE1rea donde brill\xE1s y te afirm\xE1s; los aspectos, c\xF3mo se integra tu voluntad.",
+      en: "The sign shows identity style; the house shows where you shine and assert yourself; aspects show how your will integrates."
+    }
+  },
+  luna: {
+    id: "moon",
+    label: { es: "Luna", en: "Moon" },
+    category: "planet",
+    coreTheme: {
+      es: "Emoci\xF3n, necesidad, seguridad",
+      en: "Emotion, needs, security"
+    },
+    intro: {
+      es: "La Luna representa el mundo emocional, las necesidades b\xE1sicas y c\xF3mo buscamos seguridad. Tambi\xE9n habla de h\xE1bitos afectivos y memoria.",
+      en: "The Moon represents the emotional world, basic needs, and how we seek safety. It also speaks to emotional habits and memory."
+    },
+    light: {
+      es: ["Empat\xEDa", "Contenci\xF3n", "Intuici\xF3n", "Capacidad de nutrir"],
+      en: ["Empathy", "Nurturing", "Intuition", "Ability to nourish"]
+    },
+    shadow: {
+      es: ["Reactividad emocional", "Apego", "Dependencia", "Cambios de \xE1nimo intensos"],
+      en: ["Emotional reactivity", "Attachment", "Dependency", "Intense mood swings"]
+    },
+    questions: {
+      es: ["\xBFQu\xE9 necesito para sentirme segurx?", "\xBFQu\xE9 emoci\xF3n pide ser escuchada?"],
+      en: ["What do I need to feel safe?", "Which emotion needs to be heard?"]
+    },
+    chartHint: {
+      es: "El signo muestra tu estilo emocional; la casa, d\xF3nde busc\xE1s refugio; los aspectos, qu\xE9 tan f\xE1cil o complejo es regularte.",
+      en: "The sign shows your emotional style; the house shows where you seek refuge; aspects show how easy or complex regulation is."
+    }
+  },
+  mercurio: {
+    id: "mercury",
+    label: { es: "Mercurio", en: "Mercury" },
+    category: "planet",
+    coreTheme: {
+      es: "Mente, lenguaje, aprendizaje",
+      en: "Mind, language, learning"
+    },
+    intro: {
+      es: "Mercurio describe c\xF3mo pens\xE1s, c\xF3mo proces\xE1s informaci\xF3n y c\xF3mo comunic\xE1s. Es la l\xF3gica, la curiosidad y el puente entre ideas y palabras.",
+      en: "Mercury describes how you think, process information, and communicate. It\u2019s logic, curiosity, and the bridge between ideas and words."
+    },
+    light: {
+      es: ["Curiosidad", "Adaptabilidad mental", "Claridad", "Habilidad para aprender"],
+      en: ["Curiosity", "Mental adaptability", "Clarity", "Learning ability"]
+    },
+    shadow: {
+      es: ["Sobrepensar", "Ansiedad mental", "Dispersi\xF3n", "Doble discurso"],
+      en: ["Overthinking", "Mental anxiety", "Scattering", "Mixed messages"]
+    },
+    questions: {
+      es: ["\xBFQu\xE9 dato me falta?", "\xBFEstoy diciendo lo que realmente pienso?"],
+      en: ["What information is missing?", "Am I saying what I truly think?"]
+    },
+    chartHint: {
+      es: "El signo muestra tu estilo mental; la casa indica d\xF3nde negoci\xE1s, estudi\xE1s o habl\xE1s; los aspectos muestran tu tono mental.",
+      en: "The sign shows your mental style; the house indicates where you negotiate, study, or speak; aspects show your mental tone."
+    }
+  },
+  venus: {
+    id: "venus",
+    label: { es: "Venus", en: "Venus" },
+    category: "planet",
+    coreTheme: {
+      es: "V\xEDnculo, deseo afectivo, valor",
+      en: "Bonding, affection, value"
+    },
+    intro: {
+      es: "Venus habla de c\xF3mo am\xE1s, qu\xE9 te atrae, c\xF3mo disfrut\xE1s y qu\xE9 valor\xE1s. Tambi\xE9n se relaciona con autoestima y placer.",
+      en: "Venus speaks to how you love, what attracts you, how you enjoy, and what you value. It also relates to self-worth and pleasure."
+    },
+    light: {
+      es: ["Afecto", "Armon\xEDa", "Sensualidad", "Capacidad de disfrute"],
+      en: ["Affection", "Harmony", "Sensuality", "Ability to enjoy"]
+    },
+    shadow: {
+      es: ["Complacencia", "Dependencia afectiva", "Indecisi\xF3n", "B\xFAsqueda de aprobaci\xF3n"],
+      en: ["People-pleasing", "Emotional dependency", "Indecision", "Need for validation"]
+    },
+    questions: {
+      es: ["\xBFQu\xE9 valoro de verdad?", "\xBFC\xF3mo recibo amor?"],
+      en: ["What do I truly value?", "How do I receive love?"]
+    },
+    chartHint: {
+      es: "El signo muestra tu est\xE9tica y lenguaje afectivo; la casa muestra d\xF3nde busc\xE1s placer y armon\xEDa.",
+      en: "The sign shows your aesthetic and love language; the house shows where you seek pleasure and harmony."
+    }
+  },
+  marte: {
+    id: "mars",
+    label: { es: "Marte", en: "Mars" },
+    category: "planet",
+    coreTheme: {
+      es: "Acci\xF3n, deseo, l\xEDmites",
+      en: "Action, desire, boundaries"
+    },
+    intro: {
+      es: "Marte simboliza el impulso para actuar, defenderte y conquistar objetivos. Habla del deseo, la energ\xEDa, el enojo y los l\xEDmites.",
+      en: "Mars symbolizes the drive to act, defend yourself, and pursue goals. It speaks to desire, energy, anger, and boundaries."
+    },
+    light: {
+      es: ["Determinaci\xF3n", "Coraje", "Energ\xEDa", "Capacidad de decisi\xF3n"],
+      en: ["Determination", "Courage", "Energy", "Decision-making"]
+    },
+    shadow: {
+      es: ["Impulsividad", "Agresividad", "Irritaci\xF3n", "Competencia destructiva"],
+      en: ["Impulsiveness", "Aggression", "Irritability", "Destructive competition"]
+    },
+    questions: {
+      es: ["\xBFQu\xE9 quiero y qu\xE9 hago al respecto?", "\xBFD\xF3nde necesito poner un l\xEDmite?"],
+      en: ["What do I want and what am I doing about it?", "Where do I need a boundary?"]
+    },
+    chartHint: {
+      es: "El signo muestra c\xF3mo luch\xE1s y dese\xE1s; la casa indica d\xF3nde vas al frente; aspectos muestran tu forma de manejar enojo/energ\xEDa.",
+      en: "The sign shows how you fight and desire; the house shows where you lead with force; aspects show how you handle anger/drive."
+    }
+  },
+  jupiter: {
+    id: "jupiter",
+    label: { es: "J\xFApiter", en: "Jupiter" },
+    category: "planet",
+    coreTheme: {
+      es: "Expansi\xF3n, sentido, confianza",
+      en: "Expansion, meaning, confidence"
+    },
+    intro: {
+      es: "J\xFApiter amplifica: abre puertas, expande creencias y aumenta la confianza. Muestra d\xF3nde buscamos crecer y encontrar sentido.",
+      en: "Jupiter amplifies: it opens doors, expands beliefs, and increases confidence. It shows where we seek growth and meaning."
+    },
+    light: {
+      es: ["Optimismo", "Generosidad", "Visi\xF3n", "Fe"],
+      en: ["Optimism", "Generosity", "Vision", "Faith"]
+    },
+    shadow: {
+      es: ["Exceso", "Indulgencia", "Prometer de m\xE1s", "Dogmatismo"],
+      en: ["Excess", "Indulgence", "Overpromising", "Dogmatism"]
+    },
+    questions: {
+      es: ["\xBFD\xF3nde quiero crecer?", "\xBFQu\xE9 creencia me expande o me limita?"],
+      en: ["Where do I want to grow?", "Which belief expands me or limits me?"]
+    },
+    chartHint: {
+      es: "El signo muestra tu estilo de crecimiento; la casa, el \xE1rea donde la vida pide expansi\xF3n; aspectos muestran tu medida.",
+      en: "The sign shows your growth style; the house shows where life asks for expansion; aspects show your sense of measure."
+    }
+  },
+  saturno: {
+    id: "saturn",
+    label: { es: "Saturno", en: "Saturn" },
+    category: "planet",
+    coreTheme: {
+      es: "L\xEDmite, responsabilidad, madurez",
+      en: "Limits, responsibility, maturity"
+    },
+    intro: {
+      es: "Saturno estructura: muestra d\xF3nde necesitamos compromiso, paciencia y trabajo real. Tambi\xE9n se\xF1ala miedos, pruebas y el lugar donde se gana autoridad interna.",
+      en: "Saturn structures: it shows where commitment, patience, and real work are needed. It also points to fears, tests, and where inner authority is earned."
+    },
+    light: {
+      es: ["Disciplina", "Madurez", "Consistencia", "Autoridad interna"],
+      en: ["Discipline", "Maturity", "Consistency", "Inner authority"]
+    },
+    shadow: {
+      es: ["Rigidez", "Miedo al error", "Pesimismo", "Autoexigencia extrema"],
+      en: ["Rigidity", "Fear of failure", "Pessimism", "Extreme self-demand"]
+    },
+    questions: {
+      es: ["\xBFQu\xE9 estoy construyendo a largo plazo?", "\xBFQu\xE9 miedo necesito atravesar?"],
+      en: ["What am I building long-term?", "Which fear do I need to face?"]
+    },
+    chartHint: {
+      es: "El signo muestra tu estilo de responsabilidad; la casa, el \xE1rea donde hay lecci\xF3n y maestr\xEDa; aspectos muestran tensi\xF3n o solidez.",
+      en: "The sign shows your responsibility style; the house shows the area of lesson and mastery; aspects show tension or stability."
+    }
+  },
+  urano: {
+    id: "uranus",
+    label: { es: "Urano", en: "Uranus" },
+    category: "planet",
+    coreTheme: {
+      es: "Cambio, libertad, innovaci\xF3n",
+      en: "Change, freedom, innovation"
+    },
+    intro: {
+      es: "Urano despierta: rompe patrones, impulsa cambios y pide autenticidad. Se\xF1ala d\xF3nde necesitamos libertad y originalidad.",
+      en: "Uranus awakens: it breaks patterns, drives change, and demands authenticity. It shows where we need freedom and originality."
+    },
+    light: {
+      es: ["Innovaci\xF3n", "Independencia", "Genialidad", "Visi\xF3n de futuro"],
+      en: ["Innovation", "Independence", "Brilliance", "Future vision"]
+    },
+    shadow: {
+      es: ["Inestabilidad", "Rebeld\xEDa reactiva", "Cortes abruptos", "Ansiedad por libertad"],
+      en: ["Instability", "Reactive rebellion", "Abrupt breaks", "Freedom anxiety"]
+    },
+    questions: {
+      es: ["\xBFQu\xE9 necesito liberar?", "\xBFQu\xE9 cambio estoy evitando?"],
+      en: ["What do I need to liberate?", "Which change am I avoiding?"]
+    },
+    chartHint: {
+      es: "La casa muestra el \xE1rea donde la vida trae giros; el signo muestra el estilo de innovaci\xF3n; aspectos intensifican despertares.",
+      en: "The house shows where life brings turns; the sign shows the innovation style; aspects intensify awakenings."
+    }
+  },
+  neptuno: {
+    id: "neptune",
+    label: { es: "Neptuno", en: "Neptune" },
+    category: "planet",
+    coreTheme: {
+      es: "Inspiraci\xF3n, fe, disoluci\xF3n del ego",
+      en: "Inspiration, faith, ego dissolution"
+    },
+    intro: {
+      es: "Neptuno sensibiliza: abre la intuici\xF3n, la imaginaci\xF3n y lo espiritual. Tambi\xE9n puede nublar, idealizar o diluir l\xEDmites.",
+      en: "Neptune sensitizes: it opens intuition, imagination, and spirituality. It can also blur, idealize, or dissolve boundaries."
+    },
+    light: {
+      es: ["Compasi\xF3n", "Inspiraci\xF3n", "Intuici\xF3n", "Conexi\xF3n espiritual"],
+      en: ["Compassion", "Inspiration", "Intuition", "Spiritual connection"]
+    },
+    shadow: {
+      es: ["Evasi\xF3n", "Idealizaci\xF3n", "Confusi\xF3n", "L\xEDmites difusos"],
+      en: ["Escapism", "Idealization", "Confusion", "Blurred boundaries"]
+    },
+    questions: {
+      es: ["\xBFQu\xE9 estoy idealizando?", "\xBFQu\xE9 l\xEDmite necesito poner con amor?"],
+      en: ["What am I idealizing?", "Which boundary do I need to set with compassion?"]
+    },
+    chartHint: {
+      es: "La casa muestra d\xF3nde so\xF1\xE1s o te dilu\xEDs; el signo muestra el estilo de sensibilidad; aspectos indican claridad vs neblina.",
+      en: "The house shows where you dream or dissolve; the sign shows sensitivity style; aspects indicate clarity vs fog."
+    }
+  },
+  pluton: {
+    id: "pluto",
+    label: { es: "Plut\xF3n", en: "Pluto" },
+    category: "planet",
+    coreTheme: {
+      es: "Poder, transformaci\xF3n, verdad profunda",
+      en: "Power, transformation, deep truth"
+    },
+    intro: {
+      es: "Plut\xF3n intensifica: revela lo oculto, empuja a crisis transformadoras y pide autenticidad radical. Es muerte y renacimiento simb\xF3lico.",
+      en: "Pluto intensifies: it reveals what\u2019s hidden, pushes transformative crises, and demands radical authenticity. Symbolic death and rebirth."
+    },
+    light: {
+      es: ["Regeneraci\xF3n", "Profundidad", "Valent\xEDa emocional", "Poder interno"],
+      en: ["Regeneration", "Depth", "Emotional courage", "Inner power"]
+    },
+    shadow: {
+      es: ["Control", "Obsesi\xF3n", "Manipulaci\xF3n", "Miedo a perder"],
+      en: ["Control", "Obsession", "Manipulation", "Fear of loss"]
+    },
+    questions: {
+      es: ["\xBFQu\xE9 ya no puede seguir igual?", "\xBFD\xF3nde me aferro por miedo?"],
+      en: ["What can no longer stay the same?", "Where do I cling out of fear?"]
+    },
+    chartHint: {
+      es: "La casa muestra la zona de metamorfosis; el signo muestra el estilo generacional; aspectos activan intensidad personal.",
+      en: "The house shows the area of metamorphosis; the sign shows the generational style; aspects activate personal intensity."
+    }
+  },
+  quiron: {
+    id: "chiron",
+    label: { es: "Quir\xF3n", en: "Chiron" },
+    category: "point",
+    coreTheme: {
+      es: "Herida, aprendizaje, medicina personal",
+      en: "Wound, learning, personal medicine"
+    },
+    intro: {
+      es: "Quir\xF3n se\xF1ala una herida sensible (a veces dif\xEDcil de nombrar) que, al integrarse, se vuelve sabidur\xEDa y medicina para otros.",
+      en: "Chiron points to a tender wound (sometimes hard to name) that, when integrated, becomes wisdom and medicine for others."
+    },
+    light: {
+      es: ["Sabidur\xEDa", "Humildad", "Capacidad de acompa\xF1ar", "Sanaci\xF3n consciente"],
+      en: ["Wisdom", "Humility", "Ability to support others", "Conscious healing"]
+    },
+    shadow: {
+      es: ["Verg\xFCenza", "Sensaci\xF3n de falta", "Hipersensibilidad", "Querer \u2018arreglar\u2019 a todos"],
+      en: ["Shame", "Sense of deficiency", "Hypersensitivity", "Trying to \u2018fix\u2019 everyone"]
+    },
+    questions: {
+      es: ["\xBFQu\xE9 me duele de forma antigua?", "\xBFQu\xE9 medicina nace de eso?"],
+      en: ["What feels like an old pain?", "What medicine is born from it?"]
+    },
+    chartHint: {
+      es: "La casa muestra d\xF3nde duele y se aprende; el signo muestra el estilo de la herida y la cura.",
+      en: "The house shows where it hurts and where learning happens; the sign shows the style of wound and remedy."
+    }
+  },
+  lilith: {
+    id: "lilith",
+    label: { es: "Lilith (Luna Negra)", en: "Lilith (Black Moon)" },
+    category: "point",
+    coreTheme: {
+      es: "Instinto, sombra, autonom\xEDa",
+      en: "Instinct, shadow, autonomy"
+    },
+    intro: {
+      es: "Lilith representa lo instintivo, lo no domesticado y aquello que a veces fue reprimido o juzgado. Habla de deseo crudo, l\xEDmites y autonom\xEDa.",
+      en: "Lilith represents the instinctive, the untamed, and what may have been repressed or judged. It speaks of raw desire, boundaries, and autonomy."
+    },
+    light: {
+      es: ["Autenticidad instintiva", "Poder personal", "L\xEDmites claros", "Deseo honesto"],
+      en: ["Instinctive authenticity", "Personal power", "Clear boundaries", "Honest desire"]
+    },
+    shadow: {
+      es: ["Rebeld\xEDa reactiva", "Verg\xFCenza", "Polarizaci\xF3n", "Relaciones de control"],
+      en: ["Reactive rebellion", "Shame", "Polarization", "Control dynamics"]
+    },
+    questions: {
+      es: ["\xBFQu\xE9 parte m\xEDa fue silenciada?", "\xBFD\xF3nde necesito decir \u2018no\u2019 con firmeza?"],
+      en: ["Which part of me was silenced?", "Where do I need to say \u2018no\u2019 firmly?"]
+    },
+    chartHint: {
+      es: "La casa muestra d\xF3nde se activa el tab\xFA o la potencia; el signo muestra el estilo de independencia y deseo.",
+      en: "The house shows where taboo/power gets activated; the sign shows the style of independence and desire."
+    }
+  },
+  nodoNorte: {
+    id: "north_node",
+    label: { es: "Nodo Norte", en: "North Node" },
+    category: "node",
+    coreTheme: {
+      es: "Direcci\xF3n evolutiva, crecimiento",
+      en: "Evolutionary direction, growth"
+    },
+    intro: {
+      es: "El Nodo Norte se\xF1ala un rumbo de aprendizaje: cualidades a desarrollar, experiencias nuevas y expansi\xF3n de conciencia. No siempre es c\xF3modo, pero s\xED nutritivo.",
+      en: "The North Node points to a learning direction: qualities to develop, new experiences, and expansion of consciousness. Not always comfortable, but deeply nourishing."
+    },
+    light: {
+      es: ["Crecimiento", "Apertura", "Nuevas habilidades", "Sentido de destino"],
+      en: ["Growth", "Openness", "New skills", "Sense of direction"]
+    },
+    shadow: {
+      es: ["Miedo a lo desconocido", "Autosabotaje", "Volver a lo f\xE1cil", "Resistencia al cambio"],
+      en: ["Fear of the unknown", "Self-sabotage", "Staying in the easy", "Resistance to change"]
+    },
+    questions: {
+      es: ["\xBFQu\xE9 me pide aprender la vida?", "\xBFQu\xE9 nuevo m\xFAsculo estoy desarrollando?"],
+      en: ["What is life asking me to learn?", "Which new muscle am I building?"]
+    },
+    chartHint: {
+      es: "El signo muestra el tipo de cualidad a desarrollar; la casa, el \xE1rea de vida donde se encarna el aprendizaje.",
+      en: "The sign shows the quality to develop; the house shows the life area where learning is embodied."
+    }
+  },
+  nodoSur: {
+    id: "south_node",
+    label: { es: "Nodo Sur", en: "South Node" },
+    category: "node",
+    coreTheme: {
+      es: "Zona conocida, memoria, talento autom\xE1tico",
+      en: "Familiar zone, memory, automatic talent"
+    },
+    intro: {
+      es: "El Nodo Sur describe patrones aprendidos, talentos disponibles y una forma conocida de moverte por la vida. Es sabidur\xEDa\u2026 y tambi\xE9n puede volverse zona de estancamiento.",
+      en: "The South Node describes learned patterns, available talents, and a familiar way of moving through life. It\u2019s wisdom\u2026 and it can also become a stagnation zone."
+    },
+    light: {
+      es: ["Talento natural", "Experiencia", "Memoria de recursos", "Sabidur\xEDa"],
+      en: ["Natural talent", "Experience", "Resource memory", "Wisdom"]
+    },
+    shadow: {
+      es: ["Inercia", "Repetici\xF3n", "Apego al pasado", "Evitar desaf\xEDos nuevos"],
+      en: ["Inertia", "Repetition", "Attachment to the past", "Avoiding new challenges"]
+    },
+    questions: {
+      es: ["\xBFQu\xE9 me sale f\xE1cil pero ya no me alcanza?", "\xBFD\xF3nde repito por inercia?"],
+      en: ["What comes easily but no longer serves me?", "Where am I repeating out of inertia?"]
+    },
+    chartHint: {
+      es: "El signo muestra el patr\xF3n c\xF3modo; la casa muestra d\xF3nde tend\xE9s a quedarte en lo conocido.",
+      en: "The sign shows the comfortable pattern; the house shows where you tend to stay in the familiar."
+    }
+  },
+  parteFortuna: {
+    id: "part_of_fortune",
+    label: { es: "Parte de la Fortuna", en: "Part of Fortune" },
+    category: "point",
+    coreTheme: {
+      es: "Fluidez, bienestar, facilidad",
+      en: "Flow, wellbeing, ease"
+    },
+    intro: {
+      es: "La Parte de la Fortuna se\xF1ala d\xF3nde la vida tiende a fluir con m\xE1s naturalidad: un punto de goce, bienestar y \u2018click\u2019 interno cuando est\xE1s alineadx.",
+      en: "The Part of Fortune points to where life tends to flow more naturally: a place of enjoyment, wellbeing, and inner \u2018click\u2019 when aligned."
+    },
+    light: {
+      es: ["Fluidez", "Goce", "Bienestar", "Confianza tranquila"],
+      en: ["Flow", "Enjoyment", "Wellbeing", "Quiet confidence"]
+    },
+    shadow: {
+      es: ["Buscar suerte sin acci\xF3n", "Idealizar facilidad", "Dormirse en lo c\xF3modo"],
+      en: ["Chasing luck without action", "Idealizing ease", "Getting stuck in comfort"]
+    },
+    questions: {
+      es: ["\xBFD\xF3nde siento que todo encaja?", "\xBFQu\xE9 me da alegr\xEDa simple?"],
+      en: ["Where does everything feel aligned?", "What gives me simple joy?"]
+    },
+    chartHint: {
+      es: "El signo indica el estilo de goce; la casa, el \xE1rea donde se activa bienestar y plenitud.",
+      en: "The sign indicates the style of enjoyment; the house indicates where wellbeing and fulfillment activate."
+    }
+  },
+  vertice: {
+    id: "vertex",
+    label: { es: "V\xE9rtice", en: "Vertex" },
+    category: "point",
+    coreTheme: {
+      es: "Encuentros significativos, giros de destino",
+      en: "Fated encounters, turning points"
+    },
+    intro: {
+      es: "El V\xE9rtice se asocia a encuentros y situaciones que se sienten \u201Cdestinadas\u201D o muy movilizantes. No es controlable: se activa por eventos y v\xEDnculos clave.",
+      en: "The Vertex is linked to encounters and situations that feel \u2018fated\u2019 or highly activating. It\u2019s not fully controllable; it\u2019s triggered by key events and relationships."
+    },
+    light: {
+      es: ["Sincronicidades", "Encuentros clave", "Apertura a lo nuevo"],
+      en: ["Synchronicities", "Key encounters", "Openness to the new"]
+    },
+    shadow: {
+      es: ["Proyecci\xF3n intensa", "Sentir que no eleg\xEDs", "Dramatizar el destino"],
+      en: ["Intense projection", "Feeling powerless", "Over-dramatizing fate"]
+    },
+    questions: {
+      es: ["\xBFQu\xE9 me est\xE1 mostrando este encuentro?", "\xBFQu\xE9 cambio me est\xE1 pidiendo la vida?"],
+      en: ["What is this encounter showing me?", "What change is life asking of me?"]
+    },
+    chartHint: {
+      es: "El signo muestra el tono de los encuentros; la casa, el \xE1rea donde aparecen giros y personas clave.",
+      en: "The sign shows the tone of encounters; the house shows the life area where turning points and key people appear."
+    }
+  }
+};
+var infoRetrogradacion = {
+  retrograde: {
+    intro: {
+      es: "Astrol\xF3gicamente, un planeta retr\xF3grado indica que su funci\xF3n se vive de manera m\xE1s interna, reflexiva o no lineal. No es \u201Cmalo\u201D: suele pedir revisi\xF3n, integraci\xF3n y un ritmo propio. Astron\xF3micamente es un efecto aparente desde la Tierra (parece ir hacia atr\xE1s), pero simb\xF3licamente se lee como un movimiento hacia adentro.",
+      en: "Astrologically, a retrograde planet suggests its function is expressed in a more internal, reflective, or non-linear way. It\u2019s not \u201Cbad\u201D: it often asks for review, integration, and a personal pace. Astronomically it\u2019s an apparent effect from Earth (it looks like it moves backward), but symbolically it\u2019s read as a movement inward."
+    },
+    keyIdeas: {
+      es: [
+        "M\xE1s introspecci\xF3n que impulso directo.",
+        "Procesos en espiral: volver sobre lo mismo para entenderlo distinto.",
+        "Tiempo de revisi\xF3n, reparaci\xF3n o re-encuadre.",
+        "Expresi\xF3n menos obvia hacia afuera; m\xE1s elaboraci\xF3n interna."
+      ],
+      en: [
+        "More introspection than direct push.",
+        "Spiral processes: revisiting the same theme to understand it differently.",
+        "A period of review, repair, or reframing.",
+        "Less obvious outward expression; more inner processing."
+      ]
+    }}
+};
+var infoTransitosAspectos = {
+  conjuncion: {
+    id: "conjunction",
+    angle: 0,
+    label: { es: "Conjunci\xF3n", en: "Conjunction" },
+    coreTheme: {
+      es: "Fusi\xF3n, inicio, activaci\xF3n",
+      en: "Fusion, initiation, activation"
+    },
+    intro: {
+      es: "La conjunci\xF3n ocurre cuando dos planetas se encuentran en el mismo grado o signo. Fusiona energ\xEDas y marca comienzos, \xE9nfasis y activaci\xF3n intensa.",
+      en: "A conjunction occurs when two planets meet at the same degree or sign. It fuses energies and marks beginnings, emphasis, and strong activation."
+    },
+    light: {
+      es: ["Inicio de ciclo", "Potencia concentrada", "Enfoque"],
+      en: ["Cycle beginning", "Concentrated power", "Focus"]
+    },
+    shadow: {
+      es: ["Exceso", "Identificaci\xF3n total", "Falta de perspectiva"],
+      en: ["Excess", "Over-identification", "Lack of perspective"]
+    },
+    questions: {
+      es: ["\xBFQu\xE9 se est\xE1 iniciando?", "\xBFD\xF3nde estoy poniendo toda mi energ\xEDa?"],
+      en: ["What is beginning?", "Where am I placing all my energy?"]
+    }
+  },
+  oposicion: {
+    id: "opposition",
+    angle: 180,
+    label: { es: "Oposici\xF3n", en: "Opposition" },
+    coreTheme: {
+      es: "Polaridad, espejo, conciencia",
+      en: "Polarity, mirror, awareness"
+    },
+    intro: {
+      es: "La oposici\xF3n enfrenta dos energ\xEDas opuestas. Trae conciencia a trav\xE9s del contraste, especialmente mediante v\xEDnculos y situaciones externas.",
+      en: "An opposition confronts two opposing energies. It brings awareness through contrast, often via relationships or external situations."
+    },
+    light: {
+      es: ["Conciencia", "Complementariedad", "Aprendizaje vincular"],
+      en: ["Awareness", "Complementarity", "Relational learning"]
+    },
+    shadow: {
+      es: ["Proyecci\xF3n", "Conflicto", "Tirar de la cuerda"],
+      en: ["Projection", "Conflict", "Tug of war"]
+    },
+    questions: {
+      es: ["\xBFQu\xE9 veo en el otro que tambi\xE9n es m\xEDo?", "\xBFC\xF3mo integro ambos polos?"],
+      en: ["What do I see in the other that is also mine?", "How can I integrate both poles?"]
+    }
+  },
+  cuadratura: {
+    id: "square",
+    angle: 90,
+    label: { es: "Cuadratura", en: "Square" },
+    coreTheme: {
+      es: "Tensi\xF3n, desaf\xEDo, acci\xF3n",
+      en: "Tension, challenge, action"
+    },
+    intro: {
+      es: "La cuadratura genera fricci\xF3n y conflicto interno o externo. Es un motor de cambio que exige decisi\xF3n y movimiento.",
+      en: "A square creates friction and inner or outer conflict. It\u2019s a driver of change that demands decision and action."
+    },
+    light: {
+      es: ["Motivaci\xF3n", "Crecimiento", "Desarrollo de car\xE1cter"],
+      en: ["Motivation", "Growth", "Character development"]
+    },
+    shadow: {
+      es: ["Estr\xE9s", "Bloqueo", "Reactividad"],
+      en: ["Stress", "Blockage", "Reactivity"]
+    },
+    questions: {
+      es: ["\xBFQu\xE9 conflicto pide acci\xF3n?", "\xBFD\xF3nde necesito madurar?"],
+      en: ["Which conflict calls for action?", "Where do I need to mature?"]
+    }
+  },
+  trigono: {
+    id: "trine",
+    angle: 120,
+    label: { es: "Tr\xEDgono", en: "Trine" },
+    coreTheme: {
+      es: "Fluidez, talento, facilidad",
+      en: "Flow, talent, ease"
+    },
+    intro: {
+      es: "El tr\xEDgono conecta energ\xEDas afines. Facilita el flujo natural y muestra talentos disponibles sin demasiado esfuerzo.",
+      en: "A trine connects compatible energies. It facilitates natural flow and reveals talents available with little effort."
+    },
+    light: {
+      es: ["Armon\xEDa", "Confianza", "Facilidad"],
+      en: ["Harmony", "Confidence", "Ease"]
+    },
+    shadow: {
+      es: ["Comodidad excesiva", "Falta de desaf\xEDo", "Desaprovechar potencial"],
+      en: ["Too much comfort", "Lack of challenge", "Wasted potential"]
+    },
+    questions: {
+      es: ["\xBFQu\xE9 talento puedo usar mejor?", "\xBFD\xF3nde me estoy acomodando?"],
+      en: ["Which talent can I use better?", "Where am I getting too comfortable?"]
+    }
+  },
+  sextil: {
+    id: "sextile",
+    angle: 60,
+    label: { es: "Sextil", en: "Sextile" },
+    coreTheme: {
+      es: "Oportunidad, cooperaci\xF3n, elecci\xF3n",
+      en: "Opportunity, cooperation, choice"
+    },
+    intro: {
+      es: "El sextil abre oportunidades que requieren iniciativa. No act\xFAa solo: pide participaci\xF3n consciente.",
+      en: "A sextile opens opportunities that require initiative. It doesn\u2019t act alone; it asks for conscious participation."
+    },
+    light: {
+      es: ["Colaboraci\xF3n", "Aprendizaje", "Posibilidades"],
+      en: ["Collaboration", "Learning", "Possibilities"]
+    },
+    shadow: {
+      es: ["Pasividad", "Oportunidades no tomadas"],
+      en: ["Passivity", "Missed opportunities"]
+    },
+    questions: {
+      es: ["\xBFQu\xE9 oportunidad puedo activar?", "\xBFCon qui\xE9n puedo cooperar?"],
+      en: ["Which opportunity can I activate?", "Who can I cooperate with?"]
+    }
+  },
+  quincuncio: {
+    id: "quincunx",
+    angle: 150,
+    label: { es: "Quincuncio", en: "Quincunx / Inconjunci\xF3n" },
+    coreTheme: {
+      es: "Ajuste, incomodidad, recalibraci\xF3n",
+      en: "Adjustment, discomfort, recalibration"
+    },
+    intro: {
+      es: "El quincuncio conecta energ\xEDas que no se entienden naturalmente. Pide ajustes finos, cambios de h\xE1bito y conciencia corporal o pr\xE1ctica.",
+      en: "A quincunx links energies that don\u2019t naturally understand each other. It asks for fine adjustments, habit changes, and practical awareness."
+    },
+    light: {
+      es: ["Adaptaci\xF3n", "Conciencia", "Ajuste preciso"],
+      en: ["Adaptation", "Awareness", "Precise adjustment"]
+    },
+    shadow: {
+      es: ["Incomodidad persistente", "Sensaci\xF3n de desajuste"],
+      en: ["Persistent discomfort", "Feeling out of sync"]
+    },
+    questions: {
+      es: ["\xBFQu\xE9 necesito ajustar?", "\xBFQu\xE9 h\xE1bito ya no funciona?"],
+      en: ["What needs adjustment?", "Which habit no longer works?"]
+    }
+  },
+  quintil: {
+    id: "quintile",
+    angle: 72,
+    label: { es: "Quintil", en: "Quintile" },
+    coreTheme: {
+      es: "Creatividad, talento \xFAnico, expresi\xF3n",
+      en: "Creativity, unique talent, expression"
+    },
+    intro: {
+      es: "El quintil se asocia a la creatividad consciente y al talento especial. Indica capacidad de dar forma personal a una energ\xEDa.",
+      en: "The quintile is linked to conscious creativity and special talent. It indicates the ability to shape energy in a personal way."
+    },
+    light: {
+      es: ["Creatividad", "Ingenio", "Expresi\xF3n original"],
+      en: ["Creativity", "Ingenuity", "Original expression"]
+    },
+    shadow: {
+      es: ["Autoexigencia creativa", "Sentirse incomprendido"],
+      en: ["Creative self-pressure", "Feeling misunderstood"]
+    },
+    questions: {
+      es: ["\xBFQu\xE9 talento quiere expresarse?", "\xBFC\xF3mo puedo crear algo propio?"],
+      en: ["Which talent wants to be expressed?", "How can I create something of my own?"]
+    }
+  },
+  biquintil: {
+    id: "biquintile",
+    angle: 144,
+    label: { es: "Biquintil", en: "Biquintile" },
+    coreTheme: {
+      es: "Maestr\xEDa creativa, integraci\xF3n",
+      en: "Creative mastery, integration"
+    },
+    intro: {
+      es: "El biquintil profundiza la creatividad del quintil. Habla de talento trabajado, refinado y puesto al servicio de algo mayor.",
+      en: "The biquintile deepens quintile creativity. It speaks of refined talent, developed over time and put at the service of something greater."
+    },
+    light: {
+      es: ["Maestr\xEDa", "Creatividad madura", "Integraci\xF3n"],
+      en: ["Mastery", "Mature creativity", "Integration"]
+    },
+    shadow: {
+      es: ["Exigencia excesiva", "Perfeccionismo creativo"],
+      en: ["Excessive demands", "Creative perfectionism"]
+    },
+    questions: {
+      es: ["\xBFQu\xE9 s\xE9 hacer muy bien?", "\xBFC\xF3mo pongo este talento en acci\xF3n?"],
+      en: ["What do I do very well?", "How can I put this talent into action?"]
+    }
+  }
+};
+var infoEjesAngulares = {
+  ascendente: {
+    id: "ascendant",
+    label: { es: "Ascendente", en: "Ascendant" },
+    coreTheme: {
+      es: "Identidad visible, inicio, forma de estar en el mundo",
+      en: "Visible identity, beginnings, way of being in the world"
+    },
+    intro: {
+      es: "El Ascendente marca el comienzo de la carta natal. Describe c\xF3mo iniciamos la vida, c\xF3mo reaccionamos espont\xE1neamente y la forma en que nos mostramos al mundo. Es una energ\xEDa que se aprende a habitar con el tiempo.",
+      en: "The Ascendant marks the beginning of the natal chart. It describes how we start things, how we react instinctively, and how we present ourselves to the world. It\u2019s an energy we grow into over time."
+    },
+    light: {
+      es: [
+        "Presencia aut\xE9ntica",
+        "Capacidad de iniciativa",
+        "Vitalidad y estilo personal",
+        "Adaptaci\xF3n al entorno"
+      ],
+      en: [
+        "Authentic presence",
+        "Initiative",
+        "Vitality and personal style",
+        "Adaptation to the environment"
+      ]
+    },
+    shadow: {
+      es: [
+        "Identificaci\xF3n excesiva con la imagen",
+        "Reactividad",
+        "Actuar en autom\xE1tico",
+        "Confundir apariencia con esencia"
+      ],
+      en: [
+        "Over-identification with image",
+        "Reactivity",
+        "Operating on autopilot",
+        "Confusing appearance with essence"
+      ]
+    },
+    questions: {
+      es: [
+        "\xBFC\xF3mo enfrento la vida cuando algo empieza?",
+        "\xBFQu\xE9 imagen doy sin darme cuenta?",
+        "\xBFDesde d\xF3nde reacciono?"
+      ],
+      en: [
+        "How do I face life when something begins?",
+        "What image do I project unconsciously?",
+        "From where do I react?"
+      ]
+    },
+    chartHint: {
+      es: "El signo del Ascendente muestra el estilo de entrada a la vida; su regente indica c\xF3mo se desarrolla esa identidad; los planetas en Casa 1 la intensifican.",
+      en: "The Ascendant sign shows your entry style into life; its ruler shows how that identity develops; planets in House 1 intensify it."
+    }
+  },
+  descendente: {
+    id: "descendant",
+    label: { es: "Descendente", en: "Descendant" },
+    coreTheme: {
+      es: "V\xEDnculos, proyecci\xF3n, el otro significativo",
+      en: "Relationships, projection, the significant other"
+    },
+    intro: {
+      es: "El Descendente muestra c\xF3mo nos vinculamos, qu\xE9 buscamos en el otro y qu\xE9 cualidades solemos proyectar en parejas y asociaciones. Es un espejo que revela partes no del todo integradas.",
+      en: "The Descendant shows how we relate, what we seek in others, and which qualities we tend to project onto partners and associations. It acts as a mirror revealing unintegrated parts."
+    },
+    light: {
+      es: [
+        "Capacidad de complementar",
+        "Aprendizaje a trav\xE9s del v\xEDnculo",
+        "Encuentro genuino con el otro",
+        "Cooperaci\xF3n"
+      ],
+      en: [
+        "Ability to complement",
+        "Learning through relationships",
+        "Genuine encounters",
+        "Cooperation"
+      ]
+    },
+    shadow: {
+      es: [
+        "Proyecci\xF3n inconsciente",
+        "Dependencia vincular",
+        "Conflictos repetidos",
+        "Perderse en el otro"
+      ],
+      en: [
+        "Unconscious projection",
+        "Relational dependency",
+        "Repeated conflicts",
+        "Losing oneself in others"
+      ]
+    },
+    questions: {
+      es: [
+        "\xBFQu\xE9 busco en mis v\xEDnculos?",
+        "\xBFQu\xE9 parte m\xEDa proyecto en el otro?",
+        "\xBFC\xF3mo me relaciono desde la igualdad?"
+      ],
+      en: [
+        "What do I seek in relationships?",
+        "Which part of me do I project onto others?",
+        "How do I relate from equality?"
+      ]
+    },
+    chartHint: {
+      es: "El signo del Descendente muestra el tipo de v\xEDnculo que atra\xE9s; su regente indica c\xF3mo se viven las relaciones; planetas all\xED intensifican la tem\xE1tica.",
+      en: "The Descendant sign shows the type of relationships you attract; its ruler indicates how relationships are lived; planets there intensify the theme."
+    }
+  },
+  medioCielo: {
+    id: "midheaven",
+    label: { es: "Medio Cielo", en: "Midheaven (MC)" },
+    coreTheme: {
+      es: "Vocaci\xF3n, prop\xF3sito social, direcci\xF3n",
+      en: "Vocation, social purpose, direction"
+    },
+    intro: {
+      es: "El Medio Cielo representa la proyecci\xF3n social, la vocaci\xF3n y el camino de realizaci\xF3n p\xFAblica. Habla de metas, aspiraciones y del rol que buscamos ocupar en el mundo.",
+      en: "The Midheaven represents social projection, vocation, and the path of public realization. It speaks of goals, aspirations, and the role we seek in the world."
+    },
+    light: {
+      es: [
+        "Sentido de prop\xF3sito",
+        "Ambici\xF3n consciente",
+        "Autoridad interna",
+        "Direcci\xF3n clara"
+      ],
+      en: [
+        "Sense of purpose",
+        "Conscious ambition",
+        "Inner authority",
+        "Clear direction"
+      ]
+    },
+    shadow: {
+      es: [
+        "Sobreidentificaci\xF3n con el rol",
+        "Exceso de exigencia",
+        "Buscar validaci\xF3n externa",
+        "Desconexi\xF3n emocional"
+      ],
+      en: [
+        "Over-identification with status",
+        "Excessive pressure",
+        "Seeking external validation",
+        "Emotional disconnection"
+      ]
+    },
+    questions: {
+      es: [
+        "\xBFQu\xE9 quiero construir en el mundo?",
+        "\xBFQu\xE9 imagen profesional sostengo?",
+        "\xBFMi meta es aut\xE9ntica?"
+      ],
+      en: [
+        "What do I want to build in the world?",
+        "Which professional image do I uphold?",
+        "Is my goal authentic?"
+      ]
+    },
+    chartHint: {
+      es: "El signo del MC muestra el estilo vocacional; su regente indica el camino profesional; planetas cerca del MC vuelven visible esta energ\xEDa.",
+      en: "The MC sign shows vocational style; its ruler indicates the professional path; planets near the MC make this energy visible."
+    }
+  },
+  fondoCielo: {
+    id: "imum_coeli",
+    label: { es: "Fondo del Cielo", en: "Imum Coeli (IC)" },
+    coreTheme: {
+      es: "Ra\xEDces, base emocional, intimidad",
+      en: "Roots, emotional foundation, intimacy"
+    },
+    intro: {
+      es: "El Fondo del Cielo se\xF1ala el origen emocional, la historia familiar y la base ps\xEDquica desde la cual nos desarrollamos. Es el lugar de refugio y pertenencia.",
+      en: "The Imum Coeli points to emotional origins, family history, and the psychic base from which we develop. It is a place of refuge and belonging."
+    },
+    light: {
+      es: [
+        "Sentido de pertenencia",
+        "Ra\xEDces internas",
+        "Intimidad",
+        "Capacidad de sost\xE9n emocional"
+      ],
+      en: [
+        "Sense of belonging",
+        "Inner roots",
+        "Intimacy",
+        "Emotional support capacity"
+      ]
+    },
+    shadow: {
+      es: [
+        "Apego al pasado",
+        "Heridas familiares no resueltas",
+        "Encierro emocional",
+        "Miedo a salir al mundo"
+      ],
+      en: [
+        "Attachment to the past",
+        "Unresolved family wounds",
+        "Emotional withdrawal",
+        "Fear of exposure"
+      ]
+    },
+    questions: {
+      es: [
+        "\xBFD\xF3nde me siento en casa?",
+        "\xBFQu\xE9 herencia emocional cargo?",
+        "\xBFQu\xE9 necesito cuidar internamente?"
+      ],
+      en: [
+        "Where do I feel at home?",
+        "Which emotional inheritance do I carry?",
+        "What do I need to nurture internally?"
+      ]
+    },
+    chartHint: {
+      es: "El signo del IC muestra la base emocional; su regente indica c\xF3mo se vive la intimidad; planetas all\xED marcan temas familiares profundos.",
+      en: "The IC sign shows the emotional foundation; its ruler indicates how intimacy is lived; planets there mark deep family themes."
+    }
+  }
+};
 
 // src/constants/index.ts
 var ZODIAC_SYMBOLS = {
@@ -694,7 +2667,8 @@ function ZodiacWheel({
   ascendantDegree = 0,
   theme = "light",
   onSignHover,
-  hoveredSign
+  hoveredSign,
+  onSignClick
 }) {
   const signArcAngle = 30;
   const middleRadius = (outerRadius + innerRadius) / 2;
@@ -754,6 +2728,7 @@ function ZodiacWheel({
           style: { cursor: "pointer" },
           onMouseEnter: () => onSignHover?.(sign),
           onMouseLeave: () => onSignHover?.(null),
+          onClick: () => onSignClick?.(sign),
           children: [
             /* @__PURE__ */ jsxRuntime.jsx(
               "path",
@@ -818,6 +2793,12 @@ var ANGLE_LABELS = {
   7: "DS",
   10: "MC"
 };
+var HOUSE_TO_ANGLE = {
+  1: "ascendant",
+  4: "imum_coeli",
+  7: "descendant",
+  10: "midheaven"
+};
 function HouseWheel({
   centerX,
   centerY,
@@ -827,7 +2808,11 @@ function HouseWheel({
   ascendantDegree = 0,
   isSecondChart = false,
   color,
-  theme = "light"
+  theme = "light",
+  onHouseHover,
+  hoveredHouse,
+  onHouseClick,
+  onAngleClick
 }) {
   const sortedHouses = [...houses].sort((a, b) => a.house - b.house);
   const isDark = theme === "dark";
@@ -877,6 +2862,10 @@ function HouseWheel({
           fontSize: outerRadius * 0.055,
           fill: textColor,
           fontWeight: isAngularHouse ? "bold" : "normal",
+          style: { cursor: "pointer" },
+          onMouseEnter: () => onHouseHover?.(house.house),
+          onMouseLeave: () => onHouseHover?.(null),
+          onClick: () => onHouseClick?.(house.house, house.sign),
           children: house.house
         }
       ),
@@ -891,6 +2880,8 @@ function HouseWheel({
           fill: angleLabelColor,
           fontWeight: "bold",
           opacity: isSecondChart ? 0.85 : 1,
+          style: { cursor: "pointer" },
+          onClick: () => onAngleClick?.(HOUSE_TO_ANGLE[house.house], house.sign),
           children: angleLabel
         }
       ),
@@ -921,8 +2912,26 @@ function PlanetDisplay({
   theme = "light",
   onPlanetHover,
   hoveredPlanet,
-  highlightedSign
+  highlightedSign,
+  highlightedHouse,
+  houses = [],
+  highlightedByAspect,
+  onPlanetClick
 }) {
+  const isPlanetInHouse = (planet, houseNumber) => {
+    if (!houses || houses.length === 0) return false;
+    const planetDegree = getPlanetAbsoluteDegree(planet);
+    const house = houses.find((h) => h.house === houseNumber);
+    const nextHouse = houses.find((h) => h.house === houseNumber % 12 + 1);
+    if (!house || !nextHouse) return false;
+    const houseDegree = getAbsoluteDegree(house.sign, house.degree);
+    const nextHouseDegree = getAbsoluteDegree(nextHouse.sign, nextHouse.degree);
+    if (nextHouseDegree < houseDegree) {
+      return planetDegree >= houseDegree || planetDegree < nextHouseDegree;
+    } else {
+      return planetDegree >= houseDegree && planetDegree < nextHouseDegree;
+    }
+  };
   const filteredPlanets = planets.filter(
     (planet) => planet.planet !== "Ascendant" && planet.planet !== "Midheaven"
   );
@@ -944,29 +2953,41 @@ function PlanetDisplay({
     const isAngle = planet.planet === "Ascendant" || planet.planet === "Midheaven";
     const fontSize = isAngle ? radius * 0.09 : radius * 0.14;
     const isHighlighted = highlightedSign && planet.sign === highlightedSign;
+    const isInHighlightedHouse = highlightedHouse && isPlanetInHouse(planet, highlightedHouse);
+    const isHighlightedByAspect = highlightedByAspect && (planet.planet === highlightedByAspect.planet1 || planet.planet === highlightedByAspect.planet2);
     const isHovered = hoveredPlanet === planet.planet;
     const baseOpacity = 1;
-    const highlightOpacity = isHighlighted ? 1 : highlightedSign ? 0.4 : baseOpacity;
+    let highlightOpacity = baseOpacity;
+    if (highlightedSign) {
+      highlightOpacity = isHighlighted ? 1 : 0.4;
+    }
+    if (highlightedHouse) {
+      highlightOpacity = isInHighlightedHouse ? 1 : 0.4;
+    }
+    if (highlightedByAspect) {
+      highlightOpacity = isHighlightedByAspect ? 1.2 : 0.3;
+    }
     return /* @__PURE__ */ jsxRuntime.jsxs(
       "g",
       {
-        className: `planet planet-${planet.planet.toLowerCase()}${isHighlighted ? " highlighted" : ""}${isHovered ? " hovered" : ""}`,
+        className: `planet planet-${planet.planet.toLowerCase()}${isHighlighted ? " highlighted" : ""}${isHovered ? " hovered" : ""}${isInHighlightedHouse ? " in-highlighted-house" : ""}${isHighlightedByAspect ? " highlighted-by-aspect" : ""}`,
         "data-degree": absoluteDegree,
         "data-actual-x": actualPos.x,
         "data-actual-y": actualPos.y,
         style: { cursor: "pointer" },
         onMouseEnter: () => onPlanetHover?.(planet.planet),
         onMouseLeave: () => onPlanetHover?.(null),
+        onClick: () => onPlanetClick?.(planet),
         opacity: highlightOpacity,
         children: [
-          isHighlighted && /* @__PURE__ */ jsxRuntime.jsx(
+          (isHighlighted || isInHighlightedHouse || isHighlightedByAspect) && /* @__PURE__ */ jsxRuntime.jsx(
             "circle",
             {
               cx: symbolPos.x,
               cy: symbolPos.y,
               r: fontSize * 0.8,
               fill: color,
-              opacity: 0.25,
+              opacity: isHighlightedByAspect ? 0.35 : 0.25,
               style: { filter: "blur(4px)" }
             }
           ),
@@ -1002,9 +3023,9 @@ function PlanetDisplay({
               y: symbolPos.y,
               textAnchor: "middle",
               dominantBaseline: "central",
-              fontSize: isHighlighted ? fontSize * 1.15 : fontSize,
+              fontSize: isHighlighted || isInHighlightedHouse || isHighlightedByAspect ? fontSize * 1.15 : fontSize,
               fill: color,
-              fontWeight: isAngle || isHighlighted ? "bold" : "normal",
+              fontWeight: isAngle || isHighlighted || isInHighlightedHouse || isHighlightedByAspect ? "bold" : "normal",
               style: {
                 fontFamily: "Segoe UI Symbol, Symbola, sans-serif",
                 transition: "font-size 0.15s ease-out"
@@ -1072,7 +3093,8 @@ function AspectLines({
   ascendantDegree = 0,
   aspectColors = {},
   includeAnglesInSynastry = false,
-  hoveredPlanet = null
+  hoveredPlanet = null,
+  onAspectClick
 }) {
   const colors = { ...DEFAULT_ASPECT_COLORS, ...aspectColors };
   const aspectRadius = radius * 0.7;
@@ -1114,7 +3136,9 @@ function AspectLines({
           strokeWidth: style.strokeWidth,
           strokeDasharray: style.dashArray,
           opacity,
-          className: `aspect-line aspect-${aspect.aspect}`
+          className: `aspect-line aspect-${aspect.aspect}`,
+          style: { cursor: onAspectClick ? "pointer" : "default" },
+          onClick: () => onAspectClick?.(aspect)
         },
         `natal-${index}-${aspect.planet1}-${aspect.planet2}`
       );
@@ -1140,7 +3164,9 @@ function AspectLines({
           strokeWidth: style.strokeWidth * 1.2,
           strokeDasharray: style.dashArray,
           opacity,
-          className: `aspect-line synastry-aspect aspect-${aspect.aspect}`
+          className: `aspect-line synastry-aspect aspect-${aspect.aspect}`,
+          style: { cursor: onAspectClick ? "pointer" : "default" },
+          onClick: () => onAspectClick?.(aspect)
         },
         `synastry-${index}-${aspect.planet1}-${aspect.planet2}`
       );
@@ -1211,17 +3237,31 @@ function AstroMandala({
   outerChartColor = "#d94a4a",
   aspectColors,
   theme = "light",
-  className
+  className,
+  onSignClick,
+  onHouseClick,
+  onPlanetClick,
+  onAspectClick,
+  onAngleClick
 }) {
   const centerX = size / 2;
   const centerY = size / 2;
   const [hoveredPlanet, setHoveredPlanet] = react.useState(null);
   const [hoveredSign, setHoveredSign] = react.useState(null);
+  const [hoveredHouse, setHoveredHouse] = react.useState(null);
   const handlePlanetHover = react.useCallback((planet) => {
     setHoveredPlanet(planet);
   }, []);
   const handleSignHover = react.useCallback((sign) => {
     setHoveredSign(sign);
+  }, []);
+  const handleHouseHover = react.useCallback((house) => {
+    setHoveredHouse(house);
+  }, []);
+  const handleSvgMouseLeave = react.useCallback(() => {
+    setHoveredPlanet(null);
+    setHoveredSign(null);
+    setHoveredHouse(null);
   }, []);
   const isDark = theme === "dark";
   const colors = {
@@ -1270,6 +3310,7 @@ function AstroMandala({
       height: size,
       viewBox: `0 0 ${size} ${size}`,
       className,
+      onMouseLeave: handleSvgMouseLeave,
       style: {
         fontFamily: "Arial, sans-serif",
         maxWidth: "100%",
@@ -1313,7 +3354,8 @@ function AstroMandala({
             ascendantDegree,
             theme,
             onSignHover: handleSignHover,
-            hoveredSign
+            hoveredSign,
+            onSignClick
           }
         ),
         showPlanetProjections && /* @__PURE__ */ jsxRuntime.jsx(
@@ -1339,7 +3381,11 @@ function AstroMandala({
             innerRadius: outerHouseRingInner,
             houses: chart.houses,
             ascendantDegree,
-            theme
+            theme,
+            onHouseHover: handleHouseHover,
+            hoveredHouse,
+            onHouseClick,
+            onAngleClick
           }
         ),
         showSecondChartHouses && showBothHouses && secondChart.houses.length > 0 && /* @__PURE__ */ jsxRuntime.jsx(
@@ -1353,7 +3399,11 @@ function AstroMandala({
             ascendantDegree,
             isSecondChart: true,
             color: outerChartColor,
-            theme
+            theme,
+            onHouseHover: handleHouseHover,
+            hoveredHouse,
+            onHouseClick,
+            onAngleClick
           }
         ),
         showAspects && /* @__PURE__ */ jsxRuntime.jsx(
@@ -1369,7 +3419,8 @@ function AstroMandala({
             ascendantDegree,
             aspectColors,
             includeAnglesInSynastry,
-            hoveredPlanet
+            hoveredPlanet,
+            onAspectClick
           }
         ),
         /* @__PURE__ */ jsxRuntime.jsx(
@@ -1386,7 +3437,10 @@ function AstroMandala({
             theme,
             onPlanetHover: handlePlanetHover,
             hoveredPlanet,
-            highlightedSign: hoveredSign
+            highlightedSign: hoveredSign,
+            highlightedHouse: hoveredHouse,
+            houses: chart.houses,
+            onPlanetClick
           }
         ),
         isSynastry && secondChart && /* @__PURE__ */ jsxRuntime.jsx(
@@ -1403,7 +3457,10 @@ function AstroMandala({
             theme,
             onPlanetHover: handlePlanetHover,
             hoveredPlanet,
-            highlightedSign: hoveredSign
+            highlightedSign: hoveredSign,
+            highlightedHouse: hoveredHouse,
+            houses: secondChart?.houses || [],
+            onPlanetClick
           }
         )
       ]
@@ -1626,6 +3683,804 @@ function ElementsDisplay({ chart, language, isDark }) {
     ] }, element)) })
   ] });
 }
+var signToInfoKey = {
+  "Aries": "aries",
+  "Taurus": "tauro",
+  "Gemini": "geminis",
+  "Cancer": "cancer",
+  "Leo": "leo",
+  "Virgo": "virgo",
+  "Libra": "libra",
+  "Scorpio": "escorpio",
+  "Sagittarius": "sagitario",
+  "Capricorn": "capricornio",
+  "Aquarius": "acuario",
+  "Pisces": "piscis"
+};
+var elementToInfoKey = {
+  "fire": "fuego",
+  "water": "agua",
+  "earth": "tierra",
+  "air": "aire"
+};
+var planetToInfoKey = {
+  "Sun": "sol",
+  "Moon": "luna",
+  "Mercury": "mercurio",
+  "Venus": "venus",
+  "Mars": "marte",
+  "Jupiter": "jupiter",
+  "Saturn": "saturno",
+  "Uranus": "urano",
+  "Neptune": "neptuno",
+  "Pluto": "pluton",
+  "Chiron": "quiron",
+  "Lilith": "lilith",
+  "NorthNode": "nodoNorte",
+  "SouthNode": "nodoSur",
+  "Ascendant": null,
+  "Midheaven": null
+};
+var aspectToInfoKey = {
+  "conjunction": "conjuncion",
+  "opposition": "oposicion",
+  "trine": "trigono",
+  "square": "cuadratura",
+  "sextile": "sextil",
+  "quincunx": "quincuncio",
+  "semisextile": "sextil",
+  "semisquare": "cuadratura",
+  "sesquiquadrate": "cuadratura",
+  "quintile": "quintil",
+  "biquintile": "biquintil"
+};
+var houseToInfoKey = (house) => {
+  return `casa${house}`;
+};
+function ExpandableSection({ title, children, defaultExpanded = false, theme }) {
+  const [expanded, setExpanded] = react.useState(defaultExpanded);
+  const isDark = theme === "dark";
+  return /* @__PURE__ */ jsxRuntime.jsxs("div", { style: {
+    marginBottom: "0.75rem",
+    borderRadius: "6px",
+    backgroundColor: isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.03)",
+    overflow: "hidden"
+  }, children: [
+    /* @__PURE__ */ jsxRuntime.jsxs(
+      "button",
+      {
+        onClick: () => setExpanded(!expanded),
+        style: {
+          width: "100%",
+          padding: "0.75rem",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          border: "none",
+          backgroundColor: "transparent",
+          color: isDark ? "#e0e0e0" : "#333",
+          cursor: "pointer",
+          fontSize: "14px",
+          fontWeight: 600,
+          textAlign: "left"
+        },
+        children: [
+          /* @__PURE__ */ jsxRuntime.jsx("span", { children: title }),
+          /* @__PURE__ */ jsxRuntime.jsx("span", { style: { fontSize: "12px" }, children: expanded ? "\u25BC" : "\u25B6" })
+        ]
+      }
+    ),
+    expanded && /* @__PURE__ */ jsxRuntime.jsx("div", { style: { padding: "0 0.75rem 0.75rem" }, children })
+  ] });
+}
+function LinkItem({ label, symbol, onClick, theme, color }) {
+  const isDark = theme === "dark";
+  return /* @__PURE__ */ jsxRuntime.jsxs(
+    "button",
+    {
+      onClick,
+      style: {
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "0.25rem",
+        padding: "0.25rem 0.5rem",
+        margin: "0.125rem",
+        borderRadius: "4px",
+        border: isDark ? "1px solid rgba(255,255,255,0.2)" : "1px solid rgba(0,0,0,0.15)",
+        backgroundColor: isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.05)",
+        color: color || (isDark ? "#a8c8f0" : "#2563eb"),
+        cursor: "pointer",
+        fontSize: "13px",
+        textDecoration: "none"
+      },
+      children: [
+        symbol && /* @__PURE__ */ jsxRuntime.jsx("span", { style: { fontSize: "14px" }, children: symbol }),
+        /* @__PURE__ */ jsxRuntime.jsx("span", { children: label })
+      ]
+    }
+  );
+}
+function ListRenderer({ items, theme }) {
+  const isDark = theme === "dark";
+  return /* @__PURE__ */ jsxRuntime.jsx("ul", { style: {
+    margin: 0,
+    paddingLeft: "1.25rem",
+    color: isDark ? "#ccc" : "#555",
+    fontSize: "13px",
+    lineHeight: 1.6
+  }, children: items.map((item, i) => /* @__PURE__ */ jsxRuntime.jsx("li", { children: item }, i)) });
+}
+function EducationalInfoPanel({
+  clickedItem,
+  chart,
+  theme,
+  language,
+  onClose,
+  onItemClick
+}) {
+  const t = react.useMemo(() => getTranslations(language), [language]);
+  const isDark = theme === "dark";
+  const lang = language === "es" ? "es" : "en";
+  if (!clickedItem) return null;
+  const getPlanetsInSign = (sign) => {
+    return chart.planets.filter((p) => p.sign === sign && p.planet !== "Ascendant" && p.planet !== "Midheaven");
+  };
+  const getPlanetsInHouse = (houseNum) => {
+    const sortedHouses = [...chart.houses].sort((a, b) => {
+      const degA = getAbsoluteDegreeFromSign(a.sign, a.degree);
+      const degB = getAbsoluteDegreeFromSign(b.sign, b.degree);
+      return degA - degB;
+    });
+    return chart.planets.filter((p) => {
+      if (p.planet === "Ascendant" || p.planet === "Midheaven") return false;
+      const planetDeg = getAbsoluteDegreeFromSign(p.sign, p.degree);
+      const houseIndex = sortedHouses.findIndex((h) => h.house === houseNum);
+      if (houseIndex === -1) return false;
+      const houseCusp = sortedHouses[houseIndex];
+      const nextHouse = sortedHouses[(houseIndex + 1) % 12];
+      const houseStart = getAbsoluteDegreeFromSign(houseCusp.sign, houseCusp.degree);
+      const houseEnd = getAbsoluteDegreeFromSign(nextHouse.sign, nextHouse.degree);
+      if (houseStart < houseEnd) {
+        return planetDeg >= houseStart && planetDeg < houseEnd;
+      } else {
+        return planetDeg >= houseStart || planetDeg < houseEnd;
+      }
+    });
+  };
+  const getAspectsForPlanet = (planetName) => {
+    return chart.aspects.filter((a) => a.planet1 === planetName || a.planet2 === planetName);
+  };
+  const getHouseForPlanet = (planetSign, planetDegree) => {
+    const planetAbsDeg = getAbsoluteDegreeFromSign(planetSign, planetDegree);
+    const sortedHouses = [...chart.houses].sort((a, b) => {
+      const degA = getAbsoluteDegreeFromSign(a.sign, a.degree);
+      const degB = getAbsoluteDegreeFromSign(b.sign, b.degree);
+      return degA - degB;
+    });
+    for (let i = 0; i < sortedHouses.length; i++) {
+      const houseCusp = sortedHouses[i];
+      const nextHouse = sortedHouses[(i + 1) % 12];
+      const houseStart = getAbsoluteDegreeFromSign(houseCusp.sign, houseCusp.degree);
+      const houseEnd = getAbsoluteDegreeFromSign(nextHouse.sign, nextHouse.degree);
+      if (houseStart < houseEnd) {
+        if (planetAbsDeg >= houseStart && planetAbsDeg < houseEnd) {
+          return houseCusp.house;
+        }
+      } else {
+        if (planetAbsDeg >= houseStart || planetAbsDeg < houseEnd) {
+          return houseCusp.house;
+        }
+      }
+    }
+    return 1;
+  };
+  const getAbsoluteDegreeFromSign = (sign, degree) => {
+    const signStarts = {
+      "Aries": 0,
+      "Taurus": 30,
+      "Gemini": 60,
+      "Cancer": 90,
+      "Leo": 120,
+      "Virgo": 150,
+      "Libra": 180,
+      "Scorpio": 210,
+      "Sagittarius": 240,
+      "Capricorn": 270,
+      "Aquarius": 300,
+      "Pisces": 330
+    };
+    return signStarts[sign] + degree;
+  };
+  const handleItemClick = (item) => {
+    onItemClick?.(item);
+  };
+  const renderContent = () => {
+    switch (clickedItem.type) {
+      case "sign":
+        return renderSignInfo();
+      case "planet":
+        return renderPlanetInfo();
+      case "house":
+        return renderHouseInfo();
+      case "aspect":
+        return renderAspectInfo();
+      case "angle":
+        return renderAngleInfo();
+      default:
+        return null;
+    }
+  };
+  const renderSignInfo = () => {
+    if (!clickedItem.sign) return null;
+    const signKey = signToInfoKey[clickedItem.sign];
+    const signInfo = infoSignos[signKey];
+    const element = SIGN_ELEMENTS[clickedItem.sign];
+    const elementKey = elementToInfoKey[element];
+    const elementInfo = infoElementos[elementKey];
+    const planetsInSign = getPlanetsInSign(clickedItem.sign);
+    return /* @__PURE__ */ jsxRuntime.jsxs(jsxRuntime.Fragment, { children: [
+      /* @__PURE__ */ jsxRuntime.jsxs("div", { style: { marginBottom: "1rem" }, children: [
+        /* @__PURE__ */ jsxRuntime.jsxs("div", { style: {
+          display: "flex",
+          alignItems: "center",
+          gap: "0.5rem",
+          marginBottom: "0.5rem"
+        }, children: [
+          /* @__PURE__ */ jsxRuntime.jsx("span", { style: { fontSize: "28px" }, children: ZODIAC_SYMBOLS[clickedItem.sign] }),
+          /* @__PURE__ */ jsxRuntime.jsx("h3", { style: { margin: 0, fontSize: "20px", color: isDark ? "#fff" : "#333" }, children: signInfo.label[lang] })
+        ] }),
+        /* @__PURE__ */ jsxRuntime.jsx("p", { style: {
+          margin: 0,
+          fontSize: "14px",
+          fontStyle: "italic",
+          color: isDark ? "#aaa" : "#666"
+        }, children: signInfo.coreTheme[lang] })
+      ] }),
+      /* @__PURE__ */ jsxRuntime.jsxs("div", { style: {
+        display: "grid",
+        gridTemplateColumns: "1fr 1fr",
+        gap: "0.5rem",
+        marginBottom: "0.75rem"
+      }, children: [
+        /* @__PURE__ */ jsxRuntime.jsxs("div", { style: {
+          padding: "0.5rem",
+          borderRadius: "6px",
+          backgroundColor: isDark ? "rgba(100, 200, 100, 0.1)" : "rgba(34, 197, 94, 0.1)"
+        }, children: [
+          /* @__PURE__ */ jsxRuntime.jsx("h4", { style: {
+            margin: "0 0 0.25rem 0",
+            fontSize: "12px",
+            color: isDark ? "#86efac" : "#16a34a"
+          }, children: t.lightQualities }),
+          /* @__PURE__ */ jsxRuntime.jsx(ListRenderer, { items: signInfo.light[lang], theme })
+        ] }),
+        /* @__PURE__ */ jsxRuntime.jsxs("div", { style: {
+          padding: "0.5rem",
+          borderRadius: "6px",
+          backgroundColor: isDark ? "rgba(200, 100, 100, 0.1)" : "rgba(239, 68, 68, 0.1)"
+        }, children: [
+          /* @__PURE__ */ jsxRuntime.jsx("h4", { style: {
+            margin: "0 0 0.25rem 0",
+            fontSize: "12px",
+            color: isDark ? "#fca5a5" : "#dc2626"
+          }, children: t.shadowQualities }),
+          /* @__PURE__ */ jsxRuntime.jsx(ListRenderer, { items: signInfo.shadow[lang], theme })
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxRuntime.jsx(ExpandableSection, { title: t.learning, theme, children: /* @__PURE__ */ jsxRuntime.jsx("p", { style: { margin: 0, fontSize: "13px", color: isDark ? "#ccc" : "#555" }, children: signInfo.learning[lang] }) }),
+      /* @__PURE__ */ jsxRuntime.jsx(ExpandableSection, { title: t.questions, theme, children: /* @__PURE__ */ jsxRuntime.jsx(ListRenderer, { items: signInfo.questions[lang], theme }) }),
+      /* @__PURE__ */ jsxRuntime.jsx(ExpandableSection, { title: t.chartHints, theme, children: /* @__PURE__ */ jsxRuntime.jsx("p", { style: { margin: 0, fontSize: "13px", color: isDark ? "#ccc" : "#555" }, children: signInfo.chartHint[lang] }) }),
+      /* @__PURE__ */ jsxRuntime.jsxs(ExpandableSection, { title: `${t.element}: ${elementInfo.label[lang]}`, theme, children: [
+        /* @__PURE__ */ jsxRuntime.jsx("p", { style: { margin: "0 0 0.5rem 0", fontSize: "13px", color: isDark ? "#ccc" : "#555" }, children: elementInfo.intro[lang] }),
+        /* @__PURE__ */ jsxRuntime.jsxs("div", { style: { marginTop: "0.5rem" }, children: [
+          /* @__PURE__ */ jsxRuntime.jsx("h5", { style: { margin: "0 0 0.25rem 0", fontSize: "12px", color: isDark ? "#aaa" : "#666" }, children: t.balance }),
+          /* @__PURE__ */ jsxRuntime.jsxs("p", { style: { margin: 0, fontSize: "12px", color: isDark ? "#ccc" : "#555" }, children: [
+            /* @__PURE__ */ jsxRuntime.jsxs("strong", { children: [
+              t.balanced,
+              ":"
+            ] }),
+            " ",
+            elementInfo.balance.balanced[lang]
+          ] })
+        ] })
+      ] }),
+      planetsInSign.length > 0 && /* @__PURE__ */ jsxRuntime.jsx(ExpandableSection, { title: `${t.relatedPositions} (${planetsInSign.length})`, theme, children: /* @__PURE__ */ jsxRuntime.jsx("div", { style: { display: "flex", flexWrap: "wrap", gap: "0.25rem" }, children: planetsInSign.map((p) => {
+        const house = getHouseForPlanet(p.sign, p.degree);
+        return /* @__PURE__ */ jsxRuntime.jsx(
+          LinkItem,
+          {
+            symbol: PLANET_SYMBOLS[p.planet],
+            label: `${t.inHouse} ${house}`,
+            onClick: () => handleItemClick({
+              type: "planet",
+              planet: p.planet,
+              planetSign: p.sign,
+              planetDegree: p.degree,
+              planetHouse: house,
+              isRetrograde: p.retrograde
+            }),
+            theme
+          },
+          p.planet
+        );
+      }) }) })
+    ] });
+  };
+  const renderPlanetInfo = () => {
+    if (!clickedItem.planet) return null;
+    const planetKey = planetToInfoKey[clickedItem.planet];
+    if (!planetKey) {
+      if (clickedItem.planet === "Ascendant") {
+        return renderAngleInfo();
+      } else if (clickedItem.planet === "Midheaven") {
+        return renderAngleInfo();
+      }
+      return null;
+    }
+    const planetInfo = infoCuerpos[planetKey];
+    const aspects = getAspectsForPlanet(clickedItem.planet);
+    const houseNum = clickedItem.planetHouse || (clickedItem.planetSign && clickedItem.planetDegree !== void 0 ? getHouseForPlanet(clickedItem.planetSign, clickedItem.planetDegree) : 1);
+    const houseKey = houseToInfoKey(houseNum);
+    const houseInfo = infoCasas[houseKey];
+    return /* @__PURE__ */ jsxRuntime.jsxs(jsxRuntime.Fragment, { children: [
+      /* @__PURE__ */ jsxRuntime.jsxs("div", { style: { marginBottom: "1rem" }, children: [
+        /* @__PURE__ */ jsxRuntime.jsxs("div", { style: {
+          display: "flex",
+          alignItems: "center",
+          gap: "0.5rem",
+          marginBottom: "0.5rem"
+        }, children: [
+          /* @__PURE__ */ jsxRuntime.jsx("span", { style: { fontSize: "28px" }, children: PLANET_SYMBOLS[clickedItem.planet] }),
+          /* @__PURE__ */ jsxRuntime.jsxs("div", { children: [
+            /* @__PURE__ */ jsxRuntime.jsx("h3", { style: { margin: 0, fontSize: "20px", color: isDark ? "#fff" : "#333" }, children: planetInfo.label[lang] }),
+            clickedItem.planetSign && /* @__PURE__ */ jsxRuntime.jsxs("p", { style: {
+              margin: 0,
+              fontSize: "13px",
+              color: isDark ? "#aaa" : "#666"
+            }, children: [
+              t.inSign,
+              " ",
+              infoSignos[signToInfoKey[clickedItem.planetSign]].label[lang],
+              clickedItem.planetDegree !== void 0 && ` ${t.atDegree} ${clickedItem.planetDegree.toFixed(0)}\xB0`,
+              ` \u2022 ${t.inHouse} ${houseNum}`,
+              clickedItem.isRetrograde && ` \u2022 \u211E ${t.retrograde}`
+            ] })
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxRuntime.jsx("p", { style: {
+          margin: 0,
+          fontSize: "14px",
+          fontStyle: "italic",
+          color: isDark ? "#aaa" : "#666"
+        }, children: planetInfo.coreTheme[lang] })
+      ] }),
+      /* @__PURE__ */ jsxRuntime.jsx("p", { style: {
+        margin: "0 0 0.75rem 0",
+        fontSize: "13px",
+        color: isDark ? "#ccc" : "#555",
+        lineHeight: 1.6
+      }, children: planetInfo.intro[lang] }),
+      /* @__PURE__ */ jsxRuntime.jsxs("div", { style: {
+        display: "grid",
+        gridTemplateColumns: "1fr 1fr",
+        gap: "0.5rem",
+        marginBottom: "0.75rem"
+      }, children: [
+        /* @__PURE__ */ jsxRuntime.jsxs("div", { style: {
+          padding: "0.5rem",
+          borderRadius: "6px",
+          backgroundColor: isDark ? "rgba(100, 200, 100, 0.1)" : "rgba(34, 197, 94, 0.1)"
+        }, children: [
+          /* @__PURE__ */ jsxRuntime.jsx("h4", { style: {
+            margin: "0 0 0.25rem 0",
+            fontSize: "12px",
+            color: isDark ? "#86efac" : "#16a34a"
+          }, children: t.lightQualities }),
+          /* @__PURE__ */ jsxRuntime.jsx(ListRenderer, { items: planetInfo.light[lang], theme })
+        ] }),
+        /* @__PURE__ */ jsxRuntime.jsxs("div", { style: {
+          padding: "0.5rem",
+          borderRadius: "6px",
+          backgroundColor: isDark ? "rgba(200, 100, 100, 0.1)" : "rgba(239, 68, 68, 0.1)"
+        }, children: [
+          /* @__PURE__ */ jsxRuntime.jsx("h4", { style: {
+            margin: "0 0 0.25rem 0",
+            fontSize: "12px",
+            color: isDark ? "#fca5a5" : "#dc2626"
+          }, children: t.shadowQualities }),
+          /* @__PURE__ */ jsxRuntime.jsx(ListRenderer, { items: planetInfo.shadow[lang], theme })
+        ] })
+      ] }),
+      clickedItem.isRetrograde && /* @__PURE__ */ jsxRuntime.jsxs(ExpandableSection, { title: `\u211E ${t.retrograde}`, theme, defaultExpanded: true, children: [
+        /* @__PURE__ */ jsxRuntime.jsx("p", { style: { margin: "0 0 0.5rem 0", fontSize: "13px", color: isDark ? "#ccc" : "#555" }, children: infoRetrogradacion.retrograde.intro[lang] }),
+        /* @__PURE__ */ jsxRuntime.jsx(ListRenderer, { items: infoRetrogradacion.retrograde.keyIdeas[lang], theme })
+      ] }),
+      /* @__PURE__ */ jsxRuntime.jsxs(ExpandableSection, { title: `${t.inHouse} ${houseNum}`, theme, children: [
+        /* @__PURE__ */ jsxRuntime.jsx("p", { style: { margin: "0 0 0.25rem 0", fontSize: "13px", fontStyle: "italic", color: isDark ? "#aaa" : "#666" }, children: houseInfo.coreTheme[lang] }),
+        /* @__PURE__ */ jsxRuntime.jsx("p", { style: { margin: 0, fontSize: "13px", color: isDark ? "#ccc" : "#555" }, children: houseInfo.intro[lang] })
+      ] }),
+      /* @__PURE__ */ jsxRuntime.jsx(ExpandableSection, { title: t.questions, theme, children: /* @__PURE__ */ jsxRuntime.jsx(ListRenderer, { items: planetInfo.questions[lang], theme }) }),
+      /* @__PURE__ */ jsxRuntime.jsx(ExpandableSection, { title: t.chartHints, theme, children: /* @__PURE__ */ jsxRuntime.jsx("p", { style: { margin: 0, fontSize: "13px", color: isDark ? "#ccc" : "#555" }, children: planetInfo.chartHint[lang] }) }),
+      aspects.length > 0 && /* @__PURE__ */ jsxRuntime.jsx(ExpandableSection, { title: `${t.aspectsTable} (${aspects.length})`, theme, children: /* @__PURE__ */ jsxRuntime.jsx("div", { style: {
+        display: "flex",
+        flexDirection: "column",
+        gap: "0.25rem"
+      }, children: aspects.map((asp, i) => {
+        const otherPlanet = asp.planet1 === clickedItem.planet ? asp.planet2 : asp.planet1;
+        const aspectKey = aspectToInfoKey[asp.aspect];
+        const aspectInfo = infoTransitosAspectos[aspectKey];
+        return /* @__PURE__ */ jsxRuntime.jsxs(
+          "div",
+          {
+            style: {
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              padding: "0.5rem",
+              borderRadius: "4px",
+              backgroundColor: isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.03)"
+            },
+            children: [
+              /* @__PURE__ */ jsxRuntime.jsxs("div", { style: { display: "flex", alignItems: "center", gap: "0.5rem" }, children: [
+                /* @__PURE__ */ jsxRuntime.jsx(
+                  LinkItem,
+                  {
+                    symbol: PLANET_SYMBOLS[otherPlanet],
+                    label: "",
+                    onClick: () => {
+                      const p = chart.planets.find((pl) => pl.planet === otherPlanet);
+                      if (p) {
+                        handleItemClick({
+                          type: "planet",
+                          planet: p.planet,
+                          planetSign: p.sign,
+                          planetDegree: p.degree,
+                          planetHouse: getHouseForPlanet(p.sign, p.degree),
+                          isRetrograde: p.retrograde
+                        });
+                      }
+                    },
+                    theme
+                  }
+                ),
+                /* @__PURE__ */ jsxRuntime.jsx("span", { style: { fontSize: "13px", color: isDark ? "#ccc" : "#555" }, children: aspectInfo.label[lang] })
+              ] }),
+              /* @__PURE__ */ jsxRuntime.jsx(
+                LinkItem,
+                {
+                  label: t.clickToLearnMore,
+                  onClick: () => handleItemClick({
+                    type: "aspect",
+                    aspectType: asp.aspect,
+                    aspectPlanet1: asp.planet1,
+                    aspectPlanet2: asp.planet2
+                  }),
+                  theme
+                }
+              )
+            ]
+          },
+          i
+        );
+      }) }) })
+    ] });
+  };
+  const renderHouseInfo = () => {
+    if (clickedItem.house === void 0) return null;
+    const houseKey = houseToInfoKey(clickedItem.house);
+    const houseInfo = infoCasas[houseKey];
+    const planetsInHouse = getPlanetsInHouse(clickedItem.house);
+    return /* @__PURE__ */ jsxRuntime.jsxs(jsxRuntime.Fragment, { children: [
+      /* @__PURE__ */ jsxRuntime.jsxs("div", { style: { marginBottom: "1rem" }, children: [
+        /* @__PURE__ */ jsxRuntime.jsx("h3", { style: { margin: "0 0 0.25rem 0", fontSize: "20px", color: isDark ? "#fff" : "#333" }, children: houseInfo.label[lang] }),
+        clickedItem.houseSign && /* @__PURE__ */ jsxRuntime.jsxs("p", { style: { margin: 0, fontSize: "13px", color: isDark ? "#aaa" : "#666" }, children: [
+          t.inSign,
+          " ",
+          infoSignos[signToInfoKey[clickedItem.houseSign]].label[lang]
+        ] }),
+        /* @__PURE__ */ jsxRuntime.jsx("p", { style: {
+          margin: "0.25rem 0 0 0",
+          fontSize: "14px",
+          fontStyle: "italic",
+          color: isDark ? "#aaa" : "#666"
+        }, children: houseInfo.coreTheme[lang] })
+      ] }),
+      /* @__PURE__ */ jsxRuntime.jsx("p", { style: {
+        margin: "0 0 0.75rem 0",
+        fontSize: "13px",
+        color: isDark ? "#ccc" : "#555",
+        lineHeight: 1.6
+      }, children: houseInfo.intro[lang] }),
+      /* @__PURE__ */ jsxRuntime.jsxs("div", { style: {
+        display: "grid",
+        gridTemplateColumns: "1fr 1fr",
+        gap: "0.5rem",
+        marginBottom: "0.75rem"
+      }, children: [
+        /* @__PURE__ */ jsxRuntime.jsxs("div", { style: {
+          padding: "0.5rem",
+          borderRadius: "6px",
+          backgroundColor: isDark ? "rgba(100, 200, 100, 0.1)" : "rgba(34, 197, 94, 0.1)"
+        }, children: [
+          /* @__PURE__ */ jsxRuntime.jsx("h4", { style: {
+            margin: "0 0 0.25rem 0",
+            fontSize: "12px",
+            color: isDark ? "#86efac" : "#16a34a"
+          }, children: t.lightQualities }),
+          /* @__PURE__ */ jsxRuntime.jsx(ListRenderer, { items: houseInfo.light[lang], theme })
+        ] }),
+        /* @__PURE__ */ jsxRuntime.jsxs("div", { style: {
+          padding: "0.5rem",
+          borderRadius: "6px",
+          backgroundColor: isDark ? "rgba(200, 100, 100, 0.1)" : "rgba(239, 68, 68, 0.1)"
+        }, children: [
+          /* @__PURE__ */ jsxRuntime.jsx("h4", { style: {
+            margin: "0 0 0.25rem 0",
+            fontSize: "12px",
+            color: isDark ? "#fca5a5" : "#dc2626"
+          }, children: t.shadowQualities }),
+          /* @__PURE__ */ jsxRuntime.jsx(ListRenderer, { items: houseInfo.shadow[lang], theme })
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxRuntime.jsx(ExpandableSection, { title: t.questions, theme, children: /* @__PURE__ */ jsxRuntime.jsx(ListRenderer, { items: houseInfo.questions[lang], theme }) }),
+      planetsInHouse.length > 0 && /* @__PURE__ */ jsxRuntime.jsx(ExpandableSection, { title: `${t.relatedPositions} (${planetsInHouse.length})`, theme, defaultExpanded: true, children: /* @__PURE__ */ jsxRuntime.jsx("div", { style: { display: "flex", flexWrap: "wrap", gap: "0.25rem" }, children: planetsInHouse.map((p) => /* @__PURE__ */ jsxRuntime.jsx(
+        LinkItem,
+        {
+          symbol: PLANET_SYMBOLS[p.planet],
+          label: `${p.degree.toFixed(0)}\xB0 ${ZODIAC_SYMBOLS[p.sign]}${p.retrograde ? " \u211E" : ""}`,
+          onClick: () => handleItemClick({
+            type: "planet",
+            planet: p.planet,
+            planetSign: p.sign,
+            planetDegree: p.degree,
+            planetHouse: clickedItem.house,
+            isRetrograde: p.retrograde
+          }),
+          theme
+        },
+        p.planet
+      )) }) })
+    ] });
+  };
+  const renderAspectInfo = () => {
+    if (!clickedItem.aspectType) return null;
+    const aspectKey = aspectToInfoKey[clickedItem.aspectType];
+    const aspectInfo = infoTransitosAspectos[aspectKey];
+    return /* @__PURE__ */ jsxRuntime.jsxs(jsxRuntime.Fragment, { children: [
+      /* @__PURE__ */ jsxRuntime.jsxs("div", { style: { marginBottom: "1rem" }, children: [
+        /* @__PURE__ */ jsxRuntime.jsx("h3", { style: { margin: "0 0 0.25rem 0", fontSize: "20px", color: isDark ? "#fff" : "#333" }, children: aspectInfo.label[lang] }),
+        clickedItem.aspectPlanet1 && clickedItem.aspectPlanet2 && /* @__PURE__ */ jsxRuntime.jsxs("p", { style: { margin: 0, fontSize: "13px", color: isDark ? "#aaa" : "#666" }, children: [
+          PLANET_SYMBOLS[clickedItem.aspectPlanet1],
+          " - ",
+          PLANET_SYMBOLS[clickedItem.aspectPlanet2]
+        ] }),
+        /* @__PURE__ */ jsxRuntime.jsxs("p", { style: {
+          margin: "0.25rem 0 0 0",
+          fontSize: "14px",
+          fontStyle: "italic",
+          color: isDark ? "#aaa" : "#666"
+        }, children: [
+          aspectInfo.coreTheme[lang],
+          " (",
+          aspectInfo.angle,
+          "\xB0)"
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxRuntime.jsx("p", { style: {
+        margin: "0 0 0.75rem 0",
+        fontSize: "13px",
+        color: isDark ? "#ccc" : "#555",
+        lineHeight: 1.6
+      }, children: aspectInfo.intro[lang] }),
+      /* @__PURE__ */ jsxRuntime.jsxs("div", { style: {
+        display: "grid",
+        gridTemplateColumns: "1fr 1fr",
+        gap: "0.5rem",
+        marginBottom: "0.75rem"
+      }, children: [
+        /* @__PURE__ */ jsxRuntime.jsxs("div", { style: {
+          padding: "0.5rem",
+          borderRadius: "6px",
+          backgroundColor: isDark ? "rgba(100, 200, 100, 0.1)" : "rgba(34, 197, 94, 0.1)"
+        }, children: [
+          /* @__PURE__ */ jsxRuntime.jsx("h4", { style: {
+            margin: "0 0 0.25rem 0",
+            fontSize: "12px",
+            color: isDark ? "#86efac" : "#16a34a"
+          }, children: t.lightQualities }),
+          /* @__PURE__ */ jsxRuntime.jsx(ListRenderer, { items: aspectInfo.light[lang], theme })
+        ] }),
+        /* @__PURE__ */ jsxRuntime.jsxs("div", { style: {
+          padding: "0.5rem",
+          borderRadius: "6px",
+          backgroundColor: isDark ? "rgba(200, 100, 100, 0.1)" : "rgba(239, 68, 68, 0.1)"
+        }, children: [
+          /* @__PURE__ */ jsxRuntime.jsx("h4", { style: {
+            margin: "0 0 0.25rem 0",
+            fontSize: "12px",
+            color: isDark ? "#fca5a5" : "#dc2626"
+          }, children: t.shadowQualities }),
+          /* @__PURE__ */ jsxRuntime.jsx(ListRenderer, { items: aspectInfo.shadow[lang], theme })
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxRuntime.jsx(ExpandableSection, { title: t.questions, theme, children: /* @__PURE__ */ jsxRuntime.jsx(ListRenderer, { items: aspectInfo.questions[lang], theme }) }),
+      clickedItem.aspectPlanet1 && clickedItem.aspectPlanet2 && /* @__PURE__ */ jsxRuntime.jsx(ExpandableSection, { title: t.relatedPositions, theme, defaultExpanded: true, children: /* @__PURE__ */ jsxRuntime.jsx("div", { style: { display: "flex", flexWrap: "wrap", gap: "0.25rem" }, children: [clickedItem.aspectPlanet1, clickedItem.aspectPlanet2].map((pName) => {
+        const p = chart.planets.find((pl) => pl.planet === pName);
+        if (!p) return null;
+        return /* @__PURE__ */ jsxRuntime.jsx(
+          LinkItem,
+          {
+            symbol: PLANET_SYMBOLS[pName],
+            label: `${t.inSign} ${ZODIAC_SYMBOLS[p.sign]}`,
+            onClick: () => handleItemClick({
+              type: "planet",
+              planet: p.planet,
+              planetSign: p.sign,
+              planetDegree: p.degree,
+              planetHouse: getHouseForPlanet(p.sign, p.degree),
+              isRetrograde: p.retrograde
+            }),
+            theme
+          },
+          pName
+        );
+      }) }) })
+    ] });
+  };
+  const angleToInfoKey = {
+    "ascendant": "ascendente",
+    "descendant": "descendente",
+    "midheaven": "medioCielo",
+    "imum_coeli": "fondoCielo",
+    // Also handle planet names that are angles
+    "Ascendant": "ascendente",
+    "Midheaven": "medioCielo"
+  };
+  const renderAngleInfo = () => {
+    let angleKey;
+    if (clickedItem.angle) {
+      angleKey = angleToInfoKey[clickedItem.angle];
+    } else if (clickedItem.planet) {
+      angleKey = angleToInfoKey[clickedItem.planet];
+    }
+    if (!angleKey) {
+      return null;
+    }
+    const angleInfo = infoEjesAngulares[angleKey];
+    if (!angleInfo) {
+      return null;
+    }
+    const sign = clickedItem.angleSign || clickedItem.planetSign;
+    return /* @__PURE__ */ jsxRuntime.jsxs(jsxRuntime.Fragment, { children: [
+      /* @__PURE__ */ jsxRuntime.jsxs("div", { style: { marginBottom: "1rem" }, children: [
+        /* @__PURE__ */ jsxRuntime.jsx("h3", { style: { margin: "0 0 0.25rem 0", fontSize: "20px", color: isDark ? "#fff" : "#333" }, children: angleInfo.label[lang] }),
+        sign && /* @__PURE__ */ jsxRuntime.jsxs("p", { style: { margin: 0, fontSize: "13px", color: isDark ? "#aaa" : "#666" }, children: [
+          t.inSign,
+          " ",
+          infoSignos[signToInfoKey[sign]].label[lang],
+          " ",
+          ZODIAC_SYMBOLS[sign]
+        ] }),
+        /* @__PURE__ */ jsxRuntime.jsx("p", { style: {
+          margin: "0.25rem 0 0 0",
+          fontSize: "14px",
+          fontStyle: "italic",
+          color: isDark ? "#aaa" : "#666"
+        }, children: angleInfo.coreTheme[lang] })
+      ] }),
+      /* @__PURE__ */ jsxRuntime.jsx("p", { style: {
+        margin: "0 0 0.75rem 0",
+        fontSize: "13px",
+        color: isDark ? "#ccc" : "#555",
+        lineHeight: 1.6
+      }, children: angleInfo.intro[lang] }),
+      /* @__PURE__ */ jsxRuntime.jsxs("div", { style: {
+        display: "grid",
+        gridTemplateColumns: "1fr 1fr",
+        gap: "0.5rem",
+        marginBottom: "0.75rem"
+      }, children: [
+        /* @__PURE__ */ jsxRuntime.jsxs("div", { style: {
+          padding: "0.5rem",
+          borderRadius: "6px",
+          backgroundColor: isDark ? "rgba(100, 200, 100, 0.1)" : "rgba(34, 197, 94, 0.1)"
+        }, children: [
+          /* @__PURE__ */ jsxRuntime.jsx("h4", { style: {
+            margin: "0 0 0.25rem 0",
+            fontSize: "12px",
+            color: isDark ? "#86efac" : "#16a34a"
+          }, children: t.lightQualities }),
+          /* @__PURE__ */ jsxRuntime.jsx(ListRenderer, { items: angleInfo.light[lang], theme })
+        ] }),
+        /* @__PURE__ */ jsxRuntime.jsxs("div", { style: {
+          padding: "0.5rem",
+          borderRadius: "6px",
+          backgroundColor: isDark ? "rgba(200, 100, 100, 0.1)" : "rgba(239, 68, 68, 0.1)"
+        }, children: [
+          /* @__PURE__ */ jsxRuntime.jsx("h4", { style: {
+            margin: "0 0 0.25rem 0",
+            fontSize: "12px",
+            color: isDark ? "#fca5a5" : "#dc2626"
+          }, children: t.shadowQualities }),
+          /* @__PURE__ */ jsxRuntime.jsx(ListRenderer, { items: angleInfo.shadow[lang], theme })
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxRuntime.jsx(ExpandableSection, { title: t.questions, theme, children: /* @__PURE__ */ jsxRuntime.jsx(ListRenderer, { items: angleInfo.questions[lang], theme }) }),
+      /* @__PURE__ */ jsxRuntime.jsx(ExpandableSection, { title: t.chartHints, theme, children: /* @__PURE__ */ jsxRuntime.jsx("p", { style: { margin: 0, fontSize: "13px", color: isDark ? "#ccc" : "#555" }, children: angleInfo.chartHint[lang] }) }),
+      sign && /* @__PURE__ */ jsxRuntime.jsxs(ExpandableSection, { title: `${t.sign}: ${infoSignos[signToInfoKey[sign]].label[lang]}`, theme, children: [
+        /* @__PURE__ */ jsxRuntime.jsxs("p", { style: { margin: 0, fontSize: "13px", color: isDark ? "#ccc" : "#555" }, children: [
+          /* @__PURE__ */ jsxRuntime.jsxs("strong", { children: [
+            t.coreTheme,
+            ":"
+          ] }),
+          " ",
+          infoSignos[signToInfoKey[sign]].coreTheme[lang]
+        ] }),
+        /* @__PURE__ */ jsxRuntime.jsx("div", { style: { marginTop: "0.5rem" }, children: /* @__PURE__ */ jsxRuntime.jsx(
+          LinkItem,
+          {
+            symbol: ZODIAC_SYMBOLS[sign],
+            label: t.clickToLearnMore,
+            onClick: () => handleItemClick({ type: "sign", sign }),
+            theme
+          }
+        ) })
+      ] })
+    ] });
+  };
+  return /* @__PURE__ */ jsxRuntime.jsxs("div", { style: {
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
+    backgroundColor: isDark ? "#1a1a2e" : "#fff",
+    color: isDark ? "#e0e0e0" : "#333",
+    borderRadius: "8px",
+    overflow: "hidden",
+    boxShadow: isDark ? "0 4px 20px rgba(0,0,0,0.5)" : "0 4px 20px rgba(0,0,0,0.15)"
+  }, children: [
+    /* @__PURE__ */ jsxRuntime.jsxs("div", { style: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      padding: "0.75rem 1rem",
+      borderBottom: isDark ? "1px solid rgba(255,255,255,0.1)" : "1px solid rgba(0,0,0,0.1)",
+      backgroundColor: isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.02)"
+    }, children: [
+      /* @__PURE__ */ jsxRuntime.jsxs("span", { style: {
+        fontSize: "13px",
+        fontWeight: 500,
+        color: isDark ? "#a8c8f0" : "#2563eb",
+        display: "flex",
+        alignItems: "center",
+        gap: "0.5rem"
+      }, children: [
+        "\u2139\uFE0F ",
+        t.infoMode
+      ] }),
+      /* @__PURE__ */ jsxRuntime.jsx(
+        "button",
+        {
+          onClick: onClose,
+          style: {
+            background: "none",
+            border: "none",
+            color: isDark ? "#aaa" : "#666",
+            cursor: "pointer",
+            fontSize: "18px",
+            padding: "0.25rem",
+            lineHeight: 1
+          },
+          children: "\u2715"
+        }
+      )
+    ] }),
+    /* @__PURE__ */ jsxRuntime.jsx("div", { style: {
+      flex: 1,
+      overflowY: "auto",
+      padding: "1rem"
+    }, children: renderContent() })
+  ] });
+}
 var MODAL_CSS_RESET = `
   .astromandala-modal-root,
   .astromandala-modal-root *,
@@ -1740,6 +4595,8 @@ function AstroMandalaWithModal({
   }, [isMounted]);
   const [isModalOpen, setIsModalOpen] = react.useState(false);
   const [showModalSettings, setShowModalSettings] = react.useState(false);
+  const [isInfoModeActive, setIsInfoModeActive] = react.useState(false);
+  const [clickedItem, setClickedItem] = react.useState(null);
   react.useEffect(() => {
     if (!isMounted) return;
     if (isModalOpen) {
@@ -1935,6 +4792,122 @@ function AstroMandalaWithModal({
       });
     }
   }, [showAspects, showDegrees, showHouses, showSecondChartHouses, showPlanetProjections, showChartInfo, showBirthDataOnChart, includeAnglesInSynastry, aspectTypesFilter, theme, language, onSettingsChange]);
+  const handleSignClick = react.useCallback((sign) => {
+    if (!isInfoModeActive) return;
+    setClickedItem({ type: "sign", sign });
+  }, [isInfoModeActive]);
+  const handleHouseClick = react.useCallback((house, houseSign) => {
+    if (!isInfoModeActive) return;
+    setClickedItem({ type: "house", house, houseSign });
+  }, [isInfoModeActive]);
+  const handlePlanetClick = react.useCallback((planet) => {
+    if (!isInfoModeActive) return;
+    const sortedHouses = [...chart.houses].sort((a, b) => {
+      const getAbsoluteDeg = (sign, deg) => {
+        const signStarts = {
+          "Aries": 0,
+          "Taurus": 30,
+          "Gemini": 60,
+          "Cancer": 90,
+          "Leo": 120,
+          "Virgo": 150,
+          "Libra": 180,
+          "Scorpio": 210,
+          "Sagittarius": 240,
+          "Capricorn": 270,
+          "Aquarius": 300,
+          "Pisces": 330
+        };
+        return signStarts[sign] + deg;
+      };
+      return getAbsoluteDeg(a.sign, a.degree) - getAbsoluteDeg(b.sign, b.degree);
+    });
+    const planetAbsDeg = (() => {
+      const signStarts = {
+        "Aries": 0,
+        "Taurus": 30,
+        "Gemini": 60,
+        "Cancer": 90,
+        "Leo": 120,
+        "Virgo": 150,
+        "Libra": 180,
+        "Scorpio": 210,
+        "Sagittarius": 240,
+        "Capricorn": 270,
+        "Aquarius": 300,
+        "Pisces": 330
+      };
+      return signStarts[planet.sign] + planet.degree;
+    })();
+    let houseNum = 1;
+    for (let i = 0; i < sortedHouses.length; i++) {
+      const getAbsoluteDeg = (sign, deg) => {
+        const signStarts = {
+          "Aries": 0,
+          "Taurus": 30,
+          "Gemini": 60,
+          "Cancer": 90,
+          "Leo": 120,
+          "Virgo": 150,
+          "Libra": 180,
+          "Scorpio": 210,
+          "Sagittarius": 240,
+          "Capricorn": 270,
+          "Aquarius": 300,
+          "Pisces": 330
+        };
+        return signStarts[sign] + deg;
+      };
+      const houseCusp = sortedHouses[i];
+      const nextHouse = sortedHouses[(i + 1) % 12];
+      const houseStart = getAbsoluteDeg(houseCusp.sign, houseCusp.degree);
+      const houseEnd = getAbsoluteDeg(nextHouse.sign, nextHouse.degree);
+      if (houseStart < houseEnd) {
+        if (planetAbsDeg >= houseStart && planetAbsDeg < houseEnd) {
+          houseNum = houseCusp.house;
+          break;
+        }
+      } else {
+        if (planetAbsDeg >= houseStart || planetAbsDeg < houseEnd) {
+          houseNum = houseCusp.house;
+          break;
+        }
+      }
+    }
+    if (planet.planet === "Ascendant") {
+      setClickedItem({ type: "angle", angle: "ascendant", angleSign: planet.sign });
+    } else if (planet.planet === "Midheaven") {
+      setClickedItem({ type: "angle", angle: "midheaven", angleSign: planet.sign });
+    } else {
+      setClickedItem({
+        type: "planet",
+        planet: planet.planet,
+        planetSign: planet.sign,
+        planetDegree: planet.degree,
+        planetHouse: houseNum,
+        isRetrograde: planet.retrograde
+      });
+    }
+  }, [isInfoModeActive, chart.houses]);
+  const handleAspectClick = react.useCallback((aspect) => {
+    if (!isInfoModeActive) return;
+    setClickedItem({
+      type: "aspect",
+      aspectType: aspect.aspect,
+      aspectPlanet1: aspect.planet1,
+      aspectPlanet2: aspect.planet2
+    });
+  }, [isInfoModeActive]);
+  const handleAngleClick = react.useCallback((angle, sign) => {
+    if (!isInfoModeActive) return;
+    setClickedItem({ type: "angle", angle, angleSign: sign });
+  }, [isInfoModeActive]);
+  const handleInfoPanelClose = react.useCallback(() => {
+    setClickedItem(null);
+  }, []);
+  const handleInfoPanelItemClick = react.useCallback((item) => {
+    setClickedItem(item);
+  }, []);
   const modalMandalaProps = {
     chart,
     secondChart,
@@ -1950,7 +4923,15 @@ function AstroMandalaWithModal({
     outerChartColor,
     aspectColors,
     theme,
-    language
+    language,
+    // Click handlers for educational mode
+    ...isInfoModeActive ? {
+      onSignClick: handleSignClick,
+      onHouseClick: handleHouseClick,
+      onPlanetClick: handlePlanetClick,
+      onAspectClick: handleAspectClick,
+      onAngleClick: handleAngleClick
+    } : {}
   };
   const mainMandalaProps = {
     chart,
@@ -2112,6 +5093,30 @@ function AstroMandalaWithModal({
                     children: [
                       "\u{1F4E5}",
                       isMobile ? "" : ` ${t.downloadImage}`
+                    ]
+                  }
+                ),
+                /* @__PURE__ */ jsxRuntime.jsxs(
+                  "button",
+                  {
+                    onClick: () => {
+                      setIsInfoModeActive(!isInfoModeActive);
+                      if (isInfoModeActive) {
+                        setClickedItem(null);
+                      }
+                    },
+                    style: {
+                      ...buttonStyle,
+                      padding: isMobile ? "0.25rem 0.4rem" : buttonStyle.padding,
+                      fontSize: isMobile ? "14px" : buttonStyle.fontSize,
+                      minWidth: isMobile ? "auto" : void 0,
+                      backgroundColor: isInfoModeActive ? isDark ? "rgba(147, 51, 234, 0.5)" : "rgba(147, 51, 234, 0.25)" : isDark ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.08)",
+                      border: isInfoModeActive ? isDark ? "2px solid rgba(147, 51, 234, 0.8)" : "2px solid rgba(147, 51, 234, 0.5)" : "none"
+                    },
+                    title: t.infoMode,
+                    children: [
+                      "\u2139\uFE0F",
+                      isMobile ? "" : ` ${t.infoMode}`
                     ]
                   }
                 )
@@ -2309,6 +5314,22 @@ function AstroMandalaWithModal({
                           gap: "0.5rem"
                         },
                         children: [
+                          isInfoModeActive && /* @__PURE__ */ jsxRuntime.jsxs("div", { style: {
+                            backgroundColor: isDark ? "rgba(99, 102, 241, 0.15)" : "rgba(99, 102, 241, 0.1)",
+                            border: `1px solid ${isDark ? "rgba(99, 102, 241, 0.4)" : "rgba(99, 102, 241, 0.3)"}`,
+                            borderRadius: "8px",
+                            padding: "0.5rem 1rem",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "0.5rem",
+                            color: isDark ? "#a5b4fc" : "#4f46e5",
+                            fontSize: "13px",
+                            maxWidth: modalMandalaSize,
+                            textAlign: "center"
+                          }, children: [
+                            /* @__PURE__ */ jsxRuntime.jsx("span", { style: { fontSize: "16px" }, children: "\u{1F4D6}" }),
+                            /* @__PURE__ */ jsxRuntime.jsx("span", { children: t.infoModeDescription || "Click on any element to learn more about it" })
+                          ] }),
                           /* @__PURE__ */ jsxRuntime.jsx("div", { style: {
                             width: modalMandalaSize,
                             height: modalMandalaSize,
@@ -2379,6 +5400,24 @@ function AstroMandalaWithModal({
                         secondChart,
                         theme,
                         language
+                      }
+                    ) }),
+                    isInfoModeActive && clickedItem && /* @__PURE__ */ jsxRuntime.jsx("div", { style: {
+                      alignSelf: isMobile ? "stretch" : "center",
+                      maxHeight: isMobile ? "none" : modalMandalaSize * 0.85,
+                      overflowY: "auto",
+                      width: isMobile ? "100%" : "auto",
+                      maxWidth: isMobile ? "100%" : "400px"
+                    }, children: /* @__PURE__ */ jsxRuntime.jsx(
+                      EducationalInfoPanel,
+                      {
+                        clickedItem,
+                        chart,
+                        secondChart,
+                        theme,
+                        language,
+                        onClose: handleInfoPanelClose,
+                        onItemClick: handleInfoPanelItemClick
                       }
                     ) })
                   ]

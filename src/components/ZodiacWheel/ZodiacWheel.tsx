@@ -14,6 +14,8 @@ interface ZodiacWheelProps {
     onSignHover?: (sign: ZodiacSign | null) => void;
     /** Currently hovered sign */
     hoveredSign?: ZodiacSign | null;
+    /** Callback when a zodiac sign is clicked */
+    onSignClick?: (sign: ZodiacSign) => void;
 }
 
 /**
@@ -28,6 +30,7 @@ export function ZodiacWheel({
     theme = 'light',
     onSignHover,
     hoveredSign,
+    onSignClick,
 }: ZodiacWheelProps) {
     const signArcAngle = 30; // Each sign spans 30 degrees
     const middleRadius = (outerRadius + innerRadius) / 2;
@@ -100,6 +103,7 @@ export function ZodiacWheel({
                         style={{ cursor: 'pointer' }}
                         onMouseEnter={() => onSignHover?.(sign)}
                         onMouseLeave={() => onSignHover?.(null)}
+                        onClick={() => onSignClick?.(sign)}
                     >
                         {/* Segment background */}
                         <path

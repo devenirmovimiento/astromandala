@@ -393,4 +393,14 @@ export interface AstroMandalaProps {
     language?: MandalaLanguage;
     /** Additional CSS class name */
     className?: string;
+    /** Callback when a zodiac sign is clicked */
+    onSignClick?: (sign: ZodiacSign) => void;
+    /** Callback when a house is clicked */
+    onHouseClick?: (house: number, houseSign: ZodiacSign) => void;
+    /** Callback when a planet is clicked */
+    onPlanetClick?: (planet: PlanetPosition) => void;
+    /** Callback when an aspect is clicked */
+    onAspectClick?: (aspect: Aspect | SynastryAspect) => void;
+    /** Callback when an angle (AS, MC, DS, IC) is clicked */
+    onAngleClick?: (angle: 'ascendant' | 'descendant' | 'midheaven' | 'imum_coeli', sign: ZodiacSign) => void;
 }

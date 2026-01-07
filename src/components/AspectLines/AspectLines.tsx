@@ -21,6 +21,8 @@ interface AspectLinesProps {
     includeAnglesInSynastry?: boolean;
     /** Currently hovered planet - when set, only show aspects involving this planet */
     hoveredPlanet?: PlanetName | null;
+    /** Callback when an aspect line is clicked */
+    onAspectClick?: (aspect: Aspect | SynastryAspect) => void;
 }
 
 /** Angle points to filter from synastry aspects */
@@ -62,6 +64,7 @@ export function AspectLines({
     aspectColors = {},
     includeAnglesInSynastry = false,
     hoveredPlanet = null,
+    onAspectClick,
 }: AspectLinesProps) {
     const colors = { ...DEFAULT_ASPECT_COLORS, ...aspectColors };
     const aspectRadius = radius * 0.7; // Draw aspects in inner area
@@ -126,6 +129,8 @@ export function AspectLines({
                         strokeDasharray={style.dashArray}
                         opacity={opacity}
                         className={`aspect-line aspect-${aspect.aspect}`}
+                        style={{ cursor: onAspectClick ? 'pointer' : 'default' }}
+                        onClick={() => onAspectClick?.(aspect)}
                     />
                 );
             })}
@@ -159,6 +164,8 @@ export function AspectLines({
                         strokeDasharray={style.dashArray}
                         opacity={opacity}
                         className={`aspect-line synastry-aspect aspect-${aspect.aspect}`}
+                        style={{ cursor: onAspectClick ? 'pointer' : 'default' }}
+                        onClick={() => onAspectClick?.(aspect)}
                     />
                 );
             })}

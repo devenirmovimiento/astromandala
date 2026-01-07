@@ -4,7 +4,8 @@ import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom';
 import { AstroMandala } from '../AstroMandala';
 import { ChartInfoPanel } from '../ChartInfoPanel';
-import { AstroMandalaProps, AspectType, MandalaLanguage, MandalaTheme, BirthData } from '../../types';
+import { EducationalInfoPanel, ClickedItem } from '../EducationalInfoPanel';
+import { AstroMandalaProps, AspectType, MandalaLanguage, MandalaTheme, BirthData, ZodiacSign, PlanetPosition, Aspect, SynastryAspect } from '../../types';
 import { getTranslations } from '../../constants';
 
 // CSS reset for modal isolation - prevents host page styles from affecting the modal
@@ -167,6 +168,10 @@ export function AstroMandalaWithModal({
     // Modal state - settings start closed on mobile
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [showModalSettings, setShowModalSettings] = useState(false);
+
+    // Educational mode state
+    const [isInfoModeActive, setIsInfoModeActive] = useState(false);
+    const [clickedItem, setClickedItem] = useState<ClickedItem | null>(null);
 
     // Create/cleanup portal container and manage body scroll lock
     useEffect(() => {
@@ -441,6 +446,109 @@ export function AstroMandalaWithModal({
         }
     }, [showAspects, showDegrees, showHouses, showSecondChartHouses, showPlanetProjections, showChartInfo, showBirthDataOnChart, includeAnglesInSynastry, aspectTypesFilter, theme, language, onSettingsChange]);
 
+    // Click handlers for educational mode
+    const handleSignClick = useCallback((sign: ZodiacSign) => {
+        if (!isInfoModeActive) return;
+        setClickedItem({ type: 'sign', sign });
+    }, [isInfoModeActive]);
+
+    const handleHouseClick = useCallback((house: number, houseSign: ZodiacSign) => {
+        if (!isInfoModeActive) return;
+        setClickedItem({ type: 'house', house, houseSign });
+    }, [isInfoModeActive]);
+
+    const handlePlanetClick = useCallback((planet: PlanetPosition) => {
+        if (!isInfoModeActive) return;
+        // Find house for this planet
+        const sortedHouses = [...chart.houses].sort((a, b) => {
+            const getAbsoluteDeg = (sign: ZodiacSign, deg: number) => {
+                const signStarts: Record<ZodiacSign, number> = {
+                    'Aries': 0, 'Taurus': 30, 'Gemini': 60, 'Cancer': 90,
+                    'Leo': 120, 'Virgo': 150, 'Libra': 180, 'Scorpio': 210,
+                    'Sagittarius': 240, 'Capricorn': 270, 'Aquarius': 300, 'Pisces': 330,
+                };
+                return signStarts[sign] + deg;
+            };
+            return getAbsoluteDeg(a.sign, a.degree) - getAbsoluteDeg(b.sign, b.degree);
+        });
+
+        const planetAbsDeg = (() => {
+            const signStarts: Record<ZodiacSign, number> = {
+                'Aries': 0, 'Taurus': 30, 'Gemini': 60, 'Cancer': 90,
+                'Leo': 120, 'Virgo': 150, 'Libra': 180, 'Scorpio': 210,
+                'Sagittarius': 240, 'Capricorn': 270, 'Aquarius': 300, 'Pisces': 330,
+            };
+            return signStarts[planet.sign] + planet.degree;
+        })();
+
+        let houseNum = 1;
+        for (let i = 0; i < sortedHouses.length; i++) {
+            const getAbsoluteDeg = (sign: ZodiacSign, deg: number) => {
+                const signStarts: Record<ZodiacSign, number> = {
+                    'Aries': 0, 'Taurus': 30, 'Gemini': 60, 'Cancer': 90,
+                    'Leo': 120, 'Virgo': 150, 'Libra': 180, 'Scorpio': 210,
+                    'Sagittarius': 240, 'Capricorn': 270, 'Aquarius': 300, 'Pisces': 330,
+                };
+                return signStarts[sign] + deg;
+            };
+            const houseCusp = sortedHouses[i];
+            const nextHouse = sortedHouses[(i + 1) % 12];
+            const houseStart = getAbsoluteDeg(houseCusp.sign, houseCusp.degree);
+            const houseEnd = getAbsoluteDeg(nextHouse.sign, nextHouse.degree);
+
+            if (houseStart < houseEnd) {
+                if (planetAbsDeg >= houseStart && planetAbsDeg < houseEnd) {
+                    houseNum = houseCusp.house;
+                    break;
+                }
+            } else {
+                if (planetAbsDeg >= houseStart || planetAbsDeg < houseEnd) {
+                    houseNum = houseCusp.house;
+                    break;
+                }
+            }
+        }
+
+        // Check if it's an angle
+        if (planet.planet === 'Ascendant') {
+            setClickedItem({ type: 'angle', angle: 'ascendant', angleSign: planet.sign });
+        } else if (planet.planet === 'Midheaven') {
+            setClickedItem({ type: 'angle', angle: 'midheaven', angleSign: planet.sign });
+        } else {
+            setClickedItem({
+                type: 'planet',
+                planet: planet.planet,
+                planetSign: planet.sign,
+                planetDegree: planet.degree,
+                planetHouse: houseNum,
+                isRetrograde: planet.retrograde,
+            });
+        }
+    }, [isInfoModeActive, chart.houses]);
+
+    const handleAspectClick = useCallback((aspect: Aspect | SynastryAspect) => {
+        if (!isInfoModeActive) return;
+        setClickedItem({
+            type: 'aspect',
+            aspectType: aspect.aspect,
+            aspectPlanet1: aspect.planet1,
+            aspectPlanet2: aspect.planet2,
+        });
+    }, [isInfoModeActive]);
+
+    const handleAngleClick = useCallback((angle: 'ascendant' | 'descendant' | 'midheaven' | 'imum_coeli', sign: ZodiacSign) => {
+        if (!isInfoModeActive) return;
+        setClickedItem({ type: 'angle', angle, angleSign: sign });
+    }, [isInfoModeActive]);
+
+    const handleInfoPanelClose = useCallback(() => {
+        setClickedItem(null);
+    }, []);
+
+    const handleInfoPanelItemClick = useCallback((item: ClickedItem) => {
+        setClickedItem(item);
+    }, []);
+
     // Common mandala props for MODAL (uses internal state)
     const modalMandalaProps = {
         chart,
@@ -458,6 +566,14 @@ export function AstroMandalaWithModal({
         aspectColors,
         theme,
         language,
+        // Click handlers for educational mode
+        ...(isInfoModeActive ? {
+            onSignClick: handleSignClick,
+            onHouseClick: handleHouseClick,
+            onPlanetClick: handlePlanetClick,
+            onAspectClick: handleAspectClick,
+            onAngleClick: handleAngleClick,
+        } : {}),
     };
 
     // Main mandala props (uses initial props from parent)
@@ -625,6 +741,31 @@ export function AstroMandalaWithModal({
                         title={t.downloadImage}
                     >
                         📥{isMobile ? '' : ` ${t.downloadImage}`}
+                    </button>
+
+                    {/* Info mode toggle button */}
+                    <button
+                        onClick={() => {
+                            setIsInfoModeActive(!isInfoModeActive);
+                            if (isInfoModeActive) {
+                                setClickedItem(null);
+                            }
+                        }}
+                        style={{
+                            ...buttonStyle,
+                            padding: isMobile ? '0.25rem 0.4rem' : buttonStyle.padding,
+                            fontSize: isMobile ? '14px' : buttonStyle.fontSize,
+                            minWidth: isMobile ? 'auto' : undefined,
+                            backgroundColor: isInfoModeActive
+                                ? (isDark ? 'rgba(147, 51, 234, 0.5)' : 'rgba(147, 51, 234, 0.25)')
+                                : (isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.08)'),
+                            border: isInfoModeActive
+                                ? (isDark ? '2px solid rgba(147, 51, 234, 0.8)' : '2px solid rgba(147, 51, 234, 0.5)')
+                                : 'none',
+                        }}
+                        title={t.infoMode}
+                    >
+                        ℹ️{isMobile ? '' : ` ${t.infoMode}`}
                     </button>
                 </div>
 
@@ -819,6 +960,25 @@ export function AstroMandalaWithModal({
                             gap: '0.5rem',
                         }}
                     >
+                        {/* Info Mode Banner */}
+                        {isInfoModeActive && (
+                            <div style={{
+                                backgroundColor: isDark ? 'rgba(99, 102, 241, 0.15)' : 'rgba(99, 102, 241, 0.1)',
+                                border: `1px solid ${isDark ? 'rgba(99, 102, 241, 0.4)' : 'rgba(99, 102, 241, 0.3)'}`,
+                                borderRadius: '8px',
+                                padding: '0.5rem 1rem',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.5rem',
+                                color: isDark ? '#a5b4fc' : '#4f46e5',
+                                fontSize: '13px',
+                                maxWidth: modalMandalaSize,
+                                textAlign: 'center',
+                            }}>
+                                <span style={{ fontSize: '16px' }}>📖</span>
+                                <span>{t.infoModeDescription || 'Click on any element to learn more about it'}</span>
+                            </div>
+                        )}
                         <div style={{
                             width: modalMandalaSize,
                             height: modalMandalaSize,
@@ -897,6 +1057,27 @@ export function AstroMandalaWithModal({
                                 secondChart={secondChart}
                                 theme={theme}
                                 language={language}
+                            />
+                        </div>
+                    )}
+
+                    {/* Educational Info Panel - shows when info mode is active and an item is clicked */}
+                    {isInfoModeActive && clickedItem && (
+                        <div style={{
+                            alignSelf: isMobile ? 'stretch' : 'center',
+                            maxHeight: isMobile ? 'none' : modalMandalaSize * 0.85,
+                            overflowY: 'auto',
+                            width: isMobile ? '100%' : 'auto',
+                            maxWidth: isMobile ? '100%' : '400px',
+                        }}>
+                            <EducationalInfoPanel
+                                clickedItem={clickedItem}
+                                chart={chart}
+                                secondChart={secondChart}
+                                theme={theme}
+                                language={language}
+                                onClose={handleInfoPanelClose}
+                                onItemClick={handleInfoPanelItemClick}
                             />
                         </div>
                     )}

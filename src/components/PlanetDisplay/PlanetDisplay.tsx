@@ -1,5 +1,5 @@
 import React from 'react';
-import { PlanetPosition, MandalaTheme, PlanetName, ZodiacSign } from '../../types';
+import { PlanetPosition, MandalaTheme, PlanetName, ZodiacSign, HousePosition } from '../../types';
 import { PLANET_SYMBOLS } from '../../constants';
 import {
     getPointOnCircle,
@@ -7,6 +7,7 @@ import {
     getPlanetAbsoluteDegree,
     formatDegree,
     adjustPlanetPositions,
+    getAbsoluteDegree,
 } from '../../utils';
 
 interface PlanetDisplayProps {
@@ -25,6 +26,14 @@ interface PlanetDisplayProps {
     hoveredPlanet?: PlanetName | null;
     /** Sign being hovered - planets in this sign will be highlighted */
     highlightedSign?: ZodiacSign | null;
+    /** House being hovered - planets in this house will be highlighted */
+    highlightedHouse?: number | null;
+    /** Houses data for determining planet positions */
+    houses?: HousePosition[];
+    /** Aspect being hovered - planets connected by this aspect will be highlighted */
+    highlightedByAspect?: { planet1: string; planet2: string } | null;
+    /** Callback when a planet is clicked */
+    onPlanetClick?: (planet: PlanetPosition) => void;
 }
 
 /**
@@ -43,9 +52,35 @@ export function PlanetDisplay({
     onPlanetHover,
     hoveredPlanet,
     highlightedSign,
+    highlightedHouse,
+    houses = [],
+    highlightedByAspect,
+    onPlanetClick,
 }: PlanetDisplayProps) {
     const isDark = theme === 'dark';
     const offsetLineColor = isDark ? '#555' : '#ccc';
+
+    // Helper function to check if a planet is in a specific house
+    const isPlanetInHouse = (planet: PlanetPosition, houseNumber: number): boolean => {
+        if (!houses || houses.length === 0) return false;
+
+        const planetDegree = getPlanetAbsoluteDegree(planet);
+        const house = houses.find(h => h.house === houseNumber);
+        const nextHouse = houses.find(h => h.house === (houseNumber % 12) + 1);
+
+        if (!house || !nextHouse) return false;
+
+        const houseDegree = getAbsoluteDegree(house.sign, house.degree);
+        const nextHouseDegree = getAbsoluteDegree(nextHouse.sign, nextHouse.degree);
+
+        // Handle wrap-around at 360/0 degrees
+        if (nextHouseDegree < houseDegree) {
+            // House crosses 0 degrees
+            return planetDegree >= houseDegree || planetDegree < nextHouseDegree;
+        } else {
+            return planetDegree >= houseDegree && planetDegree < nextHouseDegree;
+        }
+    };
 
     // Filter out Ascendant and Midheaven as they are already shown in HouseWheel as ASC/MC labels
     const filteredPlanets = planets.filter(
@@ -85,32 +120,51 @@ export function PlanetDisplay({
 
                 // Determine if this planet should be highlighted (when its sign is hovered)
                 const isHighlighted = highlightedSign && planet.sign === highlightedSign;
+                // Determine if this planet is in the hovered house
+                const isInHighlightedHouse = highlightedHouse && isPlanetInHouse(planet, highlightedHouse);
+                // Determine if this planet is connected by the hovered aspect
+                const isHighlightedByAspect = highlightedByAspect &&
+                    (planet.planet === highlightedByAspect.planet1 || planet.planet === highlightedByAspect.planet2);
                 // Determine if this planet is being hovered
                 const isHovered = hoveredPlanet === planet.planet;
                 // Calculate opacity based on hover state
                 const baseOpacity = 1;
-                const highlightOpacity = isHighlighted ? 1 : (highlightedSign ? 0.4 : baseOpacity);
+                let highlightOpacity = baseOpacity;
+
+                // When sign is hovered, dim others
+                if (highlightedSign) {
+                    highlightOpacity = isHighlighted ? 1 : 0.4;
+                }
+                // When house is hovered, dim others
+                if (highlightedHouse) {
+                    highlightOpacity = isInHighlightedHouse ? 1 : 0.4;
+                }
+                // When aspect is hovered, dim others and slightly highlight connected planets
+                if (highlightedByAspect) {
+                    highlightOpacity = isHighlightedByAspect ? 1.2 : 0.3;
+                }
 
                 return (
                     <g
                         key={planet.planet}
-                        className={`planet planet-${planet.planet.toLowerCase()}${isHighlighted ? ' highlighted' : ''}${isHovered ? ' hovered' : ''}`}
+                        className={`planet planet-${planet.planet.toLowerCase()}${isHighlighted ? ' highlighted' : ''}${isHovered ? ' hovered' : ''}${isInHighlightedHouse ? ' in-highlighted-house' : ''}${isHighlightedByAspect ? ' highlighted-by-aspect' : ''}`}
                         data-degree={absoluteDegree}
                         data-actual-x={actualPos.x}
                         data-actual-y={actualPos.y}
                         style={{ cursor: 'pointer' }}
                         onMouseEnter={() => onPlanetHover?.(planet.planet)}
                         onMouseLeave={() => onPlanetHover?.(null)}
+                        onClick={() => onPlanetClick?.(planet)}
                         opacity={highlightOpacity}
                     >
                         {/* Glow effect for highlighted planets */}
-                        {isHighlighted && (
+                        {(isHighlighted || isInHighlightedHouse || isHighlightedByAspect) && (
                             <circle
                                 cx={symbolPos.x}
                                 cy={symbolPos.y}
                                 r={fontSize * 0.8}
                                 fill={color}
-                                opacity={0.25}
+                                opacity={isHighlightedByAspect ? 0.35 : 0.25}
                                 style={{ filter: 'blur(4px)' }}
                             />
                         )}
@@ -146,9 +200,9 @@ export function PlanetDisplay({
                             y={symbolPos.y}
                             textAnchor="middle"
                             dominantBaseline="central"
-                            fontSize={isHighlighted ? fontSize * 1.15 : fontSize}
+                            fontSize={(isHighlighted || isInHighlightedHouse || isHighlightedByAspect) ? fontSize * 1.15 : fontSize}
                             fill={color}
-                            fontWeight={isAngle || isHighlighted ? 'bold' : 'normal'}
+                            fontWeight={isAngle || isHighlighted || isInHighlightedHouse || isHighlightedByAspect ? 'bold' : 'normal'}
                             style={{
                                 fontFamily: 'Segoe UI Symbol, Symbola, sans-serif',
                                 transition: 'font-size 0.15s ease-out',

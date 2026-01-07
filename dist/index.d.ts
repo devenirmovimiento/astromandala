@@ -318,6 +318,16 @@ interface AstroMandalaProps {
     language?: MandalaLanguage;
     /** Additional CSS class name */
     className?: string;
+    /** Callback when a zodiac sign is clicked */
+    onSignClick?: (sign: ZodiacSign) => void;
+    /** Callback when a house is clicked */
+    onHouseClick?: (house: number, houseSign: ZodiacSign) => void;
+    /** Callback when a planet is clicked */
+    onPlanetClick?: (planet: PlanetPosition) => void;
+    /** Callback when an aspect is clicked */
+    onAspectClick?: (aspect: Aspect | SynastryAspect) => void;
+    /** Callback when an angle (AS, MC, DS, IC) is clicked */
+    onAngleClick?: (angle: 'ascendant' | 'descendant' | 'midheaven' | 'imum_coeli', sign: ZodiacSign) => void;
 }
 
 /**
@@ -327,7 +337,7 @@ interface AstroMandalaProps {
  * The chart shows the zodiac wheel, house divisions, planet positions,
  * and aspect lines between planets.
  */
-declare function AstroMandala({ chart, secondChart, synastryAspects, size, showAspects, showDegrees, showHouses, showSecondChartHouses, showPlanetProjections, aspectTypesFilter, includeAnglesInSynastry, innerChartColor, outerChartColor, aspectColors, theme, className, }: AstroMandalaProps): react_jsx_runtime.JSX.Element;
+declare function AstroMandala({ chart, secondChart, synastryAspects, size, showAspects, showDegrees, showHouses, showSecondChartHouses, showPlanetProjections, aspectTypesFilter, includeAnglesInSynastry, innerChartColor, outerChartColor, aspectColors, theme, className, onSignClick, onHouseClick, onPlanetClick, onAspectClick, onAngleClick, }: AstroMandalaProps): react_jsx_runtime.JSX.Element;
 
 interface AstroMandalaWithModalProps extends AstroMandalaProps {
     /** Initial language setting */
@@ -378,11 +388,13 @@ interface ZodiacWheelProps {
     onSignHover?: (sign: ZodiacSign | null) => void;
     /** Currently hovered sign */
     hoveredSign?: ZodiacSign | null;
+    /** Callback when a zodiac sign is clicked */
+    onSignClick?: (sign: ZodiacSign) => void;
 }
 /**
  * Renders the zodiac sign wheel (outer ring of the mandala)
  */
-declare function ZodiacWheel({ centerX, centerY, outerRadius, innerRadius, ascendantDegree, theme, onSignHover, hoveredSign, }: ZodiacWheelProps): react_jsx_runtime.JSX.Element;
+declare function ZodiacWheel({ centerX, centerY, outerRadius, innerRadius, ascendantDegree, theme, onSignHover, hoveredSign, onSignClick, }: ZodiacWheelProps): react_jsx_runtime.JSX.Element;
 
 interface HouseWheelProps {
     centerX: number;
@@ -394,11 +406,19 @@ interface HouseWheelProps {
     isSecondChart?: boolean;
     color?: string;
     theme?: MandalaTheme;
+    /** Callback when mouse hovers over a house number */
+    onHouseHover?: (house: number | null) => void;
+    /** Currently hovered house */
+    hoveredHouse?: number | null;
+    /** Callback when a house is clicked */
+    onHouseClick?: (house: number, houseSign: HousePosition['sign']) => void;
+    /** Callback when an angle is clicked (AS, MC, DS, IC) */
+    onAngleClick?: (angle: 'ascendant' | 'descendant' | 'midheaven' | 'imum_coeli', sign: HousePosition['sign']) => void;
 }
 /**
  * Renders the house divisions on the chart
  */
-declare function HouseWheel({ centerX, centerY, outerRadius, innerRadius, houses, ascendantDegree, isSecondChart, color, theme, }: HouseWheelProps): react_jsx_runtime.JSX.Element;
+declare function HouseWheel({ centerX, centerY, outerRadius, innerRadius, houses, ascendantDegree, isSecondChart, color, theme, onHouseHover, hoveredHouse, onHouseClick, onAngleClick, }: HouseWheelProps): react_jsx_runtime.JSX.Element;
 
 interface PlanetDisplayProps {
     centerX: number;
@@ -416,11 +436,22 @@ interface PlanetDisplayProps {
     hoveredPlanet?: PlanetName | null;
     /** Sign being hovered - planets in this sign will be highlighted */
     highlightedSign?: ZodiacSign | null;
+    /** House being hovered - planets in this house will be highlighted */
+    highlightedHouse?: number | null;
+    /** Houses data for determining planet positions */
+    houses?: HousePosition[];
+    /** Aspect being hovered - planets connected by this aspect will be highlighted */
+    highlightedByAspect?: {
+        planet1: string;
+        planet2: string;
+    } | null;
+    /** Callback when a planet is clicked */
+    onPlanetClick?: (planet: PlanetPosition) => void;
 }
 /**
  * Renders planets on the chart
  */
-declare function PlanetDisplay({ centerX, centerY, radius, planets, ascendantDegree, color, showDegrees, isOuter, theme, onPlanetHover, hoveredPlanet, highlightedSign, }: PlanetDisplayProps): react_jsx_runtime.JSX.Element;
+declare function PlanetDisplay({ centerX, centerY, radius, planets, ascendantDegree, color, showDegrees, isOuter, theme, onPlanetHover, hoveredPlanet, highlightedSign, highlightedHouse, houses, highlightedByAspect, onPlanetClick, }: PlanetDisplayProps): react_jsx_runtime.JSX.Element;
 
 interface AspectLinesProps {
     centerX: number;
@@ -436,11 +467,13 @@ interface AspectLinesProps {
     includeAnglesInSynastry?: boolean;
     /** Currently hovered planet - when set, only show aspects involving this planet */
     hoveredPlanet?: PlanetName | null;
+    /** Callback when an aspect line is clicked */
+    onAspectClick?: (aspect: Aspect | SynastryAspect) => void;
 }
 /**
  * Renders aspect lines between planets
  */
-declare function AspectLines({ centerX, centerY, radius, aspects, synastryAspects, planets, secondChartPlanets, ascendantDegree, aspectColors, includeAnglesInSynastry, hoveredPlanet, }: AspectLinesProps): react_jsx_runtime.JSX.Element;
+declare function AspectLines({ centerX, centerY, radius, aspects, synastryAspects, planets, secondChartPlanets, ascendantDegree, aspectColors, includeAnglesInSynastry, hoveredPlanet, onAspectClick, }: AspectLinesProps): react_jsx_runtime.JSX.Element;
 
 /**
  * Translations for UI labels
@@ -495,6 +528,42 @@ interface Translations {
     birthDate: string;
     birthTime: string;
     birthLocation: string;
+    infoMode: string;
+    infoModeDescription: string;
+    clickToLearnMore: string;
+    showMore: string;
+    showLess: string;
+    element: string;
+    sign: string;
+    house: string;
+    planet: string;
+    aspect: string;
+    retrograde: string;
+    coreTheme: string;
+    lightQualities: string;
+    shadowQualities: string;
+    questions: string;
+    chartHints: string;
+    relatedPositions: string;
+    aspectsTable: string;
+    inSign: string;
+    inHouse: string;
+    atDegree: string;
+    isRetrograde: string;
+    balance: string;
+    balanced: string;
+    excess: string;
+    lack: string;
+    microTip: string;
+    keyIdeas: string;
+    howItFeels: string;
+    inNatalChart: string;
+    inTransit: string;
+    notAProblem: string;
+    commonPatterns: string;
+    examples: string;
+    intro: string;
+    learning: string;
 }
 declare const TRANSLATIONS: Record<MandalaLanguage, Translations>;
 /**

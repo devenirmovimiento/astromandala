@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useMemo, useState, useCallback } from 'react';
-import { AstroMandalaProps, ZodiacSign, PlanetName } from '../../types';
+import { AstroMandalaProps, ZodiacSign, PlanetName, PlanetPosition, Aspect, SynastryAspect } from '../../types';
 import { ZodiacWheel } from '../ZodiacWheel';
 import { HouseWheel } from '../HouseWheel';
 import { PlanetDisplay } from '../PlanetDisplay';
@@ -33,6 +33,11 @@ export function AstroMandala({
     aspectColors,
     theme = 'light',
     className,
+    onSignClick,
+    onHouseClick,
+    onPlanetClick,
+    onAspectClick,
+    onAngleClick,
 }: AstroMandalaProps) {
     const centerX = size / 2;
     const centerY = size / 2;
@@ -40,6 +45,7 @@ export function AstroMandala({
     // Interactive hover states
     const [hoveredPlanet, setHoveredPlanet] = useState<PlanetName | null>(null);
     const [hoveredSign, setHoveredSign] = useState<ZodiacSign | null>(null);
+    const [hoveredHouse, setHoveredHouse] = useState<number | null>(null);
 
     // Callbacks for hover events
     const handlePlanetHover = useCallback((planet: PlanetName | null) => {
@@ -48,6 +54,17 @@ export function AstroMandala({
 
     const handleSignHover = useCallback((sign: ZodiacSign | null) => {
         setHoveredSign(sign);
+    }, []);
+
+    const handleHouseHover = useCallback((house: number | null) => {
+        setHoveredHouse(house);
+    }, []);
+
+    // Reset all hover states when mouse leaves the SVG
+    const handleSvgMouseLeave = useCallback(() => {
+        setHoveredPlanet(null);
+        setHoveredSign(null);
+        setHoveredHouse(null);
     }, []);
 
     // Theme colors
@@ -116,6 +133,7 @@ export function AstroMandala({
             height={size}
             viewBox={`0 0 ${size} ${size}`}
             className={className}
+            onMouseLeave={handleSvgMouseLeave}
             style={{
                 fontFamily: 'Arial, sans-serif',
                 maxWidth: '100%',
@@ -158,6 +176,7 @@ export function AstroMandala({
                 theme={theme}
                 onSignHover={handleSignHover}
                 hoveredSign={hoveredSign}
+                onSignClick={onSignClick}
             />
 
             {/* Planet projection markers on zodiac ring */}
@@ -185,6 +204,10 @@ export function AstroMandala({
                     houses={chart.houses}
                     ascendantDegree={ascendantDegree}
                     theme={theme}
+                    onHouseHover={handleHouseHover}
+                    hoveredHouse={hoveredHouse}
+                    onHouseClick={onHouseClick}
+                    onAngleClick={onAngleClick}
                 />
             )}
 
@@ -200,6 +223,10 @@ export function AstroMandala({
                     isSecondChart={true}
                     color={outerChartColor}
                     theme={theme}
+                    onHouseHover={handleHouseHover}
+                    hoveredHouse={hoveredHouse}
+                    onHouseClick={onHouseClick}
+                    onAngleClick={onAngleClick}
                 />
             )}
 
@@ -217,6 +244,7 @@ export function AstroMandala({
                     aspectColors={aspectColors}
                     includeAnglesInSynastry={includeAnglesInSynastry}
                     hoveredPlanet={hoveredPlanet}
+                    onAspectClick={onAspectClick}
                 />
             )}
 
@@ -234,6 +262,9 @@ export function AstroMandala({
                 onPlanetHover={handlePlanetHover}
                 hoveredPlanet={hoveredPlanet}
                 highlightedSign={hoveredSign}
+                highlightedHouse={hoveredHouse}
+                houses={chart.houses}
+                onPlanetClick={onPlanetClick}
             />
 
             {/* Secondary chart planets (synastry) */}
@@ -251,6 +282,9 @@ export function AstroMandala({
                     onPlanetHover={handlePlanetHover}
                     hoveredPlanet={hoveredPlanet}
                     highlightedSign={hoveredSign}
+                    highlightedHouse={hoveredHouse}
+                    houses={secondChart?.houses || []}
+                    onPlanetClick={onPlanetClick}
                 />
             )}
         </svg>

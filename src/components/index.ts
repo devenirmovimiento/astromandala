@@ -7,3 +7,5 @@ export { PlanetDisplay } from './PlanetDisplay';
 export { AspectLines } from './AspectLines';
 export { PlanetProjections } from './PlanetProjections';
 export { ChartInfoPanel } from './ChartInfoPanel';
+export { EducationalInfoPanel } from './EducationalInfoPanel';
+export type { ClickedItem, ClickedItemType, EducationalInfoPanelProps } from './EducationalInfoPanel';

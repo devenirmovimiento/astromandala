@@ -66,6 +66,44 @@ export interface Translations {
     birthDate: string;
     birthTime: string;
     birthLocation: string;
+
+    // Educational mode
+    infoMode: string;
+    infoModeDescription: string;
+    clickToLearnMore: string;
+    showMore: string;
+    showLess: string;
+    element: string;
+    sign: string;
+    house: string;
+    planet: string;
+    aspect: string;
+    retrograde: string;
+    coreTheme: string;
+    lightQualities: string;
+    shadowQualities: string;
+    questions: string;
+    chartHints: string;
+    relatedPositions: string;
+    aspectsTable: string;
+    inSign: string;
+    inHouse: string;
+    atDegree: string;
+    isRetrograde: string;
+    balance: string;
+    balanced: string;
+    excess: string;
+    lack: string;
+    microTip: string;
+    keyIdeas: string;
+    howItFeels: string;
+    inNatalChart: string;
+    inTransit: string;
+    notAProblem: string;
+    commonPatterns: string;
+    examples: string;
+    intro: string;
+    learning: string;
 }
 
 export const TRANSLATIONS: Record<MandalaLanguage, Translations> = {
@@ -132,6 +170,44 @@ export const TRANSLATIONS: Record<MandalaLanguage, Translations> = {
         birthDate: 'Date',
         birthTime: 'Time',
         birthLocation: 'Location',
+
+        // Educational mode
+        infoMode: 'Info Mode',
+        infoModeDescription: 'Click on any element of the chart to learn more',
+        clickToLearnMore: 'Click to learn more',
+        showMore: 'Show more',
+        showLess: 'Show less',
+        element: 'Element',
+        sign: 'Sign',
+        house: 'House',
+        planet: 'Planet',
+        aspect: 'Aspect',
+        retrograde: 'Retrograde',
+        coreTheme: 'Core Theme',
+        lightQualities: 'Light Qualities',
+        shadowQualities: 'Shadow Aspects',
+        questions: 'Reflective Questions',
+        chartHints: 'Chart Hints',
+        relatedPositions: 'Related Positions',
+        aspectsTable: 'Aspects',
+        inSign: 'in',
+        inHouse: 'in House',
+        atDegree: 'at',
+        isRetrograde: 'is retrograde',
+        balance: 'Balance',
+        balanced: 'Balanced',
+        excess: 'Excess',
+        lack: 'Lack',
+        microTip: 'Quick Tip',
+        keyIdeas: 'Key Ideas',
+        howItFeels: 'How It Feels',
+        inNatalChart: 'In Natal Chart',
+        inTransit: 'In Transit',
+        notAProblem: 'Remember',
+        commonPatterns: 'Common Patterns',
+        examples: 'Examples',
+        intro: 'Introduction',
+        learning: 'Learning',
     },
     es: {
         // Angle labels
@@ -196,6 +272,44 @@ export const TRANSLATIONS: Record<MandalaLanguage, Translations> = {
         birthDate: 'Fecha',
         birthTime: 'Hora',
         birthLocation: 'Lugar',
+
+        // Educational mode
+        infoMode: 'Modo Info',
+        infoModeDescription: 'Haz clic en cualquier elemento del gráfico para aprender más',
+        clickToLearnMore: 'Clic para más información',
+        showMore: 'Ver más',
+        showLess: 'Ver menos',
+        element: 'Elemento',
+        sign: 'Signo',
+        house: 'Casa',
+        planet: 'Planeta',
+        aspect: 'Aspecto',
+        retrograde: 'Retrógrado',
+        coreTheme: 'Tema Central',
+        lightQualities: 'Cualidades Luminosas',
+        shadowQualities: 'Aspectos de Sombra',
+        questions: 'Preguntas Reflexivas',
+        chartHints: 'Pistas en la Carta',
+        relatedPositions: 'Posiciones Relacionadas',
+        aspectsTable: 'Aspectos',
+        inSign: 'en',
+        inHouse: 'en Casa',
+        atDegree: 'a',
+        isRetrograde: 'está retrógrado',
+        balance: 'Balance',
+        balanced: 'Equilibrado',
+        excess: 'Exceso',
+        lack: 'Falta',
+        microTip: 'Tip Rápido',
+        keyIdeas: 'Ideas Clave',
+        howItFeels: 'Cómo Se Vive',
+        inNatalChart: 'En Carta Natal',
+        inTransit: 'En Tránsito',
+        notAProblem: 'Recordar',
+        commonPatterns: 'Patrones Comunes',
+        examples: 'Ejemplos',
+        intro: 'Introducción',
+        learning: 'Aprendizaje',
     },
 };
 
