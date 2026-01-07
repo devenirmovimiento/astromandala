@@ -24,3 +24,7 @@ npm-debug.log*
 
 # Testing
 coverage/
+
+# Next.js example build
+example/.next/
+example/out/
